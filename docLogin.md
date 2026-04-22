@@ -92,4 +92,3 @@ Como testar com credenciais de usuário final da gcloud
 Mudanças são necessárias para usar o Firebase Authentication devido ao seguinte:
 O Firebase Authentication não aceita credenciais de usuário final da gcloud geradas usando o ID do cliente do OAuth da gcloud.
 O Firebase Authentication exige que o ID do projeto seja fornecido na inicialização para esse tipo de credencial de usuário final.
-
