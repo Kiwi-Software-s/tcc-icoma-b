@@ -176,14 +176,6 @@ Ao se tornar um comércio parceiro do EcoPoints, a loja de Cláudia passa a apar
 | **Funcionalidade-chave** | Dashboard de saldo + registro de reciclagem | Listagem como parceiro + sistema de descontos |
 | **O que o EcoPoints entrega** | Recompensa imediata e tangível | Visibilidade, clientes e imagem ESG |
 
----
 
-> **Referências utilizadas:**
-> - DETERDING, S. et al. *From game design elements to gamefulness: defining "gamification"*. ACM, 2011.
-> - ELLEN MACARTHUR FOUNDATION. *Rumo à economia circular*. 2015.
-> - CNI. *Sustentabilidade & Opinião Pública*. 2024.
-> - GS1 BRASIL. *87% da população prefere comprar de empresas ESG*. 2022.
-> - GIANINI, Adriano. *A Importância da Persona e Como Definir a Sua*. YouTube, 2024.
-> - TAMO JUNTO. *Diferença entre Público-Alvo e Persona*. YouTube, 2024.
 
 
