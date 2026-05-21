@@ -174,7 +174,7 @@ Ao se tornar um comércio parceiro do EcoPoints, a loja de Cláudia passa a apar
 | **Principal desejo** | Ganhar benefício real por reciclar | Atrair clientes e se destacar |
 | **Principal dúvida** | Os pontos têm valor real? | Vai ser complicado de gerenciar? |
 | **Funcionalidade-chave** | Dashboard de saldo + registro de reciclagem | Listagem como parceiro + sistema de descontos |
-| **O que o EcoPoints entrega** | Recompensa imediata e tangível | Visibilidade, clientes e imagem ESG |
+| **O que o EcoPoints entrega** | Recompensa imediata e tangível | Visibilidade, clientes e imagem ESG | 
 
 
 
