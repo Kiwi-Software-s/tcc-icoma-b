@@ -1,0 +1,2 @@
+branch-entrega-23
+https://export-download.canva.com/2pH1c/DAHKPO2pH1c/89/0-1224357562512203685.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20260525%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260525T182332Z&X-Amz-Expires=24627&X-Amz-Signature=b993523accb84368ce02107bee16e28f22c2f215790b8fd358a617968124012d&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27Sistema.pdf&response-expires=Tue%2C%2026%20May%202026%2001%3A13%3A59%20GMT
