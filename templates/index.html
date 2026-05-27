@@ -1,26 +1,856 @@
+```html
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  </head>
-  <body>
-    <section name="navbar-platform">
-        <nav class="navbar bg-body-tertiary">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="#">
-                <img src="{{url_for('static',filename='logotipo.png')}}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-                icoma.com
-              </a>
-            </div>
-          </nav>
-    <footer>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    </footer>
-  </body>
+  <title>GreenPoints</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+  <style>
+    ::-webkit-scrollbar {
+    display: none;
+    }
+
+    :root{
+      --green-dark:#102c18;
+      --green-main:#3f8d35;
+      --green-light:#79b92f;
+      --cream:#f4efe6;
+      --card:#ece5d8;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--cream);
+      overflow-x:hidden;
+    }
+
+    h1,h2,h3,h4,h5{
+      font-family:'Montserrat',sans-serif;
+    }
+
+    /* =========================
+       NAVBAR
+    ==========================*/
+
+    .navbar-custom{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      z-index:999;
+      padding:18px 0;
+      background:rgba(10,20,10,.30);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .brand{
+      color:#fff;
+      text-decoration:none;
+      font-size:2rem;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .brand i{
+      color:#7ec850;
+      font-size:2rem;
+    }
+
+    .nav-buttons{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .nav-btn{
+      text-decoration:none;
+      color:#fff;
+      padding:10px 22px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      transition:.25s;
+      font-weight:600;
+      font-size:.95rem;
+    }
+
+    .nav-btn:hover{
+      background:#7ec850;
+      color:#fff;
+      transform:translateY(-2px);
+    }
+
+    /* =========================
+       HERO
+    ==========================*/
+
+    #hero{
+      min-height:100vh;
+      background:linear-gradient(135deg,#12361f 0%,#22642c 45%,#5ba63d 100%);
+      display:flex;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+      padding-top:120px;
+    }
+
+    #hero::before{
+      content:'';
+      position:absolute;
+      width:700px;
+      height:700px;
+      background:rgba(255,255,255,.05);
+      border-radius:50%;
+      top:-250px;
+      right:-250px;
+    }
+
+    #hero::after{
+      content:'';
+      position:absolute;
+      width:500px;
+      height:500px;
+      background:rgba(0,0,0,.08);
+      border-radius:50%;
+      bottom:-200px;
+      left:-200px;
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:2;
+    }
+
+    .hero-content h1{
+      font-size:4rem;
+      font-weight:900;
+      color:#fff;
+      line-height:1.1;
+      margin-bottom:20px;
+    }
+
+    .hero-content p{
+      color:rgba(255,255,255,.85);
+      font-size:1.1rem;
+      max-width:520px;
+      margin-bottom:35px;
+    }
+
+    .hero-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      background:#fff;
+      color:#1b4b1b;
+      text-decoration:none;
+      padding:15px 28px;
+      border-radius:999px;
+      font-weight:700;
+      transition:.25s;
+    }
+
+    .hero-btn:hover{
+      transform:translateY(-3px);
+      background:#e8f5e0;
+    }
+
+    /* =========================
+       COMO FUNCIONA
+    ==========================*/
+
+    #como-funciona{
+      padding:100px 0;
+      background:#f5f1e8;
+    }
+
+    .section-title{
+      text-align:center;
+      font-size:2.5rem;
+      font-weight:800;
+      margin-bottom:15px;
+      color:#132913;
+    }
+
+    .section-subtitle{
+      text-align:center;
+      color:#666;
+      margin-bottom:60px;
+    }
+
+    .step-card{
+      background:white;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,.07);
+      transition:.25s;
+      height:100%;
+    }
+
+    .step-card:hover{
+      transform:translateY(-5px);
+    }
+
+    .step-header{
+      background:var(--green-main);
+      color:white;
+      padding:30px;
+      font-size:1.5rem;
+      font-weight:800;
+    }
+
+    .step-body{
+      padding:28px;
+      color:#666;
+      line-height:1.7;
+    }
+
+    /* =========================
+       POR QUE USAR
+    ==========================*/
+
+    #por-que{
+      padding:100px 0;
+      background:#fff;
+    }
+
+    .stat-card{
+      background:var(--card);
+      border-radius:18px;
+      padding:30px;
+      text-align:center;
+      height:100%;
+      transition:.25s;
+    }
+
+    .stat-card:hover{
+      transform:translateY(-5px);
+    }
+
+    .stat-icon{
+      font-size:2.5rem;
+      color:var(--green-main);
+      margin-bottom:15px;
+    }
+
+    .stat-number{
+      font-size:2rem;
+      font-weight:800;
+      color:#1b3d1b;
+      margin-bottom:5px;
+    }
+
+    .stat-label{
+      color:#666;
+    }
+
+    /* =========================
+       CADASTRO
+    ==========================*/
+
+    #cadastro{
+      background:linear-gradient(
+        90deg,
+        #0f2f1f 0%,
+        #173d28 50%,
+        #0f2f1f 100%
+      );
+      padding:120px 20px;
+    }
+
+    .cadastro-card{
+      background:#f3eee6;
+      border-radius:10px;
+      padding:2.5rem;
+      max-width:560px;
+      margin:auto;
+      box-shadow:0 15px 40px rgba(0,0,0,.3);
+    }
+
+    .cadastro-card h2{
+      text-align:center;
+      font-size:2rem;
+      font-weight:900;
+      margin-bottom:2rem;
+      color:#111;
+    }
+
+    .form-control{
+      height:58px;
+      border-radius:8px;
+      border:1px solid #d8d1c6;
+      background:#f8f4ed;
+      padding:0 1rem;
+    }
+
+    .form-control:focus{
+      border-color:#5b9b2d;
+      box-shadow:0 0 0 4px rgba(91,155,45,.15);
+    }
+
+    .password-wrapper{
+      position:relative;
+    }
+
+    .toggle-eye{
+      position:absolute;
+      top:50%;
+      right:15px;
+      transform:translateY(-50%);
+      border:none;
+      background:none;
+      color:#999;
+      font-size:1.1rem;
+    }
+
+    .btn-cadastro{
+      width:100%;
+      height:58px;
+      border:none;
+      border-radius:8px;
+      background:#76ab2c;
+      color:#fff;
+      font-weight:800;
+      font-size:1rem;
+      position:relative;
+      transition:.25s;
+    }
+
+    .btn-cadastro:hover{
+      background:#5f9120;
+    }
+
+    .btn-arrow{
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:1.2rem;
+    }
+
+    .parceiros-link{
+      text-align:center;
+      margin-top:20px;
+    }
+
+    .parceiros-link a{
+      color:#5b8f26;
+      text-decoration:none;
+      font-size:.9rem;
+    }
+
+    /* =========================
+       FAQ
+    ==========================*/
+
+    #faq{
+      padding:100px 0;
+      background:#102416;
+    }
+
+    #faq .section-title{
+      color:#fff;
+    }
+
+    .faq-item{
+      background:rgba(255,255,255,.06);
+      border-radius:10px;
+      padding:20px;
+      margin-bottom:15px;
+      color:#fff;
+      cursor:pointer;
+      transition:.25s;
+    }
+
+    .faq-item:hover{
+      background:rgba(255,255,255,.12);
+    }
+
+    .faq-answer{
+      display:none;
+      color:#d7d7d7;
+      margin-top:12px;
+      line-height:1.6;
+    }
+
+    /* =========================
+       FOOTER
+    ==========================*/
+
+    footer{
+      background:#0b120b;
+      color:#aaa;
+      padding:40px 0;
+      text-align:center;
+    }
+
+    footer h5{
+      color:#fff;
+      margin-bottom:10px;
+    }
+
+    /* =========================
+       RESPONSIVO
+    ==========================*/
+
+    @media(max-width:992px){
+
+      .hero-content h1{
+        font-size:3rem;
+      }
+
+      .nav-buttons{
+        justify-content:center;
+        margin-top:20px;
+      }
+
+      .navbar-custom .container{
+        flex-direction:column;
+      }
+    }
+
+    @media(max-width:768px){
+
+      .hero-content h1{
+        font-size:2.4rem;
+      }
+
+      .nav-btn{
+        width:100%;
+        text-align:center;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar-custom">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <a href="#" class="brand">
+      <i class="bi bi-recycle"></i>
+      GreenPoints
+    </a>
+
+    <div class="nav-buttons">
+
+      <a href="#como-funciona" class="nav-btn">
+        Como Funciona
+      </a>
+
+      <a href="#por-que" class="nav-btn">
+        Por que usar
+      </a>
+
+      <a href="#cadastro" class="nav-btn">
+        Crie sua conta
+      </a>
+
+      <a href="#faq" class="nav-btn">
+        FAQ
+      </a>
+
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+
+  <div class="container">
+    <div class="hero-content">
+
+      <h1>
+        Ganhe recompensas<br>
+        ajudando o planeta
+      </h1>
+
+      <p>
+        Recicle, acumule GreenPoints e troque seus pontos
+        por recompensas incríveis enquanto ajuda o meio ambiente.
+      </p>
+
+      <a href="#cadastro" class="hero-btn">
+        Começar agora
+        <i class="bi bi-arrow-right"></i>
+      </a>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona">
+
+  <div class="container">
+
+    <h2 class="section-title">
+      Como Funciona
+    </h2>
+
+    <p class="section-subtitle">
+      Recicle e acumule pontos em apenas 3 passos simples
+    </p>
+
+    <div class="row g-4">
+
+      <div class="col-md-4">
+
+        <div class="step-card">
+
+          <div class="step-header">
+            <i class="bi bi-recycle"></i>
+            Recicle
+          </div>
+
+          <div class="step-body">
+            Participe de ações sustentáveis e contribua para um futuro melhor.
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-4">
+
+        <div class="step-card">
+
+          <div class="step-header">
+            <i class="bi bi-star-fill"></i>
+            Ganhe Pontos
+          </div>
+
+          <div class="step-body">
+            Acumule GreenPoints automaticamente ao reciclar.
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-4">
+
+        <div class="step-card">
+
+          <div class="step-header">
+            <i class="bi bi-gift-fill"></i>
+            Troque Recompensas
+          </div>
+
+          <div class="step-body">
+            Troque seus pontos por benefícios e descontos exclusivos.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- POR QUE USAR -->
+<section id="por-que">
+
+  <div class="container">
+
+    <h2 class="section-title">
+      Por que usar o GreenPoints?
+    </h2>
+
+    <p class="section-subtitle">
+      Contribua para um planeta mais limpo e sustentável
+    </p>
+
+    <div class="row g-4">
+
+      <div class="col-md-4">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="bi bi-trash3-fill"></i>
+          </div>
+
+          <div class="stat-number">
+            +0000kg
+          </div>
+
+          <div class="stat-label">
+            Resíduos reciclados
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-4">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="bi bi-people-fill"></i>
+          </div>
+
+          <div class="stat-number">
+            +0000
+          </div>
+
+          <div class="stat-label">
+            Usuários ativos
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-4">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="bi bi-gift-fill"></i>
+          </div>
+
+          <div class="stat-number">
+            +0000
+          </div>
+
+          <div class="stat-label">
+            Recompensas entregues
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CADASTRO -->
+<section id="cadastro">
+
+  <div class="container">
+
+    <div class="cadastro-card">
+
+      <h2>
+        Crie sua conta!
+      </h2>
+
+      <form>
+
+        <div class="mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Seu nome completo"
+            required
+          >
+        </div>
+
+        <div class="mb-3">
+          <input
+            type="email"
+            class="form-control"
+            placeholder="Email"
+            required
+          >
+        </div>
+
+        <div class="mb-4 password-wrapper">
+
+          <input
+            type="password"
+            class="form-control pe-5"
+            placeholder="Senha"
+            id="senha"
+            required
+          >
+
+          <button type="button" class="toggle-eye" onclick="toggleSenha()">
+            <i class="bi bi-eye-slash" id="eye-icon"></i>
+          </button>
+
+        </div>
+
+        <button type="submit" class="btn-cadastro">
+
+          Começe a ganhar pontos
+
+          <span class="btn-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </span>
+
+        </button>
+
+      </form>
+
+      <div class="parceiros-link">
+        <a href="#">
+          Parcerias
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+  <script>
+    function toggleSenha() {
+      const input = document.getElementById('senha');
+      const icon = document.getElementById('eye-icon');
+    
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('bi-eye-slash', 'bi-eye');
+      } else {
+        input.type = 'password';
+        icon.classList.replace('bi-eye', 'bi-eye-slash');
+      }
+    }
+    </script>
+
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+
+  <div class="container">
+
+    <h2 class="section-title">
+      Perguntas Frequentes
+    </h2>
+
+    <div class="row">
+
+      <div class="col-md-6">
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          Como faço para me cadastrar?
+
+          <div class="faq-answer">
+            Basta preencher o formulário com seus dados.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          Como ganho GreenPoints?
+
+          <div class="faq-answer">
+            Você ganha pontos reciclando e participando de ações sustentáveis.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-6">
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          Os pontos expiram?
+
+          <div class="faq-answer">
+            Os pontos possuem validade de 12 meses.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          Existe aplicativo mobile?
+
+          <div class="faq-answer">
+            Sim, o app estará disponível em breve para Android e iOS.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+
+  <div class="container">
+
+    <h5>
+      GreenPoints
+    </h5>
+
+    <p>
+      Incentivando a reciclagem e um futuro mais sustentável.
+    </p>
+
+    <small>
+      © 2026 GreenPoints - Todos os direitos reservados.
+    </small>
+
+  </div>
+
+</footer>
+
+<script>
+
+  function toggleSenha(){
+
+    const senha = document.getElementById('senha');
+    const icon = document.getElementById('eye-icon');
+
+    if(senha.type === 'password'){
+      senha.type = 'text';
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }else{
+      senha.type = 'password';
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    }
+  }
+
+  function toggleFaq(item){
+
+    const answer = item.querySelector('.faq-answer');
+
+    if(answer.style.display === 'block'){
+      answer.style.display = 'none';
+    }else{
+      document.querySelectorAll('.faq-answer').forEach(el=>{
+        el.style.display = 'none';
+      });
+
+      answer.style.display = 'block';
+    }
+  }
+
+</script>
+
+</body>
 </html>
+```
