@@ -25,4 +25,4 @@ except ValueError as ve:
 except Exception as e:
     flash(str(e), 'error')
     
-    return render_template('login/register.html', site='')
+    return render_template('login/register.html', site='https://tcc-icoma-b-iw6u.onrender.com')
