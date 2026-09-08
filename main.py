@@ -13,6 +13,14 @@ def index():
 def login():
     return render_template('login/login.html')
 
+@app.route("/dashboard")
+def dashboard():
+    return render_template('dashboard/dashboard.html')
+
+@app.route("/mapa-de-pontos")
+def mapa_de_pontos():
+    return render_template('mapa/mapa.html')
+
 def main():
     app.run(host="0.0.0.0", port = int(os.environ.get("PORT", 10000)))
 

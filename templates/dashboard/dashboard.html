@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>EcoPoints - Dashboard</title>
+
+  <link rel="favicon" href="../../img/ecopoints.favicon.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    :root {
+      --green-dark: #144a29;
+      --green-sidebar-card: #10301a;
+      --green-sidebar-line: #2f5f33;
+      --green-drip: #31682a;
+      --green-main: #4d8b2c;
+      --green-light: #79b92f;
+      --green-soft: #cfe6bd;
+      --cream: #f8f5ee;
+      --panel: #fffdf7;
+      --card: #fdfbf5;
+      --card-line: #eae5d8;
+      --title-muted: #9dae99;
+      --ink: #4d4d44;
+      --ink-soft: #86837a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--green-main);
+      outline-offset: 2px;
+    }
+
+    /* ====================== MENU LATERAL ====================== */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 265px;
+      background: var(--green-dark);
+      padding: 22px 20px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+      z-index: 20;
+    }
+
+    .sidebar-logo {
+      width: 200px;
+      align-self: center;
+      margin-bottom: 4px;
+    }
+
+    .btn-inicio {
+      display: block;
+      width: 100%;
+      max-width: 210px;
+      height: auto;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+
+    .img-mapa {
+      display: block;
+      width: 100%;
+      max-width: 210px;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    .menu-lateral {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 11px 8px;
+      border-radius: 10px;
+      color: #e9f1e5;
+      font-size: .98rem;
+      transition: background .2s;
+    }
+
+    .menu-item:hover {
+      background: rgba(255, 255, 255, .07);
+      color: #fff;
+    }
+
+    .menu-icone {
+      width: 34px;
+      height: 30px;
+      flex: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green-light);
+      font-size: 1.4rem;
+    }
+
+    .menu-icone img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    /* ====================== ÁREA PRINCIPAL ====================== */
+    .conteudo {
+      margin-left: 265px;
+      min-height: 100vh;
+    }
+
+    /* ---- Barra superior + onda verde ---- */
+    .topo {
+      position: relative;
+      background: var(--panel);
+      padding: 18px 32px 22px;
+      border-bottom-left-radius: 26px;
+      border-bottom-right-radius: 26px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .05);
+      overflow: hidden;
+    }
+
+    .onda {
+      position: absolute;
+      top: -1px;
+      right: 8%;
+      width: min(58%, 640px);
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .topo-acoes {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .btn-sino {
+      background: none;
+      border: none;
+      padding: 0;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .btn-sino img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #e8e6e0;
+      padding: 8px;
+      object-fit: contain;
+    }
+
+    .menu-topo {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 42px;
+      margin-top: 30px;
+    }
+
+    .menu-topo a {
+      color: #a9a59b;
+      font-size: 1.05rem;
+      transition: color .2s;
+    }
+
+    .menu-topo a:hover,
+    .menu-topo a.ativo {
+      color: var(--green-main);
+    }
+
+    /* ---- Saudação ---- */
+    .painel {
+      padding: 28px 32px 40px;
+    }
+
+    .saudacao h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #3f3f37;
+    }
+
+    .saudacao p {
+      font-size: .9rem;
+      color: var(--ink-soft);
+      margin-top: 4px;
+    }
+
+    /* ---- Grade dos cards ---- */
+    .grade {
+      display: grid;
+      grid-template-columns: 1.42fr 1fr 1.1fr;
+      gap: 20px;
+      margin-top: 22px;
+      align-items: start;
+    }
+
+    .coluna-dupla {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .cartao {
+      background: var(--card);
+      border: 1px solid var(--card-line);
+      border-radius: 14px;
+      padding: 18px 20px 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .03);
+    }
+
+    .cartao-topo {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .cartao h2 {
+      font-size: 1.22rem;
+      font-weight: 800;
+      color: var(--title-muted);
+      line-height: 1.25;
+    }
+
+    .cartao h2 small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: .78rem;
+      font-weight: 500;
+      color: #b3b0a6;
+      margin-top: 2px;
+    }
+
+    .numero-grande {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin-top: 6px;
+    }
+
+    /* selects "Mensal" */
+    .filtro {
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      color: #6f6c64;
+      background-color: #fff;
+      border: 1px solid #ddd8ca;
+      border-radius: 8px;
+      padding: 5px 26px 5px 10px;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("../../static/dashboard/icons/chevron-down.png");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 11px;
+    }
+
+    /* ícones verdes dos cards */
+    /* ícones dos cards - arquivos de static/icons */
+    .icone-card {
+      width: 34px;
+      height: 34px;
+      flex: none;
+      object-fit: contain;
+    }
+
+    .folha-titulo {
+      width: 30px;
+      height: 30px;
+      vertical-align: -4px;
+      margin-left: 4px;
+    }
+
+    .grafico {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ---- Ranking ---- */
+    .lista-ranking {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .linha-ranking {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1.5px solid var(--green-soft);
+      border-radius: 11px;
+      padding: 9px 14px;
+    }
+
+    .linha-ranking .nome {
+      flex: 1;
+      font-size: .95rem;
+      color: #56534b;
+    }
+
+    .linha-ranking .pontos {
+      font-size: .95rem;
+      color: #56534b;
+    }
+
+    .avatar-mini {
+      width: 27px;
+      height: 27px;
+      flex: none;
+      border-radius: 50%;
+      background: #eceae4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-mini img {
+      width: 17px;
+      height: 17px;
+      object-fit: contain;
+    }
+
+    /* ---- Ponto de coleta ---- */
+    .ponto-nome {
+      font-size: .87rem;
+      font-weight: 700;
+      color: #4f4c44;
+    }
+
+    .ponto-endereco {
+      font-size: .87rem;
+      color: #7e7b73;
+      margin-bottom: 12px;
+    }
+
+    .mapa-mini {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid var(--card-line);
+    }
+
+    /* ---- Prêmios ---- */
+    .grade-premios {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .premio-caixa {
+      background: #fff;
+      border: 1px solid #e4e0d3;
+      border-radius: 9px;
+      padding: 8px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .premio-caixa img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .etiqueta-pontos {
+      background: #3f7d24;
+      color: #fff;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
+
+    .premio-nome {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      color: #4f4c44;
+      margin-top: 7px;
+    }
+
+    .premio-status {
+      font-size: .72rem;
+      color: #a5a29a;
+    }
+
+    /* ---- Botões "ver mais" ---- */
+    .botao-ver {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      margin-top: 16px;
+      padding: 11px 40px;
+      background: #f5f2ea;
+      border: 1px solid var(--card-line);
+      border-radius: 9px;
+      color: var(--green-main);
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .botao-ver:hover {
+      background: #ecf3e3;
+    }
+
+    .botao-ver img {
+      position: absolute;
+      right: 14px;
+      width: 15px;
+      height: 15px;
+      object-fit: contain;
+    }
+
+    /* ====================== RESPONSIVO ====================== */
+    @media (max-width: 1250px) {
+      .grade {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .card-ranking {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .sidebar-logo {
+        width: 150px;
+        align-self: auto;
+      }
+
+      .btn-inicio {
+        width: 150px;
+        margin: 0;
+      }
+
+      .img-mapa {
+        display: none;
+      }
+
+      .menu-lateral {
+        flex-direction: row;
+        margin-top: 0;
+      }
+
+      .conteudo {
+        margin-left: 0;
+      }
+
+      .grade,
+      .grade-premios {
+        grid-template-columns: 1fr;
+      }
+
+      .card-ranking {
+        grid-column: auto;
+      }
+
+      .menu-topo {
+        gap: 20px;
+      }
+
+      .painel,
+      .topo {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================ MENU LATERAL ============================ -->
+  <aside class="sidebar">
+
+    <img src="../../static/titulo.png" alt="EcoPoints" class="sidebar-logo">
+
+    <a href="/dashboard">
+      <img src="../../static/dashboard/icons/btn-inicio.png" alt="Início" class="btn-inicio">
+    </a>
+
+    <a href="/mapa-de-pontos">
+      <img src="../../static/dashboard/icons/mapa-de-pontos.png"
+        alt="Mapa de Pontos - ver pontos de coleta perto de você" class="img-mapa">
+    </a>
+
+    <nav class="menu-lateral">
+
+      <a href="#" class="menu-item">
+        <span class="menu-icone"><img src="../../static/dashboard/icons/voucher.png" alt=""></span>
+        Meus descontos
+      </a>
+
+      <a href="#" class="menu-item">
+        <span class="menu-icone"><img src="../../static/dashboard/icons/replay.png" alt=""></span>
+        Histórico
+      </a>
+
+      <a href="#" class="menu-item">
+        <span class="menu-icone"><img src="../../static/dashboard/icons/greentech.png" alt=""></span>
+        Dicas verdes
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <!-- ============================ CONTEÚDO ============================ -->
+  <main class="conteudo">
+
+    <!-- ---------- Barra superior ---------- -->
+    <header class="topo">
+
+      <img src="../../static/dashboard/icons/onda.png" alt="" class="onda">
+
+      <div class="topo-acoes">
+        <button class="btn-sino" type="button" aria-label="Notificações">
+          <img src="../../static/dashboard/icons/bell.png" alt="">
+        </button>
+        <img src="../../static/dashboard/icons/user.png" alt="Minha conta" class="avatar">
+      </div>
+
+      <nav class="menu-topo">
+        <a href="/dashboard" class="ativo">Início</a>
+        <a href="/mapa-de-pontos">Mapa de pontos</a>
+        <a href="#">Meus descontos</a>
+        <a href="#">Ajuda</a>
+        <a href="#">Dicas verdes</a>
+        <a href="#">Resgatar Códigos</a>
+      </nav>
+
+    </header>
+
+    <!-- ---------- Painel ---------- -->
+    <section class="painel">
+
+      <div class="saudacao">
+        <h1>Bem-vindo de volta, Matheus!<img src="../../static/dashboard/icons/leaf.png" alt="" class="folha-titulo"></h1>
+        <p>Acompanhe seu impacto e aproveite seus benefícios.</p>
+      </div>
+
+      <div class="grade">
+
+        <!-- ======= Meu Desempenho ======= -->
+        <article class="cartao">
+
+          <div class="cartao-topo">
+            <h2>Meu Desempenho</h2>
+            <select class="filtro" aria-label="Período do desempenho">
+              <option>Mensal</option>
+              <option>Semanal</option>
+              <option>Anual</option>
+            </select>
+          </div>
+
+          <svg class="grafico" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img"
+            aria-label="Resíduos entregues por mês, de janeiro a junho">
+
+            <g stroke="#e9e6dc" stroke-width="1">
+              <line x1="40" y1="15" x2="396" y2="15" />
+              <line x1="40" y1="55" x2="396" y2="55" />
+              <line x1="40" y1="95" x2="396" y2="95" />
+              <line x1="40" y1="135" x2="396" y2="135" />
+              <line x1="40" y1="175" x2="396" y2="175" />
+              <line x1="40" y1="215" x2="396" y2="215" />
+            </g>
+
+            <g font-family="Inter, sans-serif" font-size="11" fill="#b0aca2" text-anchor="end">
+              <text x="32" y="19">100</text>
+              <text x="32" y="59">80</text>
+              <text x="32" y="99">60</text>
+              <text x="32" y="139">40</text>
+              <text x="32" y="179">20</text>
+              <text x="32" y="219">0</text>
+              <text x="32" y="235">Kg</text>
+            </g>
+
+            <!-- barras: Jan 43 / Fev 52 / Mar 75 / Abr 47 / Mai 27 / Jun 20 -->
+            <g>
+              <rect x="55" y="129" width="40" height="86" rx="4" fill="#cfe9c1" />
+              <rect x="114" y="111" width="40" height="104" rx="4" fill="#84c064" />
+              <rect x="173" y="65" width="40" height="150" rx="4" fill="#8ec46e" />
+              <rect x="232" y="121" width="40" height="94" rx="4" fill="#a8d691" />
+              <rect x="291" y="161" width="40" height="54" rx="4" fill="#a3d38c" />
+              <rect x="350" y="175" width="40" height="40" rx="4" fill="#bde2ab" />
+            </g>
+
+            <g font-family="Inter, sans-serif" font-size="11" fill="#a8a49a" text-anchor="middle">
+              <text x="75" y="235">Jan</text>
+              <text x="134" y="235">Fev</text>
+              <text x="193" y="235">Mar</text>
+              <text x="252" y="235">Abr</text>
+              <text x="311" y="235">Mai</text>
+              <text x="370" y="235">Jun</text>
+            </g>
+
+          </svg>
+
+        </article>
+
+        <!-- ======= Resíduos + Total de Pontos ======= -->
+        <div class="coluna-dupla">
+
+          <article class="cartao">
+            <div class="cartao-topo">
+              <h2>Residuos Coletados
+                <small>(Mensal)</small>
+              </h2>
+
+              <img src="../../static/dashboard/icons/recycle-bin.png" alt="" class="icone-card">
+            </div>
+
+            <p class="numero-grande">100 Kg</p>
+          </article>
+
+          <article class="cartao">
+            <div class="cartao-topo">
+              <h2>Total de Pontos</h2>
+              <img src="../../static/dashboard/icons/dollar.png" alt="" class="icone-card">
+            </div>
+
+            <p class="numero-grande">10.000 Pontos</p>
+          </article>
+
+        </div>
+
+        <!-- ======= Ranking ======= -->
+        <article class="cartao card-ranking">
+
+          <div class="cartao-topo">
+            <h2>Ranking de pontos semanal</h2>
+          </div>
+
+          <div class="lista-ranking">
+
+            <div class="linha-ranking">
+              <svg width="26" height="30" viewBox="0 0 26 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6 1h5l3 8H8z" fill="#e8556d" />
+                <path d="M20 1h-5l-3 8h5z" fill="#c8324b" />
+                <circle cx="13" cy="20" r="8.5" fill="#f7cf4a" stroke="#dcae23" stroke-width="1.4" />
+                <text x="13" y="23.5" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="9"
+                  font-weight="700" fill="#a5790f">I</text>
+              </svg>
+              <span class="avatar-mini"><img src="../../static/dashboard/icons/user.png" alt=""></span>
+              <span class="nome">Você</span>
+              <span class="pontos">10.000</span>
+            </div>
+
+            <div class="linha-ranking">
+              <svg width="26" height="30" viewBox="0 0 26 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6 1h5l3 8H8z" fill="#5b8fd6" />
+                <path d="M20 1h-5l-3 8h5z" fill="#3767a8" />
+                <circle cx="13" cy="20" r="8.5" fill="#d5dade" stroke="#b3bbc2" stroke-width="1.4" />
+                <text x="13" y="23.5" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="9"
+                  font-weight="700" fill="#77808a">II</text>
+              </svg>
+              <span class="avatar-mini"><img src="../../static/dashboard/icons/user.png" alt=""></span>
+              <span class="nome">Murilo</span>
+              <span class="pontos">8.000</span>
+            </div>
+
+            <div class="linha-ranking">
+              <svg width="26" height="30" viewBox="0 0 26 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6 1h5l3 8H8z" fill="#e8746d" />
+                <path d="M20 1h-5l-3 8h5z" fill="#c2503f" />
+                <circle cx="13" cy="20" r="8.5" fill="#dfa06a" stroke="#c2814b" stroke-width="1.4" />
+                <text x="13" y="23.5" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="8.5"
+                  font-weight="700" fill="#8a5527">III</text>
+              </svg>
+              <span class="avatar-mini"><img src="../../static/dashboard/icons/user.png" alt=""></span>
+              <span class="nome">Thiago</span>
+              <span class="pontos">5.000</span>
+            </div>
+
+          </div>
+
+        </article>
+
+        <!-- ======= Evolução de Pontos ======= -->
+        <article class="cartao">
+
+          <div class="cartao-topo">
+            <h2>Evolução de Pontos</h2>
+            <select class="filtro" aria-label="Período da evolução de pontos">
+              <option>Mensal</option>
+              <option>Semanal</option>
+              <option>Anual</option>
+            </select>
+          </div>
+
+          <svg class="grafico" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img"
+            aria-label="Evolução dos pontos acumulados de janeiro a junho">
+
+            <defs>
+              <linearGradient id="areaPontos" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#8ec46e" stop-opacity=".85" />
+                <stop offset="100%" stop-color="#e4f2d8" stop-opacity=".15" />
+              </linearGradient>
+            </defs>
+
+            <g stroke="#e9e6dc" stroke-width="1">
+              <line x1="40" y1="15" x2="396" y2="15" />
+              <line x1="40" y1="55" x2="396" y2="55" />
+              <line x1="40" y1="95" x2="396" y2="95" />
+              <line x1="40" y1="135" x2="396" y2="135" />
+              <line x1="40" y1="175" x2="396" y2="175" />
+              <line x1="40" y1="215" x2="396" y2="215" />
+            </g>
+
+            <g font-family="Inter, sans-serif" font-size="11" fill="#b0aca2" text-anchor="end">
+              <text x="32" y="19">10k</text>
+              <text x="32" y="59">8k</text>
+              <text x="32" y="99">6k</text>
+              <text x="32" y="139">4k</text>
+              <text x="32" y="179">2k</text>
+              <text x="32" y="219">0</text>
+            </g>
+
+            <!-- área preenchida -->
+            <path fill="url(#areaPontos)" d="M55,215
+              C 78,214 96,170 119,135
+              C 142,100 160,105 183,101
+              C 206,97 224,105 247,103
+              C 270,101 288,113 311,109
+              C 334,105 352,55 375,55
+              L375,215 Z" />
+
+            <!-- linha -->
+            <path fill="none" stroke="#5f9e30" stroke-width="2.6" stroke-linecap="round" d="M55,215
+              C 78,214 96,170 119,135
+              C 142,100 160,105 183,101
+              C 206,97 224,105 247,103
+              C 270,101 288,113 311,109
+              C 334,105 352,55 375,55" />
+
+            <line x1="375" y1="55" x2="375" y2="215" stroke="#a9cf92" stroke-width="1.4" />
+
+            <g fill="#ffffff" stroke="#5f9e30" stroke-width="2.4">
+              <circle cx="55" cy="215" r="4.6" />
+              <circle cx="119" cy="135" r="4.6" />
+              <circle cx="247" cy="103" r="4.6" />
+              <circle cx="375" cy="55" r="4.6" />
+            </g>
+
+            <g font-family="Inter, sans-serif" font-size="11" fill="#a8a49a" text-anchor="middle">
+              <text x="55" y="236">Jan</text>
+              <text x="119" y="236">Fev</text>
+              <text x="183" y="236">Mar</text>
+              <text x="247" y="236">Abr</text>
+              <text x="311" y="236">Mai</text>
+              <text x="375" y="236">Jun</text>
+            </g>
+
+          </svg>
+
+        </article>
+
+        <!-- ======= Ponto de coleta em destaque ======= -->
+        <article class="cartao">
+
+          <div class="cartao-topo">
+            <h2>Ponto de coleta<br>em Destaque</h2>
+            <img src="../../static/dashboard/icons/location.png" alt="" class="icone-card">
+          </div>
+
+          <p class="ponto-nome">Nome do ponto de coleta</p>
+          <p class="ponto-endereco">Rua florencio barca, 123 - Centro</p>
+
+          <!-- Mapa provisório. Quando entrar a API do Google Maps, troque este
+               <svg> por uma <div id="mapa-destaque" class="mapa-mini"></div>
+               e monte o mapa nela pelo JavaScript. -->
+          <svg class="mapa-mini" viewBox="0 0 260 155" xmlns="http://www.w3.org/2000/svg" role="img"
+            aria-label="Mapa com a localização do ponto de coleta">
+
+            <rect width="260" height="155" fill="#eef0e9" />
+
+            <!-- quadras -->
+            <g fill="#e3e7dc">
+              <rect x="8" y="10" width="70" height="45" rx="3" />
+              <rect x="96" y="10" width="72" height="45" rx="3" />
+              <rect x="186" y="10" width="66" height="45" rx="3" />
+              <rect x="8" y="72" width="70" height="40" rx="3" />
+              <rect x="186" y="72" width="66" height="40" rx="3" />
+              <rect x="8" y="128" width="70" height="24" rx="3" />
+              <rect x="96" y="128" width="72" height="24" rx="3" />
+              <rect x="186" y="128" width="66" height="24" rx="3" />
+            </g>
+
+            <!-- área verde -->
+            <rect x="96" y="72" width="72" height="40" rx="3" fill="#d7e7c8" />
+
+            <!-- rio -->
+            <path d="M-2 42 C 30 52, 34 74, 62 88 S 96 128, 120 158" fill="none" stroke="#bcd8e6" stroke-width="7"
+              stroke-linecap="round" />
+
+            <!-- ruas -->
+            <g stroke="#ffffff" stroke-width="5" stroke-linecap="round">
+              <line x1="0" y1="63" x2="260" y2="63" />
+              <line x1="0" y1="120" x2="260" y2="120" />
+              <line x1="87" y1="0" x2="87" y2="155" />
+              <line x1="177" y1="0" x2="177" y2="155" />
+            </g>
+
+            <!-- pino -->
+            <g transform="translate(130 77)">
+              <ellipse cx="0" cy="22" rx="9" ry="3.5" fill="rgba(0,0,0,.14)" />
+              <path d="M0-24a15 15 0 0 0-15 15c0 11 15 28 15 28s15-17 15-28A15 15 0 0 0 0-24z" fill="#4d8b2c" />
+              <circle cx="0" cy="-9" r="5.6" fill="#ffffff" />
+            </g>
+
+          </svg>
+
+          <button class="botao-ver" type="button">
+            Ver no mapa
+            <img src="../../static/dashboard/icons/chevron-right.png" alt="">
+          </button>
+
+        </article>
+
+        <!-- ======= Prêmios disponíveis ======= -->
+        <article class="cartao">
+
+          <div class="cartao-topo">
+            <h2>Prêmios Disponíveis</h2>
+            <img src="../../static/dashboard/icons/gift.png" alt="" class="icone-card">
+          </div>
+
+          <div class="grade-premios">
+
+            <!-- fotos em static/premios/ -->
+            <div>
+              <div class="premio-caixa">
+                <img src="../../static/dashboard/premios/vaso.png" alt="Vazo ecológico">
+                <span class="etiqueta-pontos">10.000 Pontos</span>
+              </div>
+              <p class="premio-nome">Vazo ecológico</p>
+              <p class="premio-status">PP</p>
+            </div>
+
+            <div>
+              <div class="premio-caixa">
+                <img src="../../static/dashboard/premios/ecobag.png" alt="EcoBag">
+                <span class="etiqueta-pontos">5.000 Pontos</span>
+              </div>
+              <p class="premio-nome">EcoBag</p>
+              <p class="premio-status">Disponível</p>
+            </div>
+
+            <div>
+              <div class="premio-caixa">
+                <img src="../../static/dashboard/premios/garrafa.png" alt="Garrafa térmica">
+                <span class="etiqueta-pontos">15.000 Pontos</span>
+              </div>
+              <p class="premio-nome">Garrafa térmica</p>
+              <p class="premio-status">Disponível</p>
+            </div>
+
+          </div>
+
+          <button class="botao-ver" type="button">
+            Ver todos os produtos
+            <img src="../../static/dashboard/icons/chevron-right.png" alt="">
+          </button>
+
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+
+</html>

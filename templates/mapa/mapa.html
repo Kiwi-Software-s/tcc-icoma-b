@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>EcoPoints - Mapa de Pontos de Descarte</title>
+
+  <link rel="favicon" href="../../img/ecopoints.favicon.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <style>
+    :root {
+      --green-dark: #144a29;
+      --green-card: #155730;
+      --green-main: #4d8b2c;
+      --green-title: #45751f;
+      --green-banner: #d9edcd;
+      --cream: #fdf7f3;
+      --card-line: #e8e4d8;
+      --ink: #4d4d44;
+      --ink-soft: #9a978e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--green-main);
+      outline-offset: 2px;
+    }
+
+    /* ====================== MENU LATERAL ====================== */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 265px;
+      background: var(--green-dark);
+      padding: 24px 22px 76px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      overflow-y: auto;
+      z-index: 20;
+    }
+
+    .sidebar-logo {
+      width: 195px;
+      align-self: center;
+    }
+
+    .menu-lateral {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 10px 6px;
+      border-radius: 10px;
+      color: #f0f5ee;
+      font-size: 1.05rem;
+      transition: background .2s;
+    }
+
+    .menu-item:hover,
+    .menu-item.ativo {
+      background: rgba(255, 255, 255, .09);
+      color: #fff;
+    }
+
+    .menu-item img {
+      width: 26px;
+      height: 26px;
+      flex: none;
+      object-fit: contain;
+    }
+
+    .card-frase {
+      background: var(--green-card);
+      border-radius: 16px;
+      padding: 16px 18px 6px;
+    }
+
+    .card-frase p {
+      color: #eaf3e6;
+      font-size: .88rem;
+      line-height: 1.45;
+    }
+
+    .card-frase img {
+      display: block;
+      width: 108px;
+      margin: 10px auto 0;
+    }
+
+    /* ---- Painel "Tipos de descartes" (abre e fecha) ---- */
+    .painel-tipos {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 288px;
+      background: var(--cream);
+      border-radius: 0 18px 0 0;
+      box-shadow: 0 -4px 22px rgba(0, 0, 0, .16);
+      z-index: 30;
+    }
+
+    /* barra que fica sempre visível */
+    .painel-tipos > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 22px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--green-title);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      border-radius: 0 18px 0 0;
+    }
+
+    .painel-tipos > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .painel-tipos > summary:hover {
+      background: #f5efe9;
+    }
+
+    .painel-tipos .seta {
+      flex: none;
+      transition: transform .2s;
+    }
+
+    .painel-tipos[open] .seta {
+      transform: rotate(180deg);
+    }
+
+    .painel-corpo {
+      padding: 0 22px 18px;
+    }
+
+    .tipo-linha {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 9px;
+      font-size: .92rem;
+      color: #55524b;
+      cursor: pointer;
+    }
+
+    .tipo-linha input {
+      appearance: none;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border: 2px solid var(--green-main);
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .tipo-linha input:checked::after {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 2px;
+      width: 7px;
+      height: 13px;
+      border: solid var(--green-main);
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+
+    .tipo-linha img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    .btn-selecionar {
+      display: block;
+      width: 100%;
+      margin-top: 14px;
+      padding: 9px 0;
+      border: none;
+      border-radius: 8px;
+      background: #44741f;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .btn-selecionar:hover {
+      background: #3a6419;
+    }
+
+    /* ====================== CONTEÚDO ====================== */
+    .conteudo {
+      margin-left: 265px;
+      min-height: 100vh;
+    }
+
+    /* ---- Cabeçalho ---- */
+    .topo {
+      position: relative;
+      z-index: 2;
+      background: var(--cream);
+      padding: 22px 32px 26px;
+    }
+
+    .onda {
+      position: absolute;
+      top: -1px;
+      right: 9%;
+      width: min(52%, 620px);
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .topo-linha {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .topo-titulo h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--green-title);
+    }
+
+    .topo-titulo p {
+      font-size: .95rem;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .topo-acoes {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: none;
+    }
+
+    .btn-sino {
+      background: none;
+      border: none;
+      padding: 0;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .btn-sino img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #e8e6e0;
+      padding: 8px;
+      object-fit: contain;
+    }
+
+    /* ---- Busca ---- */
+    .busca-area {
+      position: relative;
+      z-index: 3;
+      width: min(640px, 100%);
+      margin: 24px auto 0;
+    }
+
+    .busca {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #e2ddd0;
+      border-radius: 30px;
+      padding: 12px 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+    }
+
+    .busca input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 1.02rem;
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .busca input::placeholder {
+      color: #a8a49a;
+    }
+
+    .btn-buscar {
+      background: none;
+      border: none;
+      padding: 0;
+      line-height: 0;
+      cursor: pointer;
+      flex: none;
+    }
+
+    /* lista que abre embaixo da busca */
+    .busca-resultados {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #e2ddd0;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+      overflow: hidden;
+      list-style: none;
+    }
+
+    .busca-resultados li {
+      padding: 11px 22px;
+      font-size: .9rem;
+      color: #55524b;
+      cursor: pointer;
+      border-bottom: 1px solid #f1ede3;
+    }
+
+    .busca-resultados li:last-child {
+      border-bottom: none;
+    }
+
+    .busca-resultados li:hover {
+      background: #f2f7ec;
+    }
+
+    .busca-resultados li.aviso {
+      color: #85827a;
+      cursor: default;
+    }
+
+    .busca-resultados li.aviso:hover {
+      background: #fff;
+    }
+
+    /* ---- Mapa ---- */
+    .area-mapa {
+      position: relative;
+      z-index: 0;
+      width: 100%;
+      height: clamp(400px, 60vh, 620px);
+      background: #dfe3da;
+    }
+
+    .mapa {
+      width: 100%;
+      height: 100%;
+    }
+
+    .mapa-aviso {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+      padding: 24px;
+      color: #6e6b63;
+      font-size: .92rem;
+      background: repeating-linear-gradient(45deg, #e6eae0, #e6eae0 18px, #dfe3da 18px, #dfe3da 36px);
+    }
+
+    .mapa-aviso strong {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.05rem;
+      color: var(--green-title);
+    }
+
+    .mapa-aviso code {
+      background: #fff;
+      border: 1px solid #d6d2c6;
+      border-radius: 6px;
+      padding: 2px 7px;
+      color: #55524b;
+    }
+
+    /* ---- Faixa inferior ---- */
+    .rodape {
+      padding: 20px 32px 34px;
+    }
+
+    .faixa {
+      display: flex;
+      background: var(--green-banner);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .faixa-metade {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 22px 34px;
+    }
+
+    .faixa-metade + .faixa-metade {
+      border-left: 1px solid rgba(255, 255, 255, .75);
+    }
+
+    .faixa-metade img {
+      width: 40px;
+      height: 40px;
+      flex: none;
+      object-fit: contain;
+      opacity: .85;
+    }
+
+    .faixa-titulo {
+      font-size: 1.18rem;
+      color: var(--green-main);
+      line-height: 1.3;
+    }
+
+    .faixa-sub {
+      font-size: .85rem;
+      color: #7f9b6b;
+    }
+
+    .legenda-rotulo {
+      text-align: center;
+      font-size: .88rem;
+      color: #5f5c5b;
+      margin: 26px 0 14px;
+    }
+
+    .legenda {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px 90px;
+    }
+
+    .legenda div {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .92rem;
+      color: #55524b;
+    }
+
+    .legenda img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    /* ====================== RESPONSIVO ====================== */
+    @media (max-width: 900px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .sidebar-logo {
+        width: 150px;
+      }
+
+      .menu-lateral {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .card-frase {
+        display: none;
+      }
+
+      .sidebar {
+        padding-bottom: 24px;
+      }
+
+      .painel-tipos {
+        position: static;
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        border-top: 1px solid var(--card-line);
+      }
+
+      .painel-tipos > summary {
+        border-radius: 0;
+      }
+
+      .conteudo {
+        margin-left: 0;
+      }
+
+      .topo,
+      .rodape {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .legenda {
+        gap: 16px 34px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================ MENU LATERAL ============================ -->
+  <aside class="sidebar">
+
+    <img src="../../static/titulo.png" alt="EcoPoints" class="sidebar-logo">
+
+    <nav class="menu-lateral">
+
+      <a href="/dashboard" class="menu-item">
+        <img src="../../static/mapa/home.png" alt="">
+        Início
+      </a>
+
+      <a href="#" class="menu-item">
+        <img src="../../static/mapa/voucher.png" alt="">
+        Meus descontos
+      </a>
+
+      <a href="#" class="menu-item">
+        <img src="../../static/mapa/leaf.png" alt="">
+        Meus descartes
+      </a>
+
+      <a href="#" class="menu-item">
+        <img src="../../static/mapa/greentech.png" alt="">
+        Dicas verdes
+      </a>
+
+      <a href="#" class="menu-item">
+        <img src="../../static/mapa/info.png" alt="">
+        Ajuda
+      </a>
+
+    </nav>
+
+    <div class="card-frase">
+      <p>Pequenas ações, grandes mudanças. Descarte certo futuro verde!</p>
+      <img src="../../static/mapa/terra.png" alt="">
+    </div>
+
+  </aside>
+
+  <!-- ---------- Painel flutuante de filtros ---------- -->
+  <details class="painel-tipos">
+
+    <summary>
+      Tipos de descartes
+      <svg class="seta" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 15l6-6 6 6" />
+      </svg>
+    </summary>
+
+    <div class="painel-corpo">
+
+    <label class="tipo-linha">
+      <input type="checkbox" checked>
+      <img src="../../static/mapa/plastico.png" alt="">
+      Plastico
+    </label>
+
+    <label class="tipo-linha">
+      <input type="checkbox" checked>
+      <img src="../../static/mapa/papel.png" alt="">
+      Papel
+    </label>
+
+    <label class="tipo-linha">
+      <input type="checkbox" checked>
+      <img src="../../static/mapa/vidro.png" alt="">
+      Vidro
+    </label>
+
+    <label class="tipo-linha">
+      <input type="checkbox" checked>
+      <img src="../../static/mapa/metal.png" alt="">
+      Metal
+    </label>
+
+    <button class="btn-selecionar" type="button">Selecionar</button>
+
+    </div>
+
+  </details>
+
+  <!-- ============================ CONTEÚDO ============================ -->
+  <main class="conteudo">
+
+    <header class="topo">
+
+      <img src="../../static/mapa/onda.png" alt="" class="onda">
+
+      <div class="topo-linha">
+
+        <div class="topo-titulo">
+          <h1>Mapa de Pontos de Descarte</h1>
+          <p>Encontre o local para fazer o descarte correto.</p>
+        </div>
+
+        <div class="topo-acoes">
+          <button class="btn-sino" type="button" aria-label="Notificações">
+            <img src="../../static/mapa/bell.png" alt="">
+          </button>
+          <img src="../../static/mapa/user.png" alt="Minha conta" class="avatar">
+        </div>
+
+      </div>
+
+      <div class="busca-area">
+
+        <div class="busca">
+          <button class="btn-buscar" id="btnBuscar" type="button" aria-label="Buscar">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8d8a82" stroke-width="2"
+              stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="16.5" y1="16.5" x2="21" y2="21" />
+            </svg>
+          </button>
+          <input type="search" id="campoBusca" placeholder="Buscar endereço ou tipo de descarte"
+            aria-label="Buscar endereço ou tipo de descarte" autocomplete="off">
+        </div>
+
+        <ul class="busca-resultados" id="resultadosBusca" hidden></ul>
+
+      </div>
+
+    </header>
+
+    <!-- ---------- Mapa ---------- -->
+    <div class="area-mapa">
+
+      <div class="mapa" id="mapa"></div>
+
+      <!-- Só aparece se o mapa não conseguir carregar (internet fora, por exemplo) -->
+      <div class="mapa-aviso" id="mapaAviso" style="display: none;">
+        <strong>Não foi possível carregar o mapa</strong>
+        <span>Verifique a conexão com a internet e atualize a página.</span>
+      </div>
+
+    </div>
+
+    <!-- ---------- Faixa e legenda ---------- -->
+    <section class="rodape">
+
+      <div class="faixa">
+
+        <div class="faixa-metade">
+          <img src="../../static/mapa/pin-branco.png" alt="">
+          <div>
+            <p class="faixa-titulo">Pontos de descarte</p>
+            <p class="faixa-sub">Perto de Você</p>
+          </div>
+        </div>
+
+        <div class="faixa-metade">
+          <img src="../../static/mapa/folha-branca.png" alt="">
+          <p class="faixa-titulo">Descarte correto hoje,<br>planeta melhor amanhã!</p>
+        </div>
+
+      </div>
+
+      <p class="legenda-rotulo">Legenda dos Pontos</p>
+
+      <div class="legenda">
+        <div><img src="../../static/mapa/plastico.png" alt="">Plastico</div>
+        <div><img src="../../static/mapa/papel.png" alt="">Papel</div>
+        <div><img src="../../static/mapa/vidro.png" alt="">Vidro</div>
+        <div><img src="../../static/mapa/metal.png" alt="">Metal</div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    /* =====================================================================
+       MAPA - Leaflet + OpenStreetMap
+
+       Não precisa de chave, cadastro nem cartão: é um projeto aberto.
+       A única exigência é manter o crédito que aparece no cantinho do mapa.
+
+       O mapa é só ilustrativo: NÃO há nenhum ponto de descarte marcado nele.
+       Quando o grupo tiver os locais cadastrados, para cada um basta fazer:
+
+         L.marker([latitude, longitude]).addTo(mapa).bindPopup('Nome do ponto');
+       ===================================================================== */
+
+    // Matão - SP
+    const CENTRO_DO_MAPA = [-21.6036, -48.3658];
+
+    // Trava o mapa na região da cidade, para não sair navegando o mundo todo
+    const LIMITES_DA_CIDADE = L.latLngBounds([-21.72, -48.50], [-21.48, -48.24]);
+
+    let mapa = null;
+
+    try {
+      mapa = L.map('mapa', {
+        center: CENTRO_DO_MAPA,
+        zoom: 15,
+        minZoom: 12,
+        maxZoom: 18,
+        maxBounds: LIMITES_DA_CIDADE,
+        maxBoundsViscosity: 0.9
+      });
+
+      const satelite = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        { maxZoom: 18, attribution: 'Imagens: Esri, Maxar, Earthstar Geographics' }
+      ).addTo(mapa);
+
+      const ruas = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; colaboradores do OpenStreetMap'
+      });
+
+      L.control.layers({ 'Satélite': satelite, 'Ruas': ruas }, null, { position: 'topright' }).addTo(mapa);
+
+    } catch (erro) {
+      console.error(erro);
+      document.getElementById('mapaAviso').style.display = 'flex';
+    }
+    /* =====================================================================
+       BARRA DE PESQUISA
+
+       Usa o Nominatim, o serviço de busca de endereços do próprio
+       OpenStreetMap. Também é gratuito e não precisa de chave.
+       A busca é limitada à região de Matão, então digitar "Avenida
+       Paulista" não vai jogar o mapa para São Paulo.
+       ===================================================================== */
+
+    const campoBusca = document.getElementById('campoBusca');
+    const btnBuscar = document.getElementById('btnBuscar');
+    const listaResultados = document.getElementById('resultadosBusca');
+
+    // canto oeste/norte e leste/sul da área de busca (mesma região do mapa)
+    const AREA_DA_BUSCA = '-48.50,-21.48,-48.24,-21.72';
+
+    const MATERIAIS = {
+      'plastico': 'Plastico', 'plástico': 'Plastico',
+      'papel': 'Papel',
+      'vidro': 'Vidro',
+      'metal': 'Metal'
+    };
+
+    let marcadorBusca = null;
+
+    function mostrarLista(itens) {
+      listaResultados.innerHTML = '';
+      itens.forEach(function (item) {
+        const li = document.createElement('li');
+        li.textContent = item.texto;
+        if (item.aoClicar) {
+          li.addEventListener('click', item.aoClicar);
+        } else {
+          li.className = 'aviso';
+        }
+        listaResultados.appendChild(li);
+      });
+      listaResultados.hidden = false;
+    }
+
+    function fecharLista() {
+      listaResultados.hidden = true;
+    }
+
+    function irPara(lat, lon, nome) {
+      if (!mapa) return;
+      mapa.flyTo([lat, lon], 17);
+      if (marcadorBusca) mapa.removeLayer(marcadorBusca);
+      marcadorBusca = L.marker([lat, lon]).addTo(mapa).bindPopup(nome).openPopup();
+      fecharLista();
+    }
+
+    async function buscar() {
+      const termo = campoBusca.value.trim();
+      if (!termo) { fecharLista(); return; }
+
+      // se a pessoa digitou um tipo de material, marca o filtro correspondente
+      const material = MATERIAIS[termo.toLowerCase()];
+      if (material) {
+        document.querySelectorAll('.tipo-linha').forEach(function (linha) {
+          if (linha.textContent.trim() === material) linha.querySelector('input').checked = true;
+        });
+        mostrarLista([{ texto: 'Filtro "' + material + '" marcado. Ainda não há pontos cadastrados.' }]);
+        return;
+      }
+
+      mostrarLista([{ texto: 'Buscando...' }]);
+
+      try {
+        const resposta = await fetch(
+          'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=br' +
+          '&bounded=1&viewbox=' + AREA_DA_BUSCA +
+          '&q=' + encodeURIComponent(termo),
+          { headers: { 'Accept-Language': 'pt-BR' } }
+        );
+        const dados = await resposta.json();
+
+        if (!dados.length) {
+          mostrarLista([{ texto: 'Nenhum endereço encontrado em Matão para "' + termo + '".' }]);
+          return;
+        }
+
+        mostrarLista(dados.map(function (lugar) {
+          return {
+            texto: lugar.display_name,
+            aoClicar: function () {
+              campoBusca.value = lugar.display_name.split(',')[0];
+              irPara(parseFloat(lugar.lat), parseFloat(lugar.lon), lugar.display_name);
+            }
+          };
+        }));
+
+      } catch (erro) {
+        console.error(erro);
+        mostrarLista([{ texto: 'Não foi possível buscar agora. Verifique a conexão.' }]);
+      }
+    }
+
+    btnBuscar.addEventListener('click', buscar);
+
+    campoBusca.addEventListener('keydown', function (evento) {
+      if (evento.key === 'Enter') { evento.preventDefault(); buscar(); }
+    });
+
+    // clicou fora, fecha a lista
+    document.addEventListener('click', function (evento) {
+      if (!evento.target.closest('.busca-area')) fecharLista();
+    });
+  </script>
+
+</body>
+
+</html>
