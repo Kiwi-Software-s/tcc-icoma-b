@@ -430,6 +430,195 @@
       color: #55524b;
     }
 
+    /* ---- Marcador e card do ponto de descarte ---- */
+    .marcador-ecopoint-wrap {
+      background: transparent;
+      border: 0;
+    }
+
+    .marcador-ecopoint-wrap svg {
+      display: block;
+      filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .28));
+    }
+
+    .ecoponto-popup .leaflet-popup-content-wrapper {
+      width: min(430px, calc(100vw - 36px));
+      border-radius: 20px;
+      background: #fdfaf7;
+      box-shadow: 0 7px 22px rgba(0, 0, 0, .28);
+      overflow: hidden;
+    }
+
+    .ecoponto-popup .leaflet-popup-content {
+      width: auto !important;
+      margin: 0;
+    }
+
+    .ecoponto-popup .leaflet-popup-tip {
+      background: #fdfaf7;
+    }
+
+    .ecoponto-popup .leaflet-popup-close-button {
+      top: 10px !important;
+      right: 12px !important;
+      width: 34px !important;
+      height: 34px !important;
+      color: #666 !important;
+      font: 700 33px/30px Arial, sans-serif !important;
+      z-index: 5;
+    }
+
+    .ecoponto-card {
+      padding: 25px 25px 20px;
+      color: #222;
+    }
+
+    .ecoponto-titulo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-right: 34px;
+      margin-bottom: 16px;
+      color: var(--green-title);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .ecoponto-titulo img {
+      width: 35px;
+      height: 35px;
+      object-fit: contain;
+    }
+
+    .ecoponto-endereco {
+      display: grid;
+      grid-template-columns: 27px 1fr;
+      gap: 12px;
+      align-items: start;
+      font-size: .96rem;
+      line-height: 1.45;
+    }
+
+    .ecoponto-endereco i {
+      margin-top: 1px;
+      font-size: 1.65rem;
+      color: #333;
+    }
+
+    .ecoponto-nome {
+      display: inline-block;
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+
+    .ecoponto-divisor {
+      height: 1px;
+      margin: 20px 0;
+      background: #ddd7d1;
+    }
+
+    .ecoponto-subtitulo {
+      margin: 0 0 14px;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .ecoponto-materiais {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      min-height: 50px;
+    }
+
+    .ecoponto-material {
+      display: inline-flex;
+      width: 34px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ecoponto-material img {
+      max-width: 34px;
+      max-height: 44px;
+      object-fit: contain;
+    }
+
+    .ecoponto-horario {
+      margin: 0;
+      font-size: .92rem;
+      line-height: 1.45;
+    }
+
+    .ecoponto-horario strong {
+      font-weight: 500;
+    }
+
+    .ecoponto-acoes {
+      display: grid;
+      grid-template-columns: 1fr 1.38fr;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .ecoponto-botao {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 43px;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: .84rem;
+      font-weight: 500;
+      transition: transform .15s, box-shadow .15s, background .15s;
+    }
+
+    .ecoponto-botao:hover {
+      transform: translateY(-1px);
+    }
+
+    .ecoponto-botao.rota {
+      background: #477d23;
+      color: #fff;
+      box-shadow: 0 3px 7px rgba(55, 95, 29, .24);
+    }
+
+    .ecoponto-botao.rota:hover {
+      background: #3d6d1d;
+    }
+
+    .ecoponto-botao.info {
+      border: 1px solid #d8d8d8;
+      background: #fafafa;
+      color: #333;
+      box-shadow: 0 3px 7px rgba(0, 0, 0, .18);
+    }
+
+    .ecoponto-botao i {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 520px) {
+      .ecoponto-card {
+        padding: 22px 20px 18px;
+      }
+
+      .ecoponto-titulo {
+        font-size: 1.12rem;
+      }
+
+      .ecoponto-materiais {
+        gap: 16px;
+      }
+
+      .ecoponto-acoes {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* ---- Faixa inferior ---- */
     .rodape {
       padding: 20px 32px 34px;
@@ -621,30 +810,30 @@
     <div class="painel-corpo">
 
     <label class="tipo-linha">
-      <input type="checkbox" checked>
+      <input type="checkbox" data-material="Plástico" checked>
       <img src="../../static/mapa/plastico.png" alt="">
-      Plastico
+      Plástico
     </label>
 
     <label class="tipo-linha">
-      <input type="checkbox" checked>
+      <input type="checkbox" data-material="Papel" checked>
       <img src="../../static/mapa/papel.png" alt="">
       Papel
     </label>
 
     <label class="tipo-linha">
-      <input type="checkbox" checked>
+      <input type="checkbox" data-material="Vidro" checked>
       <img src="../../static/mapa/vidro.png" alt="">
       Vidro
     </label>
 
     <label class="tipo-linha">
-      <input type="checkbox" checked>
+      <input type="checkbox" data-material="Metal" checked>
       <img src="../../static/mapa/metal.png" alt="">
       Metal
     </label>
 
-    <button class="btn-selecionar" type="button">Selecionar</button>
+    <button class="btn-selecionar" id="btnSelecionarTipos" type="button">Selecionar</button>
 
     </div>
 
@@ -729,7 +918,7 @@
       <p class="legenda-rotulo">Legenda dos Pontos</p>
 
       <div class="legenda">
-        <div><img src="../../static/mapa/plastico.png" alt="">Plastico</div>
+        <div><img src="../../static/mapa/plastico.png" alt="">Plástico</div>
         <div><img src="../../static/mapa/papel.png" alt="">Papel</div>
         <div><img src="../../static/mapa/vidro.png" alt="">Vidro</div>
         <div><img src="../../static/mapa/metal.png" alt="">Metal</div>
@@ -743,75 +932,217 @@
 
   <script>
     /* =====================================================================
-       MAPA - Leaflet + OpenStreetMap
+       MAPA - Leaflet + tiles gratuitos
 
-       Não precisa de chave, cadastro nem cartão: é um projeto aberto.
-       A única exigência é manter o crédito que aparece no cantinho do mapa.
-
-       O mapa é só ilustrativo: NÃO há nenhum ponto de descarte marcado nele.
-       Quando o grupo tiver os locais cadastrados, para cada um basta fazer:
-
-         L.marker([latitude, longitude]).addTo(mapa).bindPopup('Nome do ponto');
+       O EcoPoints continua usando Leaflet, sem chave e sem cobrança.
+       O único ponto de descarte cadastrado nesta tela é a Etec Sylvio de
+       Mattos Carvalho, em Matão. O mapa abre em modo satélite para ficar
+       próximo ao layout de referência.
        ===================================================================== */
 
-    // Matão - SP
-    const CENTRO_DO_MAPA = [-21.6036, -48.3658];
+    const PONTO_ETEC = {
+      nome: 'Etec Sylvio de Mattos Carvalho',
+      latitude: -21.60405026,
+      longitude: -48.36789472,
+      endereco: 'Rua Cesário Mota, 644 - Centro',
+      cidade: 'Matão - SP, 15990-050',
+      materiais: ['Plástico', 'Papel', 'Vidro', 'Metal']
+    };
 
-    // Trava o mapa na região da cidade, para não sair navegando o mundo todo
+    const CENTRO_DO_MAPA = [PONTO_ETEC.latitude, PONTO_ETEC.longitude];
     const LIMITES_DA_CIDADE = L.latLngBounds([-21.72, -48.50], [-21.48, -48.24]);
 
+    const ICONES_MATERIAIS = {
+      'Plástico': '/static/mapa/plastico.png',
+      'Papel': '/static/mapa/papel.png',
+      'Vidro': '/static/mapa/vidro.png',
+      'Metal': '/static/mapa/metal.png'
+    };
+
+    const iconePonto = L.divIcon({
+      className: 'marcador-ecopoint-wrap',
+      html: `
+        <svg width="38" height="50" viewBox="0 0 38 50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M19 1.8C9.7 1.8 2.2 9.3 2.2 18.6c0 12.4 16.8 29.2 16.8 29.2s16.8-16.8 16.8-29.2C35.8 9.3 28.3 1.8 19 1.8Z" fill="#e43d30" stroke="#ffffff" stroke-width="2.4"/>
+          <circle cx="19" cy="18.5" r="6.2" fill="#ffffff"/>
+        </svg>`,
+      iconSize: [38, 50],
+      iconAnchor: [19, 48],
+      popupAnchor: [0, -42]
+    });
+
+    function htmlPopupEtec() {
+      const materiais = PONTO_ETEC.materiais.map(function (material) {
+        return `
+          <span class="ecoponto-material" title="${material}" aria-label="${material}">
+            <img src="${ICONES_MATERIAIS[material]}" alt="${material}">
+          </span>`;
+      }).join('');
+
+      const destino = `${PONTO_ETEC.latitude},${PONTO_ETEC.longitude}`;
+      const rota = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destino)}`;
+      const site = 'https://etecmatao.cps.sp.gov.br/';
+
+      return `
+        <article class="ecoponto-card">
+          <div class="ecoponto-titulo">
+            <img src="/static/mapa/recycle.png" alt="">
+            <span>Local do descarte</span>
+          </div>
+
+          <div class="ecoponto-endereco">
+            <i class="bi bi-geo-alt" aria-hidden="true"></i>
+            <div>
+              <strong class="ecoponto-nome">${PONTO_ETEC.nome}</strong><br>
+              ${PONTO_ETEC.endereco}<br>
+              ${PONTO_ETEC.cidade}
+            </div>
+          </div>
+
+          <div class="ecoponto-divisor"></div>
+
+          <p class="ecoponto-subtitulo">Materiais aceitos</p>
+          <div class="ecoponto-materiais">${materiais}</div>
+
+          <div class="ecoponto-divisor"></div>
+
+          <p class="ecoponto-subtitulo">Horário de funcionamento</p>
+          <p class="ecoponto-horario"><strong>Seg a Sex</strong> • 07h às 23h</p>
+
+          <div class="ecoponto-acoes">
+            <a class="ecoponto-botao rota" href="${rota}" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-bezier2" aria-hidden="true"></i>
+              Traçar Rota
+            </a>
+            <a class="ecoponto-botao info" href="${site}" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+              Mais Informações
+            </a>
+          </div>
+        </article>`;
+    }
+
     let mapa = null;
+    let marcadorEtec = null;
 
     try {
       mapa = L.map('mapa', {
         center: CENTRO_DO_MAPA,
-        zoom: 15,
+        zoom: 17,
         minZoom: 12,
-        maxZoom: 18,
+        maxZoom: 19,
         maxBounds: LIMITES_DA_CIDADE,
         maxBoundsViscosity: 0.9
       });
 
       const satelite = L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        { maxZoom: 18, attribution: 'Imagens: Esri, Maxar, Earthstar Geographics' }
+        {
+          maxZoom: 19,
+          attribution: 'Imagens: Esri, Maxar, Earthstar Geographics'
+        }
       ).addTo(mapa);
 
       const ruas = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
+        maxZoom: 19,
         attribution: '&copy; colaboradores do OpenStreetMap'
       });
 
-      L.control.layers({ 'Satélite': satelite, 'Ruas': ruas }, null, { position: 'topright' }).addTo(mapa);
+      L.control.layers(
+        { 'Satélite': satelite, 'Ruas': ruas },
+        null,
+        { position: 'topright' }
+      ).addTo(mapa);
+
+      marcadorEtec = L.marker(CENTRO_DO_MAPA, {
+        icon: iconePonto,
+        title: PONTO_ETEC.nome,
+        alt: 'Ponto de descarte na Etec Sylvio de Mattos Carvalho'
+      })
+        .addTo(mapa)
+        .bindPopup(htmlPopupEtec(), {
+          className: 'ecoponto-popup',
+          maxWidth: 430,
+          minWidth: 330,
+          autoPanPaddingTopLeft: [28, 28],
+          autoPanPaddingBottomRight: [28, 28]
+        });
+
+      // A referência enviada mostra o card já aberto ao entrar no mapa.
+      window.setTimeout(function () {
+        if (marcadorEtec && mapa.hasLayer(marcadorEtec)) marcadorEtec.openPopup();
+      }, 350);
 
     } catch (erro) {
       console.error(erro);
       document.getElementById('mapaAviso').style.display = 'flex';
     }
+
+    /* =====================================================================
+       FILTROS
+       A Etec é o único ponto cadastrado e aceita os quatro materiais que
+       aparecem no protótipo. O marcador fica visível se pelo menos um dos
+       materiais selecionados for aceito pelo ponto.
+       ===================================================================== */
+
+    const btnSelecionarTipos = document.getElementById('btnSelecionarTipos');
+
+    function materiaisSelecionados() {
+      return Array.from(document.querySelectorAll('.tipo-linha input:checked'))
+        .map(function (input) { return input.dataset.material; });
+    }
+
+    function aplicarFiltros(abrirPonto) {
+      if (!mapa || !marcadorEtec) return;
+
+      const selecionados = materiaisSelecionados();
+      const deveMostrar = selecionados.some(function (material) {
+        return PONTO_ETEC.materiais.includes(material);
+      });
+
+      if (deveMostrar) {
+        if (!mapa.hasLayer(marcadorEtec)) marcadorEtec.addTo(mapa);
+        if (abrirPonto) {
+          mapa.flyTo(CENTRO_DO_MAPA, 17);
+          marcadorEtec.openPopup();
+        }
+      } else if (mapa.hasLayer(marcadorEtec)) {
+        mapa.removeLayer(marcadorEtec);
+      }
+    }
+
+    btnSelecionarTipos.addEventListener('click', function () {
+      aplicarFiltros(true);
+    });
+
     /* =====================================================================
        BARRA DE PESQUISA
 
-       Usa o Nominatim, o serviço de busca de endereços do próprio
-       OpenStreetMap. Também é gratuito e não precisa de chave.
-       A busca é limitada à região de Matão, então digitar "Avenida
-       Paulista" não vai jogar o mapa para São Paulo.
+       - "Etec", nome da escola, endereço e materiais levam ao único ponto.
+       - Outros endereços ainda podem ser localizados com Nominatim/OSM,
+         sem criar marcadores adicionais de coleta.
        ===================================================================== */
 
     const campoBusca = document.getElementById('campoBusca');
     const btnBuscar = document.getElementById('btnBuscar');
     const listaResultados = document.getElementById('resultadosBusca');
-
-    // canto oeste/norte e leste/sul da área de busca (mesma região do mapa)
     const AREA_DA_BUSCA = '-48.50,-21.48,-48.24,-21.72';
 
     const MATERIAIS = {
-      'plastico': 'Plastico', 'plástico': 'Plastico',
+      'plastico': 'Plástico',
+      'plástico': 'Plástico',
       'papel': 'Papel',
       'vidro': 'Vidro',
       'metal': 'Metal'
     };
 
-    let marcadorBusca = null;
+    function normalizar(texto) {
+      return texto
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+    }
 
     function mostrarLista(itens) {
       listaResultados.innerHTML = '';
@@ -832,29 +1163,61 @@
       listaResultados.hidden = true;
     }
 
-    function irPara(lat, lon, nome) {
-      if (!mapa) return;
-      mapa.flyTo([lat, lon], 17);
-      if (marcadorBusca) mapa.removeLayer(marcadorBusca);
-      marcadorBusca = L.marker([lat, lon]).addTo(mapa).bindPopup(nome).openPopup();
+    function abrirEtec() {
+      if (!mapa || !marcadorEtec) return;
+      if (!mapa.hasLayer(marcadorEtec)) marcadorEtec.addTo(mapa);
+      mapa.flyTo(CENTRO_DO_MAPA, 17);
+      window.setTimeout(function () { marcadorEtec.openPopup(); }, 300);
       fecharLista();
+    }
+
+    function termoEhEtec(termo) {
+      const t = normalizar(termo);
+      const referencias = [
+        'etec',
+        'sylvio',
+        'sylvio de mattos carvalho',
+        'cesario mota',
+        'cesario motta',
+        'rua cesario mota 644'
+      ];
+      return referencias.some(function (ref) {
+        return ref.includes(t) || t.includes(ref);
+      });
     }
 
     async function buscar() {
       const termo = campoBusca.value.trim();
       if (!termo) { fecharLista(); return; }
 
-      // se a pessoa digitou um tipo de material, marca o filtro correspondente
-      const material = MATERIAIS[termo.toLowerCase()];
+      const material = MATERIAIS[normalizar(termo)];
       if (material) {
-        document.querySelectorAll('.tipo-linha').forEach(function (linha) {
-          if (linha.textContent.trim() === material) linha.querySelector('input').checked = true;
+        document.querySelectorAll('.tipo-linha input').forEach(function (input) {
+          input.checked = input.dataset.material === material;
         });
-        mostrarLista([{ texto: 'Filtro "' + material + '" marcado. Ainda não há pontos cadastrados.' }]);
+        aplicarFiltros(false);
+        mostrarLista([{
+          texto: `${PONTO_ETEC.nome} • aceita ${material}`,
+          aoClicar: function () {
+            campoBusca.value = PONTO_ETEC.nome;
+            abrirEtec();
+          }
+        }]);
         return;
       }
 
-      mostrarLista([{ texto: 'Buscando...' }]);
+      if (termoEhEtec(termo)) {
+        mostrarLista([{
+          texto: `${PONTO_ETEC.nome} — ${PONTO_ETEC.endereco}`,
+          aoClicar: function () {
+            campoBusca.value = PONTO_ETEC.nome;
+            abrirEtec();
+          }
+        }]);
+        return;
+      }
+
+      mostrarLista([{ texto: 'Buscando endereço em Matão...' }]);
 
       try {
         const resposta = await fetch(
@@ -866,7 +1229,7 @@
         const dados = await resposta.json();
 
         if (!dados.length) {
-          mostrarLista([{ texto: 'Nenhum endereço encontrado em Matão para "' + termo + '".' }]);
+          mostrarLista([{ texto: `Nenhum endereço encontrado em Matão para "${termo}".` }]);
           return;
         }
 
@@ -875,7 +1238,8 @@
             texto: lugar.display_name,
             aoClicar: function () {
               campoBusca.value = lugar.display_name.split(',')[0];
-              irPara(parseFloat(lugar.lat), parseFloat(lugar.lon), lugar.display_name);
+              if (mapa) mapa.flyTo([parseFloat(lugar.lat), parseFloat(lugar.lon)], 17);
+              fecharLista();
             }
           };
         }));
@@ -889,10 +1253,12 @@
     btnBuscar.addEventListener('click', buscar);
 
     campoBusca.addEventListener('keydown', function (evento) {
-      if (evento.key === 'Enter') { evento.preventDefault(); buscar(); }
+      if (evento.key === 'Enter') {
+        evento.preventDefault();
+        buscar();
+      }
     });
 
-    // clicou fora, fecha a lista
     document.addEventListener('click', function (evento) {
       if (!evento.target.closest('.busca-area')) fecharLista();
     });
