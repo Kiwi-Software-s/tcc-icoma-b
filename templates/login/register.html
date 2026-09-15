@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>EcoPoints - Login</title>
-    
+    <title>EcoPoints - Cadastro</title>
+
     <style>
         /* RESET E FONTES */
         * {
@@ -17,7 +17,7 @@
 
         /* FUNDO DA PÁGINA */
         body {
-            background-color: #F8F5EE; /* Cor bege da imagem original */
+            background-color: #F8F5EE;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -26,12 +26,12 @@
             overflow: hidden;
         }
 
-        /* ONDA VERDE DE FUNDO (Usando sua imagem Vector 1.png) */
+        /* ONDA VERDE DE FUNDO */
         .wave-bg {
             position: absolute;
             bottom: 0;
             right: 0;
-            width: 45vw; /* Ajuste conforme necessário para o tamanho da onda */
+            width: 45vw;
             max-width: 600px;
             z-index: -1;
         }
@@ -57,7 +57,7 @@
         }
 
         .logo-img {
-            max-width: 250px; /* Ajustado tamanho da logo */
+            max-width: 250px;
             margin-bottom: 20px;
         }
 
@@ -73,7 +73,7 @@
             max-width: 100%;
             width: 380px;
             z-index: 1;
-            mix-blend-mode: multiply; /* Ajuda a imagem jpg a se mesclar com o fundo se não tiver fundo transparente */
+            mix-blend-mode: multiply;
         }
 
         /* LADO DIREITO (FORMULÁRIO) */
@@ -82,7 +82,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            max-width: 380px; /* Alargado um pouco para ficar fiel */
+            max-width: 380px;
             margin-left: 50px;
             padding: 20px;
         }
@@ -90,7 +90,7 @@
         /* INPUTS */
         .custom-input-group {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .custom-input-group input {
@@ -99,11 +99,11 @@
             padding: 10px 20px;
             font-size: 16px;
             color: #333;
-            background-color: #F8F5EE; /* Mesma cor do fundo da página */
-            border: 1px solid #C4C4C4; /* Borda cinza do design */
-            border-radius: 8px; /* Bordas um pouco mais arredondadas */
+            background-color: #F8F5EE;
+            border: 1px solid #C4C4C4;
+            border-radius: 8px;
             outline: none;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); /* Sombra interna leve */
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
         }
 
         .custom-input-group input::placeholder {
@@ -114,7 +114,7 @@
             border-color: #5b922a;
         }
 
-        /* ÍCONE DE SENHA (Usando sua imagem Invisible.png) */
+        /* ÍCONE DE SENHA */
         .password-toggle {
             position: absolute;
             right: 15px;
@@ -126,20 +126,18 @@
             background-image: url('../../static/Invisible.png');
             background-size: cover;
             background-position: center;
-            opacity: 0.5; /* Deixa o ícone um pouco mais cinza */
+            opacity: 0.5;
         }
 
-        /* Classe adicionada via JS quando o olho estiver 'aberto' */
         .password-toggle.visible {
             opacity: 0.9;
-            /* Se você tiver outro ícone para o olho aberto, mudaria o background-image aqui */
         }
 
-        /* BOTÃO DE LOGIN */
+        /* BOTÃO DE CADASTRO */
         .btn-login {
             width: 100%;
             height: 55px;
-            background: linear-gradient(90deg, #579A22 0%, #467a1a 100%); /* Verde da imagem */
+            background: linear-gradient(90deg, #579A22 0%, #467a1a 100%);
             color: white;
             font-size: 18px;
             font-weight: 600;
@@ -180,7 +178,7 @@
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 25px 0 20px;
+            margin: 20px 0 20px;
             color: #888;
             font-size: 14px;
         }
@@ -200,11 +198,11 @@
             margin-left: 15px;
         }
 
-        /* LOGIN GOOGLE */
+        /* CADASTRO COM GOOGLE */
         .social-login {
             display: flex;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
 
         .google-icon {
@@ -226,7 +224,7 @@
             line-height: 1.5;
         }
 
-        /* LINK DE CADASTRO */
+        /* LINK DE LOGIN */
         .signup-link {
             text-align: center;
             font-size: 13px;
@@ -241,23 +239,6 @@
         }
 
         .signup-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* LINK ESQUECI MINHA SENHA */
-        .forgot-password {
-            text-align: right;
-            font-size: 13px;
-            margin-bottom: 16px;
-        }
-
-        .forgot-password a {
-            color: #6f6c64;
-            text-decoration: none;
-        }
-
-        .forgot-password a:hover {
-            color: #467a1a;
             text-decoration: underline;
         }
 
@@ -282,33 +263,36 @@
     <img src="../../static/Vector 1.png" alt="Fundo verde" class="wave-bg">
 
     <main class="login-wrapper">
-        
+
         <div class="left-side">
             <img src="../../static/titulo.png" alt="EcoPoints Logo" class="logo-img">
-            
+
             <div class="bins-container">
                 <img src="../../static/lixeiras.png" alt="Lixeiras de Reciclagem" class="bins-img">
             </div>
         </div>
 
         <div class="right-side">
-            <form id="loginForm">
+            <form id="registerForm">
+                <div class="custom-input-group">
+                    <input type="text" id="nomeInput" placeholder="Nome completo" required>
+                </div>
+
                 <div class="custom-input-group">
                     <input type="email" id="emailInput" placeholder="E-mail" required>
                 </div>
 
                 <div class="custom-input-group">
-                    <input type="password" id="passwordInput" placeholder="Senha" required>
-                    
+                    <input type="password" id="passwordInput" placeholder="Senha (mínimo 6 caracteres)" required>
                     <div class="password-toggle" id="togglePassword"></div>
                 </div>
 
-                <p class="forgot-password">
-                    <a href="#" id="forgotPasswordLink">Esqueci minha senha</a>
-                </p>
+                <div class="custom-input-group">
+                    <input type="password" id="confirmPasswordInput" placeholder="Confirmar senha" required>
+                </div>
 
-                <button type="submit" class="btn-login" id="btnLogin">
-                    <span class="btn-text" id="btnLoginText">Login</span>
+                <button type="submit" class="btn-login" id="btnRegister">
+                    <span class="btn-text" id="btnRegisterText">Criar conta</span>
                     <svg class="btn-icon" viewBox="0 0 10 16" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.5 0L0 1.5L6.5 8L0 14.5L1.5 16L9.5 8L1.5 0Z" />
                     </svg>
@@ -317,7 +301,7 @@
                 <div class="divider">or</div>
 
                 <div class="social-login">
-                    <svg class="google-icon" id="googleLoginBtn" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="google-icon" id="googleRegisterBtn" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                         <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -325,7 +309,7 @@
                     </svg>
                 </div>
 
-                <p id="loginError" style="color:#c0392b; text-align:center; font-size:13px; margin-bottom:10px;"></p>
+                <p id="registerError" style="color:#c0392b; text-align:center; font-size:13px; margin-bottom:10px;"></p>
 
                 <p class="terms-text">
                     Ao continuar, você concorda com os nossos termos<br>
@@ -334,7 +318,7 @@
                 </p>
 
                 <p class="signup-link">
-                    Não tem uma conta? <a href="/cadastro">Cadastre-se</a>
+                    Já tem uma conta? <a href="/login">Entrar</a>
                 </p>
             </form>
         </div>
@@ -347,8 +331,8 @@
             getAuth,
             GoogleAuthProvider,
             signInWithPopup,
-            signInWithEmailAndPassword,
-            sendPasswordResetEmail
+            createUserWithEmailAndPassword,
+            updateProfile
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
         // Configuração do projeto Firebase "tcc-ecopoint"
@@ -365,14 +349,15 @@
         const auth = getAuth(firebaseApp);
         const provider = new GoogleAuthProvider();
 
-        const googleBtn = document.getElementById('googleLoginBtn');
-        const errorMsg = document.getElementById('loginError');
-        const loginForm = document.getElementById('loginForm');
+        const googleBtn = document.getElementById('googleRegisterBtn');
+        const errorMsg = document.getElementById('registerError');
+        const registerForm = document.getElementById('registerForm');
+        const nomeInput = document.getElementById('nomeInput');
         const emailInput = document.getElementById('emailInput');
         const passwordInput = document.getElementById('passwordInput');
-        const btnLogin = document.getElementById('btnLogin');
-        const btnLoginText = document.getElementById('btnLoginText');
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+        const btnRegister = document.getElementById('btnRegister');
+        const btnRegisterText = document.getElementById('btnRegisterText');
 
         // Envia o idToken pro backend Flask, cria a sessão e redireciona pra dashboard
         async function autenticarNoBackend(idToken) {
@@ -387,11 +372,26 @@
             if (data.success) {
                 window.location.href = '/dashboard';
             } else {
-                errorMsg.textContent = 'Não foi possível entrar. Tente novamente.';
+                errorMsg.textContent = 'Não foi possível concluir o cadastro. Tente novamente.';
             }
         }
 
-        // LOGIN COM GOOGLE (já existente)
+        function traduzirErro(codigo) {
+            switch (codigo) {
+                case 'auth/email-already-in-use':
+                    return 'Este e-mail já está cadastrado.';
+                case 'auth/invalid-email':
+                    return 'E-mail inválido.';
+                case 'auth/weak-password':
+                    return 'A senha precisa ter no mínimo 6 caracteres.';
+                case 'auth/network-request-failed':
+                    return 'Falha de conexão. Verifique sua internet.';
+                default:
+                    return 'Não foi possível concluir o cadastro. Tente novamente.';
+            }
+        }
+
+        // CADASTRO COM GOOGLE
         googleBtn.addEventListener('click', async () => {
             errorMsg.textContent = '';
 
@@ -401,74 +401,40 @@
                 await autenticarNoBackend(idToken);
             } catch (err) {
                 console.error(err);
-                errorMsg.textContent = 'Login com Google cancelado ou falhou.';
+                errorMsg.textContent = 'Cadastro com Google cancelado ou falhou.';
             }
         });
 
-        // ESQUECI MINHA SENHA
-        forgotPasswordLink.addEventListener('click', async (e) => {
+        // CADASTRO COM NOME, E-MAIL E SENHA
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorMsg.style.color = '#c0392b';
+            errorMsg.textContent = '';
 
+            const nome = nomeInput.value.trim();
             const email = emailInput.value.trim();
+            const senha = passwordInput.value;
+            const confirmaSenha = confirmPasswordInput.value;
 
-            if (!email) {
-                errorMsg.textContent = 'Digite seu e-mail no campo acima primeiro.';
+            if (senha !== confirmaSenha) {
+                errorMsg.textContent = 'As senhas não coincidem.';
                 return;
             }
 
-            try {
-                await sendPasswordResetEmail(auth, email);
-                errorMsg.style.color = '#3f7d24';
-                errorMsg.textContent = 'Enviamos um link de redefinição de senha para ' + email + '.';
-            } catch (err) {
-                console.error(err);
-                errorMsg.textContent = 'Não foi possível enviar o e-mail de redefinição. Confira se o e-mail está correto.';
-            }
-        });
-
-        // LOGIN COM EMAIL E SENHA (novo)
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            errorMsg.style.color = '#c0392b';
-            errorMsg.textContent = '';
-
-            const email = emailInput.value.trim();
-            const senha = passwordInput.value;
-
-            btnLogin.disabled = true;
-            btnLoginText.textContent = 'Entrando...';
+            btnRegister.disabled = true;
+            btnRegisterText.textContent = 'Criando conta...';
 
             try {
-                const cred = await signInWithEmailAndPassword(auth, email, senha);
-                const idToken = await cred.user.getIdToken();
+                const cred = await createUserWithEmailAndPassword(auth, email, senha);
+                await updateProfile(cred.user, { displayName: nome });
+
+                const idToken = await cred.user.getIdToken(true);
                 await autenticarNoBackend(idToken);
             } catch (err) {
-                let texto = 'Não foi possível entrar. Tente novamente.';
-
-                switch (err.code) {
-                    case 'auth/invalid-email':
-                        texto = 'Email inválido.';
-                        break;
-                    case 'auth/user-not-found':
-                    case 'auth/invalid-credential':
-                        texto = 'Email ou senha incorretos.';
-                        break;
-                    case 'auth/wrong-password':
-                        texto = 'Email ou senha incorretos.';
-                        break;
-                    case 'auth/too-many-requests':
-                        texto = 'Muitas tentativas. Tente novamente mais tarde.';
-                        break;
-                    case 'auth/network-request-failed':
-                        texto = 'Falha de conexão. Verifique sua internet.';
-                        break;
-                }
-
-                errorMsg.textContent = texto;
+                console.error(err);
+                errorMsg.textContent = traduzirErro(err.code);
             } finally {
-                btnLogin.disabled = false;
-                btnLoginText.textContent = 'Login';
+                btnRegister.disabled = false;
+                btnRegisterText.textContent = 'Criar conta';
             }
         });
     </script>
@@ -478,11 +444,8 @@
         const passwordToggleInput = document.getElementById('passwordInput');
 
         togglePassword.addEventListener('click', function () {
-            // Alterna o tipo do input entre 'password' e 'text'
             const type = passwordToggleInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordToggleInput.setAttribute('type', type);
-            
-            // Alterna a classe para mudar o visual (se desejar alterar a opacidade/ícone)
             this.classList.toggle('visible');
         });
     </script>

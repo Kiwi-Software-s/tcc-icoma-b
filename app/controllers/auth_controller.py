@@ -1,28 +1,65 @@
-from flask import Blue print, render_template, request, flash, redirect, url_for
-from app.services.auth_service import AuthService
+import functools
 
-auth_bp = Blueprint('auth', __name__)
-auth_service = AuthService()
+from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
+from firebase_admin import auth as firebase_auth
 
-@auth_bp.route('/login')
+from app.firebase_config import init_firebase
+
+init_firebase()
+
+auth_bp = Blueprint("auth", __name__)
+
+
+def login_required(view):
+    """Decorator que protege rotas exigindo uma sessão autenticada."""
+    @functools.wraps(view)
+    def wrapped_view(*args, **kwargs):
+        if not session.get("uid"):
+            return redirect(url_for("auth.login"))
+        return view(*args, **kwargs)
+    return wrapped_view
+
+
+@auth_bp.route("/login")
 def login():
-    return render_template('login.html')
+    if session.get("uid"):
+        return redirect(url_for("home.dashboard"))
+    return render_template("login/login.html")
 
-@auth_bp.route('/register', methods=['GET','POST'])
-def register():
-    if request.method == 'POST':
-        nome = request.form.get('nome')
-        email = request.form.get('email')
-        confrima_senha = request.form.get('confirma_senha')
 
-try:
-    success, message = auth_service.register_user(nome, email, senha, confirma_senha)
-    if success:
-        flash(message, 'success')
-        return redirect(url_for('auth.login'))
-except ValueError as ve:
-    flash(str(e), 'error')
-except Exception as e:
-    flash(str(e), 'error')
-    
-    return render_template('login/register.html', site='https://tcc-icoma-b-iw6u.onrender.com')
+@auth_bp.route("/cadastro")
+def cadastro():
+    if session.get("uid"):
+        return redirect(url_for("home.dashboard"))
+    return render_template("login/register.html")
+
+
+@auth_bp.route("/auth/session", methods=["POST"])
+def criar_sessao():
+    """
+    Recebe o idToken gerado pelo Firebase no navegador (após login ou
+    cadastro com e-mail/senha ou Google), valida no servidor com o
+    Firebase Admin SDK e cria a sessão do Flask.
+    """
+    data = request.get_json(silent=True) or {}
+    id_token = data.get("idToken")
+
+    if not id_token:
+        return jsonify(success=False, message="Token não informado."), 400
+
+    try:
+        decoded_token = firebase_auth.verify_id_token(id_token)
+    except Exception:
+        return jsonify(success=False, message="Token inválido ou expirado."), 401
+
+    session["uid"] = decoded_token.get("uid")
+    session["email"] = decoded_token.get("email")
+    session["nome"] = decoded_token.get("name", "")
+
+    return jsonify(success=True)
+
+
+@auth_bp.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("auth.login"))
