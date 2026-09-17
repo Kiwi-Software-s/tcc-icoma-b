@@ -1,22 +1,52 @@
 import os
-
+import json
 import firebase_admin
 from firebase_admin import credentials
 
 
 def init_firebase():
     """
-    Inicializa o Firebase Admin SDK uma única vez.
+    Inicializa o Firebase Admin SDK.
 
-    O caminho do arquivo de credenciais (baixado em:
-    Console do Firebase > Configurações do projeto > Contas de serviço >
-    Gerar nova chave privada) é lido da variável de ambiente
-    FIREBASE_CREDENTIALS. Se não existir, usa "serviceAccountKey.json"
-    na raiz do projeto (não versionar esse arquivo — adicione ao .gitignore).
+    No Render:
+    usa FIREBASE_CREDENTIALS.
+
+    Localmente:
+    usa serviceAccountKey.json.
     """
+
     if firebase_admin._apps:
         return
 
-    cred_path = os.environ.get("FIREBASE_CREDENTIALS", "serviceAccountKey.json")
-    cred = credentials.Certificate(cred_path)
+    firebase_credentials = os.environ.get("FIREBASE_CREDENTIALS")
+
+    if firebase_credentials:
+        # Render: JSON armazenado na variável de ambiente
+        try:
+            cred_dict = json.loads(firebase_credentials)
+            cred = credentials.Certificate(cred_dict)
+
+        except json.JSONDecodeError as e:
+            raise RuntimeError(
+                "FIREBASE_CREDENTIALS não contém um JSON válido."
+            ) from e
+
+    else:
+        # Local: arquivo serviceAccountKey.json
+        base_dir = os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__))
+        )
+
+        cred_path = os.path.join(
+            base_dir,
+            "serviceAccountKey.json"
+        )
+
+        if not os.path.exists(cred_path):
+            raise RuntimeError(
+                "serviceAccountKey.json não encontrado."
+            )
+
+        cred = credentials.Certificate(cred_path)
+
     firebase_admin.initialize_app(cred)
