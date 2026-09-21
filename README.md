@@ -2,16 +2,36 @@
 
 Website gamificado para incentivo à economia circular e engajamento na gestão de resíduos sólidos em Matão
 
-🛠️ Tecnologias
+## 🛠️ Tecnologias utilizadas
 
-- ANGULAR
-- ANGULAR MATERIAL
-- FastAPI
-- Google Maps APIs
-- git / github
-- VSCode
-- TailWind CSS
-- TypeScript
+### Front-end
+
+* HTML5
+* CSS3
+* JavaScript
+* Bootstrap 5
+* Bootstrap Icons
+
+### Back-end
+
+* Python
+* Flask
+
+### Autenticação
+
+* Firebase Authentication
+* Firebase Admin SDK
+
+### Mapas
+
+* Leaflet
+* OpenStreetMap
+
+### Desenvolvimento e versionamento
+
+* Git
+* GitHub
+* Visual Studio Code
 
 ---
 
