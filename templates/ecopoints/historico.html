@@ -1,0 +1,119 @@
+{% extends "ecopoints/base.html" %}
+{% block title %}Histórico - EcoPoints{% endblock %}
+
+{% block content %}
+<div class="search-row">
+  <div class="search-box">
+    <i class="bi bi-search"></i>
+    <input id="buscaHistorico" placeholder="Buscar histórico">
+  </div>
+
+  <button class="filter-btn history-filter">
+    <i class="bi bi-calendar3"></i>Filtrar período<i class="bi bi-chevron-down"></i>
+  </button>
+</div>
+
+<section class="summary-grid">
+  <article class="card summary-card">
+    <div class="summary-icon"><i class="bi bi-trophy-fill"></i></div>
+    <div><div class="summary-label">Pontos ganhos</div><div class="summary-value">2.450</div><div class="summary-label">Pontos</div></div>
+  </article>
+
+  <article class="card summary-card">
+    <div class="summary-icon"><i class="bi bi-wallet2"></i></div>
+    <div><div class="summary-label">Pontos gastos</div><div class="summary-value purple-text">1.320</div><div class="summary-label">Pontos</div></div>
+  </article>
+
+  <article class="card summary-card">
+    <div class="summary-icon"><i class="bi bi-recycle"></i></div>
+    <div><div class="summary-label">Kilos reciclados</div><div class="summary-value">85,7</div><div class="summary-label">Kg</div></div>
+  </article>
+
+  <article class="card summary-card">
+    <div class="summary-icon"><i class="bi bi-gift-fill"></i></div>
+    <div><div class="summary-label">Produtos resgatados</div><div class="summary-value violet-text">8</div><div class="summary-label">Produtos</div></div>
+  </article>
+
+  <article class="card summary-card">
+    <div class="summary-icon"><i class="bi bi-percent"></i></div>
+    <div><div class="summary-label">Descontos resgatados</div><div class="summary-value orange-text">5</div><div class="summary-label">Descontos</div></div>
+  </article>
+
+  <article class="card summary-card">
+    <div class="summary-icon"><i class="bi bi-geo-alt-fill"></i></div>
+    <div><div class="summary-label">Pontos de descarte</div><div class="summary-value">12</div><div class="summary-label">Locais</div></div>
+  </article>
+</section>
+
+<section class="card history-card">
+  <div class="tabs">
+    <button class="tab active" data-type="todos"><i class="bi bi-list-ul"></i> Todos</button>
+    <button class="tab" data-type="ganhos"><i class="bi bi-trophy"></i> Ganhos</button>
+    <button class="tab" data-type="gastos"><i class="bi bi-wallet2"></i> Gastos</button>
+    <button class="tab" data-type="reciclagens"><i class="bi bi-recycle"></i> Reciclagens</button>
+    <button class="tab" data-type="resgates"><i class="bi bi-gift"></i> Resgates</button>
+    <button class="tab" data-type="descartes"><i class="bi bi-geo-alt"></i> Descartes</button>
+  </div>
+
+  <div class="history-list" id="historicoLista">
+    <div class="history-item" data-type="descartes reciclagens">
+      <div class="history-dot"><i class="bi bi-geo-alt-fill"></i></div>
+      <div>
+        <div class="history-title">Descarte realizado</div>
+        <div class="history-meta">EcoPonto, Centro Matão - SP<br>21/09/2026 • 12:22</div>
+      </div>
+      <div class="delta">+200 Pontos</div>
+    </div>
+
+    <div class="history-item orange" data-type="gastos resgates">
+      <div class="history-dot"><i class="bi bi-percent"></i></div>
+      <div>
+        <div class="history-title">Descontos resgatados</div>
+        <div class="history-meta">10% OFF em Produtos Naturais<br>20/09/2026 • 10:22</div>
+      </div>
+      <div class="delta minus">-150 Pontos</div>
+    </div>
+
+    <div class="history-item purple" data-type="gastos resgates">
+      <div class="history-dot"><i class="bi bi-gift-fill"></i></div>
+      <div>
+        <div class="history-title">Produtos resgatados</div>
+        <div class="history-meta">Garrafa reutilizável<br>18/09/2026 • 16:10</div>
+      </div>
+      <div class="delta minus">-350 Pontos</div>
+    </div>
+
+    <div class="history-item" data-type="ganhos reciclagens">
+      <div class="history-dot"><i class="bi bi-recycle"></i></div>
+      <div>
+        <div class="history-title">Reciclagem registrada</div>
+        <div class="history-meta">12,4 kg de materiais recicláveis<br>17/09/2026 • 09:45</div>
+      </div>
+      <div class="delta">+310 Pontos</div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('buscaHistorico').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.history-item').forEach(item => {
+    item.style.display = item.innerText.toLowerCase().includes(q) ? 'grid' : 'none';
+  });
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    const type = tab.dataset.type;
+    document.querySelectorAll('.history-item').forEach(item => {
+      item.style.display = (type === 'todos' || item.dataset.type.includes(type)) ? 'grid' : 'none';
+    });
+  });
+});
+</script>
+{% endblock %}

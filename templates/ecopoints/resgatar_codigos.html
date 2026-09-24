@@ -1,0 +1,88 @@
+{% extends "ecopoints/base.html" %}
+{% block title %}Resgate dos pontos - EcoPoints{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <h1>Resgate dos pontos</h1>
+    <p>Utilize seus pontos para resgatar códigos e troque-os por benefícios.</p>
+  </div>
+</section>
+
+<div class="redeem-grid">
+  <article class="card steps-card">
+    <h2><i class="bi bi-info-circle-fill accent"></i> Como funciona?</h2>
+
+    <div class="step">
+      <span class="step-num">1</span>
+      <div>
+        <strong>Resgate um código</strong>
+        <span>Use seus pontos para resgatar o código desejado.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">2</span>
+      <div>
+        <strong>Receba o código</strong>
+        <span>Após o resgate, você recebe um código para utilizar.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">3</span>
+      <div>
+        <strong>Resgate e aproveite</strong>
+        <span>Use o código na loja parceira e aproveite seu benefício.</span>
+      </div>
+    </div>
+
+    <div class="example-code">
+      <i class="bi bi-ticket-perforated"></i> Exemplo<br>
+      <strong>ECO-459-POINTS-ABC</strong>
+    </div>
+  </article>
+
+  <article class="card redeem-card">
+    <h2>Inserir código</h2>
+    <p class="small-muted">Digite seu código de resgate para adicioná-lo à sua conta.</p>
+
+    <label for="codigo">Código de resgate</label>
+    <input id="codigo" maxlength="24" placeholder="Ex: ECO-POINTS-ABC-123">
+
+    <small><i class="bi bi-info-circle"></i> O código não diferencia letras maiúsculas e minúsculas.</small>
+
+    <button class="green-button" id="btnResgatar">
+      <i class="bi bi-arrow-right"></i> Resgatar código
+    </button>
+  </article>
+</div>
+
+<div class="card benefits">
+  <div class="benefit">
+    <i class="bi bi-clock-history"></i>
+    <div><strong>Válido para sempre</strong><span>Seu código não expira após ser resgatado.</span></div>
+  </div>
+  <div class="benefit">
+    <i class="bi bi-stars"></i>
+    <div><strong>Mais pontos, mais benefícios</strong><span>Use pontos para resgatar códigos cada vez melhores.</span></div>
+  </div>
+  <div class="benefit">
+    <i class="bi bi-leaf"></i>
+    <div><strong>Mais pontos, mais benefícios</strong><span>Uma experiência que valoriza escolhas sustentáveis.</span></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('btnResgatar').addEventListener('click', () => {
+  const input = document.getElementById('codigo');
+  if (!input.value.trim()) {
+    ecoToast('Digite um código para continuar.');
+    return;
+  }
+  ecoToast('Código enviado para validação.');
+});
+</script>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "ecopoints/base.html" %}
+{% block title %}Meus descontos - EcoPoints{% endblock %}
+
+{% block content %}
+<div class="search-row">
+  <div class="search-box">
+    <i class="bi bi-search"></i>
+    <input id="buscaDesconto" placeholder="Buscar desconto">
+  </div>
+
+  <div class="points-pill">
+    <i class="bi bi-coin"></i>
+    <span>Seus GreenPoints<br><strong>350 Pontos</strong></span>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn primary"><i class="bi bi-grid-fill"></i>Categoria<i class="bi bi-chevron-down"></i></button>
+  <button class="filter-btn"><i class="bi bi-tags-fill"></i>% Desconto<i class="bi bi-chevron-down"></i></button>
+  <button class="filter-btn"><i class="bi bi-shop"></i>Lojas parceiras<i class="bi bi-chevron-down"></i></button>
+</div>
+
+<div class="discount-layout">
+  <section class="products" id="listaProdutos">
+    <article class="card product-card" data-name="EcoBag sustentável">
+      <div class="product-image">
+        <span class="discount-badge">30% OFF</span>
+        <button class="heart" aria-label="Favoritar">♡</button>
+        <img src="{{ url_for('static', filename='dashboard/premios/ecobag.png') }}" alt="EcoBag sustentável">
+      </div>
+      <div class="product-body">
+        <div class="product-name">EcoBag sustentável</div>
+        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
+        <button class="exchange">Trocar por GreenPoints</button>
+        <button class="detail">Ver detalhes</button>
+      </div>
+    </article>
+
+    <article class="card product-card" data-name="Garrafa reutilizável">
+      <div class="product-image">
+        <span class="discount-badge">20% OFF</span>
+        <button class="heart" aria-label="Favoritar">♡</button>
+        <img src="{{ url_for('static', filename='dashboard/premios/garrafa.png') }}" alt="Garrafa reutilizável">
+      </div>
+      <div class="product-body">
+        <div class="product-name">Garrafa reutilizável</div>
+        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
+        <button class="exchange">Trocar por GreenPoints</button>
+        <button class="detail">Ver detalhes</button>
+      </div>
+    </article>
+
+    <article class="card product-card" data-name="Vaso ecológico">
+      <div class="product-image">
+        <span class="discount-badge">15% OFF</span>
+        <button class="heart" aria-label="Favoritar">♡</button>
+        <img src="{{ url_for('static', filename='dashboard/premios/vaso.png') }}" alt="Vaso ecológico">
+      </div>
+      <div class="product-body">
+        <div class="product-name">Vaso ecológico</div>
+        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
+        <button class="exchange">Trocar por GreenPoints</button>
+        <button class="detail">Ver detalhes</button>
+      </div>
+    </article>
+
+    <article class="card product-card" data-name="Kit produtos naturais">
+      <div class="product-image">
+        <span class="discount-badge">10% OFF</span>
+        <button class="heart" aria-label="Favoritar">♡</button>
+        <i class="bi bi-bag-heart product-placeholder"></i>
+      </div>
+      <div class="product-body">
+        <div class="product-name">Kit produtos naturais</div>
+        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
+        <button class="exchange">Trocar por GreenPoints</button>
+        <button class="detail">Ver detalhes</button>
+      </div>
+    </article>
+  </section>
+
+  <div class="discount-bottom">
+    <aside class="card ranking">
+      <h3>Ranking de Recicladores</h3>
+      <div class="rank-row"><span class="medal">1</span><span>Você</span><strong>65 kg</strong></div>
+      <div class="rank-row"><span class="medal">2</span><span>Murilo</span><strong>45 kg</strong></div>
+      <div class="rank-row"><span class="medal">3</span><span>Thiago</span><strong>30 kg</strong></div>
+    </aside>
+
+    <div class="bottom-right">
+      <article class="card impact">
+        <div class="impact-metrics">
+          <div><strong>Você recicla</strong><span>plástico, vidro e outros resíduos</span></div>
+          <div><strong>Ganha</strong><span>GreenPoints pelas suas ações</span></div>
+          <div><strong>Troca por</strong><span>Descontos e benefícios</span></div>
+          <div><strong>Ajuda o campo</strong><span>e o planeta a respirar melhor</span></div>
+        </div>
+        <div class="impact-globe"><i class="bi bi-globe-americas"></i></div>
+      </article>
+
+      <article class="card partners">
+        <h3><i class="bi bi-shop accent"></i> Lojas Parceiras</h3>
+        <div class="partner-row">
+          <span class="partner-dot"></span>
+          <span class="partner-dot"></span>
+          <span class="partner-dot"></span>
+          <span class="partner-dot"></span>
+          <span class="partner-dot"></span>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('buscaDesconto').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.style.display = card.dataset.name.toLowerCase().includes(q) ? 'block' : 'none';
+  });
+});
+
+document.querySelectorAll('.heart').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.textContent = btn.textContent === '♡' ? '♥' : '♡';
+  });
+});
+
+document.querySelectorAll('.exchange').forEach(btn => {
+  btn.addEventListener('click', () => ecoToast('Desconto selecionado para troca.'));
+});
+</script>
+{% endblock %}

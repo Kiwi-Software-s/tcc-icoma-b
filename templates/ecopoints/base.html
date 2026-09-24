@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}EcoPoints{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='ecopoints-pages.css') }}">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <img class="sidebar-logo" src="{{ url_for('static', filename='titulo.png') }}" alt="EcoPoints">
+
+    <a class="side-link {{ 'active' if active == 'inicio' else '' }}" href="{{ url_for('home.dashboard') }}">
+      <i class="bi bi-house-fill"></i>Início
+    </a>
+    <a class="side-link {{ 'active' if active == 'descontos' else '' }}" href="{{ url_for('meus_descontos') }}">
+      <i class="bi bi-ticket-perforated-fill"></i>Meus descontos
+    </a>
+    <a class="side-link {{ 'active' if active == 'historico' else '' }}" href="{{ url_for('historico') }}">
+      <i class="bi bi-clock-history"></i>Histórico
+    </a>
+    <a class="side-link {{ 'active' if active == 'dicas' else '' }}" href="{{ url_for('dicas_verdes') }}">
+      <i class="bi bi-lightbulb-fill"></i>Dicas verdes
+    </a>
+    <a class="side-link" href="#">
+      <i class="bi bi-info-circle-fill"></i>Ajuda
+    </a>
+    <a class="side-link" href="{{ url_for('home.mapa_de_pontos') }}">
+      <i class="bi bi-map-fill"></i>Mapa dos pontos
+    </a>
+  </aside>
+
+  <div class="shell-main">
+    <header class="topbar">
+      <div class="top-wave"></div>
+
+      <div class="top-actions">
+        <button class="icon-btn" aria-label="Notificações"><i class="bi bi-bell"></i></button>
+        <a class="avatar" href="{{ url_for('auth.logout') }}" title="Sair"><i class="bi bi-person-fill"></i></a>
+      </div>
+
+      <nav class="top-nav">
+        <a href="{{ url_for('home.dashboard') }}">Início</a>
+        <a href="{{ url_for('home.mapa_de_pontos') }}">Mapa de pontos</a>
+        <a href="{{ url_for('meus_descontos') }}" class="{{ 'active' if active == 'descontos' else '' }}">Meus descontos</a>
+        <a href="#">Ajuda</a>
+        <a href="{{ url_for('dicas_verdes') }}" class="{{ 'active' if active == 'dicas' else '' }}">Dicas verdes</a>
+        <a href="{{ url_for('resgatar_codigos') }}" class="{{ 'active' if active == 'resgate' else '' }}">Resgatar Códigos</a>
+      </nav>
+    </header>
+
+    <main class="page">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+function ecoToast(message) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = message;
+  el.classList.add('show');
+  clearTimeout(window.__ecoToast);
+  window.__ecoToast = setTimeout(() => el.classList.remove('show'), 2200);
+}
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
