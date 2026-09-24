@@ -751,6 +751,8 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
+  <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
 </head>
 
 <body>
@@ -784,7 +786,7 @@
 
       <a href="/resgatar-codigos" class="menu-item">
         <i class="bi bi-qr-code" aria-hidden="true" style="font-size: 24px; width: 24px; text-align: center;"></i>
-        Resgatar códigos
+        Resgatar pontos
       </a>
 
     </nav>
@@ -857,7 +859,7 @@
           <button class="btn-sino" type="button" aria-label="Notificações">
             <img src="../../static/mapa/bell.png" alt="">
           </button>
-          <img src="../../static/mapa/user.png" alt="Minha conta" class="avatar">
+          {% include 'ecopoints/account_menu.html' %}
         </div>
 
       </div>
@@ -1267,3 +1269,4 @@
 </body>
 
 </html>
+

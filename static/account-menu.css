@@ -1,0 +1,38 @@
+.eco-account-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.eco-account-trigger .avatar { display: block; }
+.eco-account-trigger:focus-visible {
+  outline: 3px solid #4c7e24;
+  outline-offset: 4px;
+}
+.eco-account-menu {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 6px;
+  min-width: 170px;
+  max-width: calc(100vw - 24px);
+  border: 1px solid #ddd8cf;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+}
+.eco-account-menu a {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #174d2c;
+  font: 600 15px/1.4 Inter, sans-serif;
+  text-decoration: none;
+}
+.eco-account-menu a:hover,
+.eco-account-menu a:focus-visible { background: #edf4e8; }

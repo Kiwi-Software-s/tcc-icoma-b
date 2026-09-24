@@ -661,6 +661,8 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
+  <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
 </head>
 
 <body>
@@ -696,6 +698,11 @@
         Dicas verdes
       </a>
 
+      <a href="{{ url_for('resgatar_codigos') }}" class="menu-item">
+        <span class="menu-icone"><img src="{{ url_for('static', filename='dashboard/icons/gift.png') }}" alt=""></span>
+        Resgatar pontos
+      </a>
+
     </nav>
 
   </aside>
@@ -712,16 +719,15 @@
         <button class="btn-sino" type="button" aria-label="Notificações">
           <img src="../../static/dashboard/icons/bell.png" alt="">
         </button>
-        <img src="../../static/dashboard/icons/user.png" alt="Minha conta" class="avatar">
+        {% include 'ecopoints/account_menu.html' %}
       </div>
 
       <nav class="menu-topo">
         <a href="/dashboard" class="ativo">Início</a>
         <a href="/mapa-de-pontos">Mapa de pontos</a>
         <a href="/meus-descontos">Meus descontos</a>
-        <a href="#">Ajuda</a>
         <a href="/dicas-verdes">Dicas verdes</a>
-        <a href="/resgatar-codigos">Resgatar Códigos</a>
+        <a href="/resgatar-codigos">Resgatar pontos</a>
       </nav>
 
     </header>

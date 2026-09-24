@@ -1,0 +1,6 @@
+<button class="eco-account-trigger" type="button" popovertarget="eco-account-menu" aria-label="Abrir opções da conta" aria-expanded="false" aria-controls="eco-account-menu">
+  <img class="avatar" src="{{ url_for('static', filename='dashboard/icons/user.png') }}" alt="">
+</button>
+<div id="eco-account-menu" class="eco-account-menu" popover="auto">
+  <a href="{{ url_for('auth.logout') }}">Sair da conta</a>
+</div>
