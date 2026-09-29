@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, redirect, render_template, request, sessio
 from firebase_admin import auth as firebase_auth
 
 from app.firebase_config import init_firebase
+from app.repositories.user_repository import garantir_usuario
 
 init_firebase()
 
@@ -55,6 +56,12 @@ def criar_sessao():
     session["uid"] = decoded_token.get("uid")
     session["email"] = decoded_token.get("email")
     session["nome"] = decoded_token.get("name", "")
+
+    garantir_usuario(
+        uid=session["uid"],
+        nome=session.get("nome", ""),
+        email=session.get("email", ""),
+    )
 
     return jsonify(success=True)
 

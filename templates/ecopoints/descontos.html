@@ -10,7 +10,7 @@
 
   <div class="points-pill">
     <i class="bi bi-coin"></i>
-    <span>Seus GreenPoints<br><strong>350 Pontos</strong></span>
+    <span>Seus GreenPoints<br><strong id="saldoPontos">{{ pontos_total|fmt_int }} Pontos</strong></span>
   </div>
 </div>
 
@@ -22,69 +22,46 @@
 
 <div class="discount-layout">
   <section class="products" id="listaProdutos">
-    <article class="card product-card" data-name="EcoBag sustentável">
+    {% for beneficio in beneficios %}
+    <article class="card product-card" data-name="{{ beneficio.nome }}" data-beneficio-id="{{ beneficio.id }}">
       <div class="product-image">
-        <span class="discount-badge">30% OFF</span>
+        <span class="discount-badge">{{ beneficio.desconto }}% OFF</span>
         <button class="heart" aria-label="Favoritar">♡</button>
-        <img src="{{ url_for('static', filename='dashboard/premios/ecobag.png') }}" alt="EcoBag sustentável">
+        {% if beneficio.imagem %}
+          <img src="{{ url_for('static', filename=beneficio.imagem) }}" alt="{{ beneficio.nome }}">
+        {% else %}
+          <i class="bi {{ beneficio.icone or 'bi-gift' }} product-placeholder"></i>
+        {% endif %}
       </div>
       <div class="product-body">
-        <div class="product-name">EcoBag sustentável</div>
-        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
-        <button class="exchange">Trocar por GreenPoints</button>
-        <button class="detail">Ver detalhes</button>
+        <div class="product-name">{{ beneficio.nome }}</div>
+        <div class="product-price"><i class="bi bi-recycle"></i><strong>{{ beneficio.preco_pontos|fmt_int }} GreenPoints</strong></div>
+        <button
+          class="exchange"
+          data-id="{{ beneficio.id }}"
+          data-name="{{ beneficio.nome }}"
+          data-price="{{ beneficio.preco_pontos }}"
+        >Trocar por GreenPoints</button>
+        <button class="detail" data-detail="{{ beneficio.desconto }}% OFF em {{ beneficio.nome }} por {{ beneficio.preco_pontos }} GreenPoints">Ver detalhes</button>
       </div>
     </article>
-
-    <article class="card product-card" data-name="Garrafa reutilizável">
-      <div class="product-image">
-        <span class="discount-badge">20% OFF</span>
-        <button class="heart" aria-label="Favoritar">♡</button>
-        <img src="{{ url_for('static', filename='dashboard/premios/garrafa.png') }}" alt="Garrafa reutilizável">
-      </div>
-      <div class="product-body">
-        <div class="product-name">Garrafa reutilizável</div>
-        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
-        <button class="exchange">Trocar por GreenPoints</button>
-        <button class="detail">Ver detalhes</button>
-      </div>
-    </article>
-
-    <article class="card product-card" data-name="Vaso ecológico">
-      <div class="product-image">
-        <span class="discount-badge">15% OFF</span>
-        <button class="heart" aria-label="Favoritar">♡</button>
-        <img src="{{ url_for('static', filename='dashboard/premios/vaso.png') }}" alt="Vaso ecológico">
-      </div>
-      <div class="product-body">
-        <div class="product-name">Vaso ecológico</div>
-        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
-        <button class="exchange">Trocar por GreenPoints</button>
-        <button class="detail">Ver detalhes</button>
-      </div>
-    </article>
-
-    <article class="card product-card" data-name="Kit produtos naturais">
-      <div class="product-image">
-        <span class="discount-badge">10% OFF</span>
-        <button class="heart" aria-label="Favoritar">♡</button>
-        <i class="bi bi-bag-heart product-placeholder"></i>
-      </div>
-      <div class="product-body">
-        <div class="product-name">Kit produtos naturais</div>
-        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
-        <button class="exchange">Trocar por GreenPoints</button>
-        <button class="detail">Ver detalhes</button>
-      </div>
-    </article>
+    {% endfor %}
   </section>
 
   <div class="discount-bottom">
     <aside class="card ranking">
-      <h3>Ranking de Recicladores</h3>
-      <div class="rank-row"><span class="medal">1</span><span>Você</span><strong>65 kg</strong></div>
-      <div class="rank-row"><span class="medal">2</span><span>Murilo</span><strong>45 kg</strong></div>
-      <div class="rank-row"><span class="medal">3</span><span>Thiago</span><strong>30 kg</strong></div>
+      <h3>Ranking semanal</h3>
+      {% if ranking %}
+        {% for item in ranking %}
+        <div class="rank-row">
+          <span class="medal">{{ loop.index }}</span>
+          <span>{{ item.nome }}</span>
+          <strong>{{ item.pontos|fmt_int }} pts</strong>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="font-size:10px;color:#908d85;padding:10px 0;">Ainda não há pontos resgatados nesta semana.</div>
+      {% endif %}
     </aside>
 
     <div class="bottom-right">
@@ -115,6 +92,12 @@
 
 {% block scripts %}
 <script>
+const saldoPontos = document.getElementById('saldoPontos');
+
+function formatarPontos(valor) {
+  return Number(valor || 0).toLocaleString('pt-BR');
+}
+
 document.getElementById('buscaDesconto').addEventListener('input', e => {
   const q = e.target.value.toLowerCase();
   document.querySelectorAll('.product-card').forEach(card => {
@@ -128,8 +111,42 @@ document.querySelectorAll('.heart').forEach(btn => {
   });
 });
 
+document.querySelectorAll('.detail').forEach(btn => {
+  btn.addEventListener('click', () => ecoToast(btn.dataset.detail));
+});
+
 document.querySelectorAll('.exchange').forEach(btn => {
-  btn.addEventListener('click', () => ecoToast('Desconto selecionado para troca.'));
+  btn.addEventListener('click', async () => {
+    const nome = btn.dataset.name;
+    const preco = Number(btn.dataset.price || 0);
+    const confirmar = window.confirm(`Resgatar ${nome} por ${formatarPontos(preco)} GreenPoints?`);
+    if (!confirmar) return;
+
+    const textoOriginal = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Processando...';
+
+    try {
+      const response = await fetch('/api/trocar-beneficio', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({beneficio_id: btn.dataset.id})
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Não foi possível concluir a troca.');
+      }
+
+      saldoPontos.textContent = `${formatarPontos(data.pontos_total)} Pontos`;
+      ecoToast(`${data.nome} resgatado! -${formatarPontos(data.pontos_gastos)} pontos • ${data.protocolo}`);
+    } catch (erro) {
+      ecoToast(erro.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = textoOriginal;
+    }
+  });
 });
 </script>
 {% endblock %}

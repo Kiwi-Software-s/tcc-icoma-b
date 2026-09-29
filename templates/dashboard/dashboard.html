@@ -545,6 +545,24 @@
     .premio-status {
       font-size: .72rem;
       color: #a5a29a;
+      line-height: 1.35;
+    }
+
+    .premio-link {
+      display: block;
+      color: inherit;
+    }
+
+    .premio-placeholder {
+      width: 100%;
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green-main);
+      font-size: 2.6rem;
+      background: #f5f2ea;
+      border-radius: 7px;
     }
 
     /* ---- Botões "ver mais" ---- */
@@ -749,53 +767,11 @@
             <h2>Meu Desempenho</h2>
             <select class="filtro" aria-label="Período do desempenho">
               <option>Mensal</option>
-              <option>Semanal</option>
-              <option>Anual</option>
             </select>
           </div>
 
-          <svg class="grafico" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img"
-            aria-label="Resíduos entregues por mês, de janeiro a junho">
-
-            <g stroke="#e9e6dc" stroke-width="1">
-              <line x1="40" y1="15" x2="396" y2="15" />
-              <line x1="40" y1="55" x2="396" y2="55" />
-              <line x1="40" y1="95" x2="396" y2="95" />
-              <line x1="40" y1="135" x2="396" y2="135" />
-              <line x1="40" y1="175" x2="396" y2="175" />
-              <line x1="40" y1="215" x2="396" y2="215" />
-            </g>
-
-            <g font-family="Inter, sans-serif" font-size="11" fill="#b0aca2" text-anchor="end">
-              <text x="32" y="19">100</text>
-              <text x="32" y="59">80</text>
-              <text x="32" y="99">60</text>
-              <text x="32" y="139">40</text>
-              <text x="32" y="179">20</text>
-              <text x="32" y="219">0</text>
-              <text x="32" y="235">Kg</text>
-            </g>
-
-            <!-- barras: Jan 43 / Fev 52 / Mar 75 / Abr 47 / Mai 27 / Jun 20 -->
-            <g>
-              <rect x="55" y="129" width="40" height="86" rx="4" fill="#cfe9c1" />
-              <rect x="114" y="111" width="40" height="104" rx="4" fill="#84c064" />
-              <rect x="173" y="65" width="40" height="150" rx="4" fill="#8ec46e" />
-              <rect x="232" y="121" width="40" height="94" rx="4" fill="#a8d691" />
-              <rect x="291" y="161" width="40" height="54" rx="4" fill="#a3d38c" />
-              <rect x="350" y="175" width="40" height="40" rx="4" fill="#bde2ab" />
-            </g>
-
-            <g font-family="Inter, sans-serif" font-size="11" fill="#a8a49a" text-anchor="middle">
-              <text x="75" y="235">Jan</text>
-              <text x="134" y="235">Fev</text>
-              <text x="193" y="235">Mar</text>
-              <text x="252" y="235">Abr</text>
-              <text x="311" y="235">Mai</text>
-              <text x="370" y="235">Jun</text>
-            </g>
-
-          </svg>
+          <svg id="grafico-desempenho" class="grafico" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img"
+            aria-label="Quilos reciclados nos últimos seis meses"></svg>
 
         </article>
 
@@ -811,7 +787,7 @@
               <img src="../../static/dashboard/icons/recycle-bin.png" alt="" class="icone-card">
             </div>
 
-            <p class="numero-grande">100 Kg</p>
+            <p class="numero-grande">{{ kg_mes|fmt_num }} Kg</p>
           </article>
 
           <article class="cartao">
@@ -820,7 +796,7 @@
               <img src="../../static/dashboard/icons/dollar.png" alt="" class="icone-card">
             </div>
 
-            <p class="numero-grande">10.000 Pontos</p>
+            <p class="numero-grande">{{ pontos_total|fmt_int }} Pontos</p>
           </article>
 
         </div>
@@ -833,46 +809,24 @@
           </div>
 
           <div class="lista-ranking">
-
-            <div class="linha-ranking">
-              <svg width="26" height="30" viewBox="0 0 26 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 1h5l3 8H8z" fill="#e8556d" />
-                <path d="M20 1h-5l-3 8h5z" fill="#c8324b" />
-                <circle cx="13" cy="20" r="8.5" fill="#f7cf4a" stroke="#dcae23" stroke-width="1.4" />
-                <text x="13" y="23.5" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="9"
-                  font-weight="700" fill="#a5790f">I</text>
-              </svg>
-              <span class="avatar-mini"><img src="../../static/dashboard/icons/user.png" alt=""></span>
-              <span class="nome">Você</span>
-              <span class="pontos">10.000</span>
-            </div>
-
-            <div class="linha-ranking">
-              <svg width="26" height="30" viewBox="0 0 26 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 1h5l3 8H8z" fill="#5b8fd6" />
-                <path d="M20 1h-5l-3 8h5z" fill="#3767a8" />
-                <circle cx="13" cy="20" r="8.5" fill="#d5dade" stroke="#b3bbc2" stroke-width="1.4" />
-                <text x="13" y="23.5" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="9"
-                  font-weight="700" fill="#77808a">II</text>
-              </svg>
-              <span class="avatar-mini"><img src="../../static/dashboard/icons/user.png" alt=""></span>
-              <span class="nome">Murilo</span>
-              <span class="pontos">8.000</span>
-            </div>
-
-            <div class="linha-ranking">
-              <svg width="26" height="30" viewBox="0 0 26 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 1h5l3 8H8z" fill="#e8746d" />
-                <path d="M20 1h-5l-3 8h5z" fill="#c2503f" />
-                <circle cx="13" cy="20" r="8.5" fill="#dfa06a" stroke="#c2814b" stroke-width="1.4" />
-                <text x="13" y="23.5" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="8.5"
-                  font-weight="700" fill="#8a5527">III</text>
-              </svg>
-              <span class="avatar-mini"><img src="../../static/dashboard/icons/user.png" alt=""></span>
-              <span class="nome">Thiago</span>
-              <span class="pontos">5.000</span>
-            </div>
-
+            {% if ranking %}
+              {% for item in ranking %}
+              <div class="linha-ranking">
+                {% set pos = loop.index %}
+                <svg width="26" height="30" viewBox="0 0 26 30" xmlns="http://www.w3.org/2000/svg" aria-label="{{ pos }}º lugar">
+                  <path d="M6 1h5l3 8H8z" fill="{{ '#e8556d' if pos == 1 else '#5b8fd6' if pos == 2 else '#e8746d' }}" />
+                  <path d="M20 1h-5l-3 8h5z" fill="{{ '#c8324b' if pos == 1 else '#3767a8' if pos == 2 else '#c2503f' }}" />
+                  <circle cx="13" cy="20" r="8.5" fill="{{ '#f7cf4a' if pos == 1 else '#d5dade' if pos == 2 else '#dfa06a' }}" stroke="{{ '#dcae23' if pos == 1 else '#b3bbc2' if pos == 2 else '#c2814b' }}" stroke-width="1.4" />
+                  <text x="13" y="23.5" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="8.5" font-weight="700" fill="#6f6b63">{{ pos }}</text>
+                </svg>
+                <span class="avatar-mini"><img src="../../static/dashboard/icons/user.png" alt=""></span>
+                <span class="nome">{{ item.nome }}</span>
+                <span class="pontos">{{ item.pontos|fmt_int }}</span>
+              </div>
+              {% endfor %}
+            {% else %}
+              <div style="padding:18px 8px;color:#9a968d;text-align:center;">Ainda não há pontos resgatados nesta semana.</div>
+            {% endif %}
           </div>
 
         </article>
@@ -884,75 +838,11 @@
             <h2>Evolução de Pontos</h2>
             <select class="filtro" aria-label="Período da evolução de pontos">
               <option>Mensal</option>
-              <option>Semanal</option>
-              <option>Anual</option>
             </select>
           </div>
 
-          <svg class="grafico" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img"
-            aria-label="Evolução dos pontos acumulados de janeiro a junho">
-
-            <defs>
-              <linearGradient id="areaPontos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#8ec46e" stop-opacity=".85" />
-                <stop offset="100%" stop-color="#e4f2d8" stop-opacity=".15" />
-              </linearGradient>
-            </defs>
-
-            <g stroke="#e9e6dc" stroke-width="1">
-              <line x1="40" y1="15" x2="396" y2="15" />
-              <line x1="40" y1="55" x2="396" y2="55" />
-              <line x1="40" y1="95" x2="396" y2="95" />
-              <line x1="40" y1="135" x2="396" y2="135" />
-              <line x1="40" y1="175" x2="396" y2="175" />
-              <line x1="40" y1="215" x2="396" y2="215" />
-            </g>
-
-            <g font-family="Inter, sans-serif" font-size="11" fill="#b0aca2" text-anchor="end">
-              <text x="32" y="19">10k</text>
-              <text x="32" y="59">8k</text>
-              <text x="32" y="99">6k</text>
-              <text x="32" y="139">4k</text>
-              <text x="32" y="179">2k</text>
-              <text x="32" y="219">0</text>
-            </g>
-
-            <!-- área preenchida -->
-            <path fill="url(#areaPontos)" d="M55,215
-              C 78,214 96,170 119,135
-              C 142,100 160,105 183,101
-              C 206,97 224,105 247,103
-              C 270,101 288,113 311,109
-              C 334,105 352,55 375,55
-              L375,215 Z" />
-
-            <!-- linha -->
-            <path fill="none" stroke="#5f9e30" stroke-width="2.6" stroke-linecap="round" d="M55,215
-              C 78,214 96,170 119,135
-              C 142,100 160,105 183,101
-              C 206,97 224,105 247,103
-              C 270,101 288,113 311,109
-              C 334,105 352,55 375,55" />
-
-            <line x1="375" y1="55" x2="375" y2="215" stroke="#a9cf92" stroke-width="1.4" />
-
-            <g fill="#ffffff" stroke="#5f9e30" stroke-width="2.4">
-              <circle cx="55" cy="215" r="4.6" />
-              <circle cx="119" cy="135" r="4.6" />
-              <circle cx="247" cy="103" r="4.6" />
-              <circle cx="375" cy="55" r="4.6" />
-            </g>
-
-            <g font-family="Inter, sans-serif" font-size="11" fill="#a8a49a" text-anchor="middle">
-              <text x="55" y="236">Jan</text>
-              <text x="119" y="236">Fev</text>
-              <text x="183" y="236">Mar</text>
-              <text x="247" y="236">Abr</text>
-              <text x="311" y="236">Mai</text>
-              <text x="375" y="236">Jun</text>
-            </g>
-
-          </svg>
+          <svg id="grafico-evolucao" class="grafico" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img"
+            aria-label="Evolução dos pontos acumulados nos últimos seis meses"></svg>
 
         </article>
 
@@ -964,8 +854,8 @@
             <img src="../../static/dashboard/icons/location.png" alt="" class="icone-card">
           </div>
 
-          <p class="ponto-nome">Nome do ponto de coleta</p>
-          <p class="ponto-endereco">Rua florencio barca, 123 - Centro</p>
+          <p class="ponto-nome">Etec Sylvio de Mattos Carvalho</p>
+          <p class="ponto-endereco">Rua Cesário Mota, 644 - Centro, Matão - SP</p>
 
           <!-- Mapa provisório. Quando entrar a API do Google Maps, troque este
                <svg> por uma <div id="mapa-destaque" class="mapa-mini"></div>
@@ -1011,57 +901,50 @@
 
           </svg>
 
-          <button class="botao-ver" type="button">
+          <a class="botao-ver" href="/mapa-de-pontos" style="text-decoration:none;">
             Ver no mapa
             <img src="../../static/dashboard/icons/chevron-right.png" alt="">
-          </button>
+          </a>
 
         </article>
 
-        <!-- ======= Prêmios disponíveis ======= -->
+        <!-- ======= Benefícios disponíveis ======= -->
         <article class="cartao">
 
           <div class="cartao-topo">
-            <h2>Prêmios Disponíveis</h2>
+            <h2>Benefícios Disponíveis</h2>
             <img src="../../static/dashboard/icons/gift.png" alt="" class="icone-card">
           </div>
 
           <div class="grade-premios">
-
-            <!-- fotos em static/premios/ -->
+            {% for beneficio in beneficios_dashboard %}
             <div>
-              <div class="premio-caixa">
-                <img src="../../static/dashboard/premios/vaso.png" alt="Vazo ecológico">
-                <span class="etiqueta-pontos">10.000 Pontos</span>
-              </div>
-              <p class="premio-nome">Vazo ecológico</p>
-              <p class="premio-status">PP</p>
+              <a class="premio-link" href="{{ url_for('meus_descontos') }}" aria-label="Ver {{ beneficio.nome }} em Meus descontos">
+                <div class="premio-caixa">
+                  {% if beneficio.imagem %}
+                  <img src="{{ url_for('static', filename=beneficio.imagem) }}" alt="{{ beneficio.nome }}">
+                  {% else %}
+                  <div class="premio-placeholder"><i class="bi {{ beneficio.icone or 'bi-gift' }}"></i></div>
+                  {% endif %}
+                  <span class="etiqueta-pontos">{{ beneficio.preco_pontos|fmt_int }} GreenPoints</span>
+                </div>
+              </a>
+              <p class="premio-nome">{{ beneficio.nome }}</p>
+              <p class="premio-status">
+                {% if pontos_total >= beneficio.preco_pontos %}
+                  Disponível para resgate • {{ beneficio.desconto }}% OFF
+                {% else %}
+                  Faltam {{ (beneficio.preco_pontos - pontos_total)|fmt_int }} GreenPoints • {{ beneficio.desconto }}% OFF
+                {% endif %}
+              </p>
             </div>
-
-            <div>
-              <div class="premio-caixa">
-                <img src="../../static/dashboard/premios/ecobag.png" alt="EcoBag">
-                <span class="etiqueta-pontos">5.000 Pontos</span>
-              </div>
-              <p class="premio-nome">EcoBag</p>
-              <p class="premio-status">Disponível</p>
-            </div>
-
-            <div>
-              <div class="premio-caixa">
-                <img src="../../static/dashboard/premios/garrafa.png" alt="Garrafa térmica">
-                <span class="etiqueta-pontos">15.000 Pontos</span>
-              </div>
-              <p class="premio-nome">Garrafa térmica</p>
-              <p class="premio-status">Disponível</p>
-            </div>
-
+            {% endfor %}
           </div>
 
-          <button class="botao-ver" type="button">
-            Ver todos os produtos
+          <a class="botao-ver" href="{{ url_for('meus_descontos') }}">
+            Ver todos os benefícios
             <img src="../../static/dashboard/icons/chevron-right.png" alt="">
-          </button>
+          </a>
 
         </article>
 
@@ -1070,6 +953,109 @@
     </section>
 
   </main>
+
+<script>
+  const desempenhoData = {{ desempenho|tojson }};
+  const evolucaoData = {{ evolucao|tojson }};
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+
+  function elSvg(tag, attrs = {}, text = '') {
+    const el = document.createElementNS(SVG_NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    if (text !== '') el.textContent = text;
+    return el;
+  }
+
+  function limpar(svg) {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+  }
+
+  function formatarEixo(valor) {
+    if (valor >= 1000) {
+      const k = valor / 1000;
+      return `${Number.isInteger(k) ? k : k.toFixed(1)}k`;
+    }
+    return Number(valor.toFixed(1)).toLocaleString('pt-BR');
+  }
+
+  function desenharGrade(svg, max, unidade = '') {
+    const left = 40, right = 396, top = 15, bottom = 215;
+    for (let i = 0; i <= 5; i++) {
+      const y = top + ((bottom - top) / 5) * i;
+      svg.appendChild(elSvg('line', {x1:left, y1:y, x2:right, y2:y, stroke:'#e9e6dc', 'stroke-width':'1'}));
+      const valor = max * (1 - i / 5);
+      svg.appendChild(elSvg('text', {x:32, y:y+4, 'text-anchor':'end', 'font-family':'Inter, sans-serif', 'font-size':'11', fill:'#b0aca2'}, formatarEixo(valor)));
+    }
+    if (unidade) {
+      svg.appendChild(elSvg('text', {x:32, y:235, 'text-anchor':'end', 'font-family':'Inter, sans-serif', 'font-size':'11', fill:'#b0aca2'}, unidade));
+    }
+  }
+
+  function desenharBarras(svgId, dados) {
+    const svg = document.getElementById(svgId);
+    if (!svg) return;
+    limpar(svg);
+    const valores = dados.map(item => Number(item.valor) || 0);
+    const bruto = Math.max(...valores, 1);
+    const max = Math.max(5, Math.ceil(bruto / 5) * 5);
+    desenharGrade(svg, max, 'Kg');
+
+    const left = 55, right = 390, bottom = 215, top = 15;
+    const larguraTotal = right - left;
+    const passo = larguraTotal / dados.length;
+    const largura = Math.min(40, passo * 0.62);
+    const cores = ['#cfe9c1','#84c064','#8ec46e','#a8d691','#a3d38c','#bde2ab'];
+
+    dados.forEach((item, i) => {
+      const valor = Number(item.valor) || 0;
+      const h = ((bottom - top) * valor) / max;
+      const x = left + i * passo + (passo - largura) / 2;
+      const y = bottom - h;
+      svg.appendChild(elSvg('rect', {x, y, width:largura, height:h, rx:4, fill:cores[i % cores.length]}));
+      svg.appendChild(elSvg('text', {x:x+largura/2, y:235, 'text-anchor':'middle', 'font-family':'Inter, sans-serif', 'font-size':'11', fill:'#a8a49a'}, item.label));
+    });
+  }
+
+  function desenharLinha(svgId, dados) {
+    const svg = document.getElementById(svgId);
+    if (!svg) return;
+    limpar(svg);
+
+    const defs = elSvg('defs');
+    const grad = elSvg('linearGradient', {id:'areaPontosDinamico', x1:'0', y1:'0', x2:'0', y2:'1'});
+    grad.appendChild(elSvg('stop', {offset:'0%', 'stop-color':'#8ec46e', 'stop-opacity':'.85'}));
+    grad.appendChild(elSvg('stop', {offset:'100%', 'stop-color':'#e4f2d8', 'stop-opacity':'.15'}));
+    defs.appendChild(grad);
+    svg.appendChild(defs);
+
+    const valores = dados.map(item => Number(item.valor) || 0);
+    const bruto = Math.max(...valores, 1);
+    const passoMax = bruto <= 1000 ? 500 : Math.pow(10, Math.floor(Math.log10(bruto)));
+    const max = Math.max(1000, Math.ceil(bruto / passoMax) * passoMax);
+    desenharGrade(svg, max);
+
+    const left=55, right=375, top=15, bottom=215;
+    const passo=(right-left)/(Math.max(dados.length-1,1));
+    const pontos=dados.map((item,i)=>({
+      x:left+i*passo,
+      y:bottom-((Number(item.valor)||0)/max)*(bottom-top),
+      label:item.label
+    }));
+
+    const coord=pontos.map(p=>`${p.x},${p.y}`).join(' ');
+    const area=`${left},${bottom} ${coord} ${right},${bottom}`;
+    svg.appendChild(elSvg('polygon', {points:area, fill:'url(#areaPontosDinamico)'}));
+    svg.appendChild(elSvg('polyline', {points:coord, fill:'none', stroke:'#5f9e30', 'stroke-width':'2.6', 'stroke-linecap':'round', 'stroke-linejoin':'round'}));
+
+    pontos.forEach((p,i)=>{
+      svg.appendChild(elSvg('circle', {cx:p.x, cy:p.y, r:4.6, fill:'#fff', stroke:'#5f9e30', 'stroke-width':'2.4'}));
+      svg.appendChild(elSvg('text', {x:p.x, y:236, 'text-anchor':'middle', 'font-family':'Inter, sans-serif', 'font-size':'11', fill:'#a8a49a'}, dados[i].label));
+    });
+  }
+
+  desenharBarras('grafico-desempenho', desempenhoData);
+  desenharLinha('grafico-evolucao', evolucaoData);
+</script>
 
 </body>
 
