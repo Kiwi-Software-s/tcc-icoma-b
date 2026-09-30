@@ -83,6 +83,12 @@ def criar_sessao():
     if usuario.get("nome"):
         session["nome"] = usuario["nome"]
 
+    garantir_usuario(
+        uid=session["uid"],
+        nome=session.get("nome", ""),
+        email=session.get("email", ""),
+    )
+
     return jsonify(success=True)
 
 

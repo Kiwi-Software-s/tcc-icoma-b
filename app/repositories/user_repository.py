@@ -11,8 +11,13 @@ def _db():
 def garantir_usuario(uid: str, nome: str = "", email: str = "") -> dict:
     """Cria o perfil do usuário no Firestore na primeira autenticação.
 
+<<<<<<< HEAD
     Se o documento já existir, preserva pontos/kg/favoritos e apenas preenche
     dados básicos que estejam ausentes.
+=======
+    Se o documento já existir, preserva pontos/kg e apenas preenche dados
+    básicos que estejam ausentes.
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
     """
     db = _db()
     ref = db.collection("usuarios").document(uid)
@@ -27,7 +32,10 @@ def garantir_usuario(uid: str, nome: str = "", email: str = "") -> dict:
             "email": email,
             "pontos_total": 0,
             "kg_total": 0.0,
+<<<<<<< HEAD
             "favoritos": [],
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
             "created_at": firestore.SERVER_TIMESTAMP,
         }
         ref.set(dados)
@@ -44,8 +52,11 @@ def garantir_usuario(uid: str, nome: str = "", email: str = "") -> dict:
         atualizacoes["pontos_total"] = 0
     if "kg_total" not in dados:
         atualizacoes["kg_total"] = 0.0
+<<<<<<< HEAD
     if "favoritos" not in dados:
         atualizacoes["favoritos"] = []
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 
     if atualizacoes:
         ref.set(atualizacoes, merge=True)
@@ -59,6 +70,7 @@ def obter_usuario(uid: str) -> dict:
     if not snap.exists:
         return {}
     return snap.to_dict() or {}
+<<<<<<< HEAD
 
 
 def atualizar_nome_usuario(uid: str, nome: str) -> str:
@@ -85,3 +97,5 @@ def obter_tipo_usuario(uid: str) -> str:
         return "usuario"
 
     return dados.get("tipo", "usuario")
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6

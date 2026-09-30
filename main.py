@@ -11,18 +11,24 @@ from app.servicies.beneficio_service import (
     BeneficioInvalidoError,
     SaldoInsuficienteError,
     listar_beneficios,
+<<<<<<< HEAD
     listar_favoritos_usuario,
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
     montar_historico_usuario,
     trocar_beneficio,
 )
 from app.servicies.resgate_service import ranking_semanal
 
+<<<<<<< HEAD
 
 IS_PRODUCTION = (
     os.environ.get("RENDER", "").lower() == "true"
     or os.environ.get("FLASK_ENV", "").lower() == "production"
 )
 
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 app = Flask(__name__)
 
 secret_key = os.environ.get("FLASK_SECRET_KEY")
@@ -66,6 +72,7 @@ def fmt_num(value):
     return texto.replace(",", "X").replace(".", ",").replace("X", ".").rstrip("0").rstrip(",")
 
 
+<<<<<<< HEAD
 @app.template_filter("fmt_date")
 def fmt_date(value):
     if not value:
@@ -80,6 +87,8 @@ def health():
     return jsonify(status="ok", app="ecopoints")
 
 
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 @app.route("/dicas-verdes")
 @login_required
 def dicas_verdes():
@@ -102,7 +111,10 @@ def meus_descontos():
         "ecopoints/descontos.html",
         active="descontos",
         beneficios=listar_beneficios(),
+<<<<<<< HEAD
         favoritos=listar_favoritos_usuario(uid),
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
         pontos_total=int(usuario.get("pontos_total", 0) or 0),
         ranking=ranking_semanal(uid),
     )
@@ -126,7 +138,11 @@ def api_trocar_beneficio():
     except SaldoInsuficienteError as exc:
         return jsonify(success=False, message=str(exc)), 409
     except Exception as exc:
+<<<<<<< HEAD
         print(f"Erro ao trocar benefício: {type(exc).__name__}: {exc}")
+=======
+        print(f"Erro ao trocar benefício: {exc}")
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
         return jsonify(success=False, message="Não foi possível concluir a troca agora."), 500
 
     return jsonify(success=True, **resultado)
@@ -141,6 +157,7 @@ def historico():
         active="historico",
         **dados,
     )
+<<<<<<< HEAD
 
 
 @app.errorhandler(404)
@@ -155,6 +172,8 @@ def erro_interno(error):
     if request.path.startswith("/api/"):
         return jsonify(success=False, message="Ocorreu um erro interno. Tente novamente."), 500
     return render_template("errors/500.html"), 500
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 
 
 @app.after_request

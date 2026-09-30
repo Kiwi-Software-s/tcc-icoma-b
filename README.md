@@ -9,8 +9,7 @@ Website gamificado para incentivo à economia circular e engajamento na gestão 
 * HTML5
 * CSS3
 * JavaScript
-* Bootstrap 5
-* Bootstrap Icons
+* Python
 
 ### Back-end
 

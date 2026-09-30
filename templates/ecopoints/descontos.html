@@ -10,7 +10,11 @@
 
   <div class="points-pill">
     <i class="bi bi-coin"></i>
+<<<<<<< HEAD
     <span>Seus GreenPoints<br><strong id="saldoPontos" data-saldo="{{ pontos_total }}">{{ pontos_total|fmt_int }} Pontos</strong></span>
+=======
+    <span>Seus GreenPoints<br><strong id="saldoPontos">{{ pontos_total|fmt_int }} Pontos</strong></span>
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
   </div>
 </div>
 
@@ -54,6 +58,7 @@
 <div class="discount-layout">
   <section class="products" id="listaProdutos">
     {% for beneficio in beneficios %}
+<<<<<<< HEAD
     <article
       class="card product-card"
       data-name="{{ beneficio.nome|lower }}"
@@ -69,10 +74,21 @@
           <img src="{{ url_for('static', filename=beneficio.imagem) }}" alt="{{ beneficio.nome }}">
         {% else %}
           <i class="bi {{ beneficio.icone or 'bi-gift' }} product-placeholder" aria-hidden="true"></i>
+=======
+    <article class="card product-card" data-name="{{ beneficio.nome }}" data-beneficio-id="{{ beneficio.id }}">
+      <div class="product-image">
+        <span class="discount-badge">{{ beneficio.desconto }}% OFF</span>
+        <button class="heart" aria-label="Favoritar">♡</button>
+        {% if beneficio.imagem %}
+          <img src="{{ url_for('static', filename=beneficio.imagem) }}" alt="{{ beneficio.nome }}">
+        {% else %}
+          <i class="bi {{ beneficio.icone or 'bi-gift' }} product-placeholder"></i>
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
         {% endif %}
       </div>
       <div class="product-body">
         <div class="product-name">{{ beneficio.nome }}</div>
+<<<<<<< HEAD
         <div class="product-meta"><i class="bi bi-shop"></i> {{ beneficio.loja }} • {{ beneficio.categoria }}</div>
         <div class="product-price"><i class="bi bi-recycle"></i><strong>{{ beneficio.preco_pontos|fmt_int }} GreenPoints</strong></div>
         <button
@@ -84,6 +100,16 @@
           data-discount="{{ beneficio.desconto }}"
         >Trocar por GreenPoints</button>
         <button class="detail" type="button" data-detail="{{ beneficio.desconto }}% OFF em {{ beneficio.nome }} • {{ beneficio.loja }} • {{ beneficio.preco_pontos }} GreenPoints">Ver detalhes</button>
+=======
+        <div class="product-price"><i class="bi bi-recycle"></i><strong>{{ beneficio.preco_pontos|fmt_int }} GreenPoints</strong></div>
+        <button
+          class="exchange"
+          data-id="{{ beneficio.id }}"
+          data-name="{{ beneficio.nome }}"
+          data-price="{{ beneficio.preco_pontos }}"
+        >Trocar por GreenPoints</button>
+        <button class="detail" data-detail="{{ beneficio.desconto }}% OFF em {{ beneficio.nome }} por {{ beneficio.preco_pontos }} GreenPoints">Ver detalhes</button>
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
       </div>
     </article>
     {% endfor %}
@@ -159,6 +185,7 @@
 {% block scripts %}
 <script>
 const saldoPontos = document.getElementById('saldoPontos');
+<<<<<<< HEAD
 const busca = document.getElementById('buscaDesconto');
 const filtroCategoria = document.getElementById('filtroCategoria');
 const filtroDesconto = document.getElementById('filtroDesconto');
@@ -167,11 +194,14 @@ const semResultados = document.getElementById('semResultados');
 const modal = document.getElementById('confirmModal');
 const btnConfirmar = document.getElementById('modalConfirmar');
 let botaoSelecionado = null;
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 
 function formatarPontos(valor) {
   return Number(valor || 0).toLocaleString('pt-BR');
 }
 
+<<<<<<< HEAD
 function saldoAtual() {
   return Number(saldoPontos.dataset.saldo || 0);
 }
@@ -195,6 +225,10 @@ function aplicarFiltros() {
   const loja = filtroLoja.value;
   let visiveis = 0;
 
+=======
+document.getElementById('buscaDesconto').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
   document.querySelectorAll('.product-card').forEach(card => {
     const texto = `${card.dataset.name} ${card.dataset.category} ${card.dataset.partner}`;
     const bateBusca = !q || texto.includes(q);
@@ -260,6 +294,43 @@ document.querySelectorAll('.heart').forEach(btn => {
 
 document.querySelectorAll('.detail').forEach(btn => {
   btn.addEventListener('click', () => ecoToast(btn.dataset.detail));
+<<<<<<< HEAD
+=======
+});
+
+document.querySelectorAll('.exchange').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const nome = btn.dataset.name;
+    const preco = Number(btn.dataset.price || 0);
+    const confirmar = window.confirm(`Resgatar ${nome} por ${formatarPontos(preco)} GreenPoints?`);
+    if (!confirmar) return;
+
+    const textoOriginal = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Processando...';
+
+    try {
+      const response = await fetch('/api/trocar-beneficio', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({beneficio_id: btn.dataset.id})
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Não foi possível concluir a troca.');
+      }
+
+      saldoPontos.textContent = `${formatarPontos(data.pontos_total)} Pontos`;
+      ecoToast(`${data.nome} resgatado! -${formatarPontos(data.pontos_gastos)} pontos • ${data.protocolo}`);
+    } catch (erro) {
+      ecoToast(erro.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = textoOriginal;
+    }
+  });
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 });
 
 function abrirModal(btn) {

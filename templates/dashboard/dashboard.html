@@ -765,10 +765,15 @@
 
           <div class="cartao-topo">
             <h2>Meu Desempenho</h2>
+<<<<<<< HEAD
             <select id="periodo-desempenho" class="filtro" aria-label="Período do desempenho">
               <option value="mensal">Mensal</option>
               <option value="semanal">Semanal</option>
               <option value="diario">Diário</option>
+=======
+            <select class="filtro" aria-label="Período do desempenho">
+              <option>Mensal</option>
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
             </select>
           </div>
 
@@ -838,10 +843,15 @@
 
           <div class="cartao-topo">
             <h2>Evolução de Pontos</h2>
+<<<<<<< HEAD
             <select id="periodo-evolucao" class="filtro" aria-label="Período da evolução de pontos">
               <option value="mensal">Mensal</option>
               <option value="semanal">Semanal</option>
               <option value="diario">Diário</option>
+=======
+            <select class="filtro" aria-label="Período da evolução de pontos">
+              <option>Mensal</option>
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
             </select>
           </div>
 
@@ -959,9 +969,14 @@
   </main>
 
 <script>
+<<<<<<< HEAD
   const graficosData = {{ graficos|tojson }};
   let desempenhoData = graficosData.mensal.desempenho;
   let evolucaoData = graficosData.mensal.evolucao;
+=======
+  const desempenhoData = {{ desempenho|tojson }};
+  const evolucaoData = {{ evolucao|tojson }};
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
   function elSvg(tag, attrs = {}, text = '') {
@@ -1004,7 +1019,10 @@
     const bruto = Math.max(...valores, 1);
     const max = Math.max(5, Math.ceil(bruto / 5) * 5);
     desenharGrade(svg, max, 'Kg');
+<<<<<<< HEAD
     const semDados = valores.every(valor => valor <= 0);
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 
     const left = 55, right = 390, bottom = 215, top = 15;
     const larguraTotal = right - left;
@@ -1020,9 +1038,12 @@
       svg.appendChild(elSvg('rect', {x, y, width:largura, height:h, rx:4, fill:cores[i % cores.length]}));
       svg.appendChild(elSvg('text', {x:x+largura/2, y:235, 'text-anchor':'middle', 'font-family':'Inter, sans-serif', 'font-size':'11', fill:'#a8a49a'}, item.label));
     });
+<<<<<<< HEAD
     if (semDados) {
       svg.appendChild(elSvg('text', {x:220, y:120, 'text-anchor':'middle', 'font-family':'Inter, sans-serif', 'font-size':'13', fill:'#8d897f'}, 'Ainda não há reciclagens neste período'));
     }
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
   }
 
   function desenharLinha(svgId, dados) {
@@ -1038,7 +1059,10 @@
     svg.appendChild(defs);
 
     const valores = dados.map(item => Number(item.valor) || 0);
+<<<<<<< HEAD
     const semDados = valores.every(valor => valor <= 0);
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
     const bruto = Math.max(...valores, 1);
     const passoMax = bruto <= 1000 ? 500 : Math.pow(10, Math.floor(Math.log10(bruto)));
     const max = Math.max(1000, Math.ceil(bruto / passoMax) * passoMax);
@@ -1061,6 +1085,7 @@
       svg.appendChild(elSvg('circle', {cx:p.x, cy:p.y, r:4.6, fill:'#fff', stroke:'#5f9e30', 'stroke-width':'2.4'}));
       svg.appendChild(elSvg('text', {x:p.x, y:236, 'text-anchor':'middle', 'font-family':'Inter, sans-serif', 'font-size':'11', fill:'#a8a49a'}, dados[i].label));
     });
+<<<<<<< HEAD
     if (semDados) {
       svg.appendChild(elSvg('text', {x:220, y:120, 'text-anchor':'middle', 'font-family':'Inter, sans-serif', 'font-size':'13', fill:'#8d897f'}, 'Ainda não há movimentação de pontos neste período'));
     }
@@ -1092,6 +1117,12 @@
 
   atualizarGraficoDesempenho('mensal');
   atualizarGraficoEvolucao('mensal');
+=======
+  }
+
+  desenharBarras('grafico-desempenho', desempenhoData);
+  desenharLinha('grafico-evolucao', evolucaoData);
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 </script>
 
 </body>

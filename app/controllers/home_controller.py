@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, render_template, request, session
 
 from app.controllers.auth_controller import login_required
+<<<<<<< HEAD
 from app.repositories.admin_repository import listar_codigos, listar_usuarios, alterar_tipo
 from app.repositories.user_repository import (
     atualizar_nome_usuario,
@@ -16,6 +17,9 @@ from app.servicies.beneficio_service import (
     montar_historico_usuario,
 )
 from app.servicies.funcionario_service import criar_codigo
+=======
+from app.repositories.user_repository import garantir_usuario
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 from app.servicies.resgate_service import (
     CodigoInvalidoError,
     CodigoJaUsadoError,
@@ -23,6 +27,10 @@ from app.servicies.resgate_service import (
     ranking_semanal,
     resgatar_codigo,
 )
+<<<<<<< HEAD
+=======
+from app.servicies.beneficio_service import listar_beneficios
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 
 home_bp = Blueprint("home", __name__)
 
@@ -39,17 +47,28 @@ def dashboard():
     nome = session.get("nome", "")
     email = session.get("email", "")
 
+<<<<<<< HEAD
     usuario = garantir_usuario(uid, nome, email)
     if usuario.get("nome"):
         session["nome"] = usuario["nome"]
 
     metricas = montar_metricas_dashboard(uid)
     ranking = ranking_semanal(uid)
+=======
+    garantir_usuario(uid, nome, email)
+    metricas = montar_metricas_dashboard(uid)
+    ranking = ranking_semanal(uid)
+
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
     beneficios_dashboard = listar_beneficios()[:3]
 
     return render_template(
         "dashboard/dashboard.html",
+<<<<<<< HEAD
         nome=session.get("nome") or "Usuário",
+=======
+        nome=nome,
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
         ranking=ranking,
         beneficios_dashboard=beneficios_dashboard,
         **metricas,
@@ -62,6 +81,7 @@ def mapa_de_pontos():
     return render_template("mapa/mapa.html")
 
 
+<<<<<<< HEAD
 @home_bp.route("/perfil")
 @login_required
 def perfil():
@@ -115,6 +135,8 @@ def api_favorito(beneficio_id):
     return jsonify(success=True, favorito=favorito, favoritos=favoritos)
 
 
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 @home_bp.route("/api/resgatar-codigo", methods=["POST"])
 @login_required
 def api_resgatar_codigo():
@@ -133,6 +155,7 @@ def api_resgatar_codigo():
     except CodigoJaUsadoError as exc:
         return jsonify(success=False, message=str(exc)), 409
     except Exception as exc:
+<<<<<<< HEAD
         print(f"Erro ao resgatar código: {type(exc).__name__}: {exc}")
         return jsonify(success=False, message="Não foi possível resgatar o código agora."), 500
 
@@ -184,3 +207,9 @@ def funcionario_gerar():
         return jsonify(success=True, **resultado)
     except Exception as exc:
         return jsonify(success=False, message=str(exc)),400
+=======
+        print(f"Erro ao resgatar código: {exc}")
+        return jsonify(success=False, message="Não foi possível resgatar o código agora."), 500
+
+    return jsonify(success=True, **resultado)
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6

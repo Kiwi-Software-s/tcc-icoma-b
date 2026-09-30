@@ -3,9 +3,13 @@ from datetime import datetime, timedelta, timezone
 from app.repositories.beneficio_repository import (
     BeneficioInvalidoError,
     SaldoInsuficienteError,
+<<<<<<< HEAD
     definir_favorito,
     listar_beneficios,
     listar_favoritos_usuario,
+=======
+    listar_beneficios,
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
     listar_trocas_usuario,
     trocar_beneficio,
 )
@@ -103,18 +107,25 @@ def montar_historico_usuario(uid: str) -> dict:
         "descontos_resgatados": descontos_resgatados,
         "pontos_descarte": len(locais),
         "eventos": eventos,
+<<<<<<< HEAD
         "quantidade_eventos": len(eventos),
         "quantidade_resgates": len(resgates),
         "quantidade_trocas": len(trocas),
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
     }
 
 
 __all__ = [
     "BeneficioInvalidoError",
     "SaldoInsuficienteError",
+<<<<<<< HEAD
     "definir_favorito",
     "listar_beneficios",
     "listar_favoritos_usuario",
+=======
+    "listar_beneficios",
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
     "listar_trocas_usuario",
     "montar_historico_usuario",
     "trocar_beneficio",

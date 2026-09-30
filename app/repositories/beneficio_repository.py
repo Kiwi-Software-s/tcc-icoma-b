@@ -13,8 +13,14 @@ class SaldoInsuficienteError(Exception):
     pass
 
 
+<<<<<<< HEAD
 # Catálogo fixo por enquanto. O backend usa estes valores como fonte de
 # verdade, então o navegador não consegue alterar o preço pelo DevTools.
+=======
+# Catálogo fixo por enquanto, como o restante dos benefícios do protótipo.
+# O backend usa estes valores como fonte de verdade, então o navegador não
+# consegue alterar o preço de um resgate pelo DevTools.
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 BENEFICIOS = {
     "ecobag-sustentavel": {
         "id": "ecobag-sustentavel",
@@ -22,8 +28,11 @@ BENEFICIOS = {
         "preco_pontos": 150,
         "desconto": 30,
         "tipo": "desconto",
+<<<<<<< HEAD
         "categoria": "Acessórios",
         "loja": "EcoViva",
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
         "imagem": "dashboard/premios/ecobag.png",
         "icone": None,
     },
@@ -33,8 +42,11 @@ BENEFICIOS = {
         "preco_pontos": 150,
         "desconto": 20,
         "tipo": "desconto",
+<<<<<<< HEAD
         "categoria": "Casa & dia a dia",
         "loja": "Verde Mais",
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
         "imagem": "dashboard/premios/garrafa.png",
         "icone": None,
     },
@@ -44,8 +56,11 @@ BENEFICIOS = {
         "preco_pontos": 150,
         "desconto": 15,
         "tipo": "desconto",
+<<<<<<< HEAD
         "categoria": "Casa & jardim",
         "loja": "Raiz Verde",
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
         "imagem": "dashboard/premios/vaso.png",
         "icone": None,
     },
@@ -55,8 +70,11 @@ BENEFICIOS = {
         "preco_pontos": 150,
         "desconto": 10,
         "tipo": "desconto",
+<<<<<<< HEAD
         "categoria": "Bem-estar",
         "loja": "Naturalmente",
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
         "imagem": None,
         "icone": "bi-bag-heart",
     },
@@ -78,6 +96,7 @@ def obter_beneficio(beneficio_id: str) -> dict | None:
     return dict(item) if item else None
 
 
+<<<<<<< HEAD
 def listar_favoritos_usuario(uid: str) -> list[str]:
     snap = _db().collection("usuarios").document(uid).get()
     if not snap.exists:
@@ -115,6 +134,8 @@ def definir_favorito(uid: str, beneficio_id: str, favorito: bool) -> list[str]:
     return _executar(transaction)
 
 
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
 def trocar_beneficio(
     uid: str,
     beneficio_id: str,
