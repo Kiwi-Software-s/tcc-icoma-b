@@ -443,6 +443,7 @@
 
     .ecoponto-popup .leaflet-popup-content-wrapper {
       width: min(430px, calc(100vw - 36px));
+      max-width: 95vw;
       border-radius: 20px;
       background: #fdfaf7;
       box-shadow: 0 7px 22px rgba(0, 0, 0, .28);
@@ -750,7 +751,13 @@
         transition: none !important;
       }
     }
-  </style>
+  
+@media (max-width: 600px) {
+  .leaflet-popup-content-wrapper { width: calc(100vw - 50px); }
+  .ecoponto-popup { max-width: calc(100vw - 50px); }
+  .ecoponto-popup img { max-width: 100%; height: auto; }
+}
+</style>
   <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
   <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
 </head>

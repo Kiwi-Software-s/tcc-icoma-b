@@ -2,5 +2,10 @@
   <img class="avatar" src="{{ url_for('static', filename='dashboard/icons/user.png') }}" alt="">
 </button>
 <div id="eco-account-menu" class="eco-account-menu" popover="auto">
-  <a href="{{ url_for('auth.logout') }}">Sair da conta</a>
+  <div class="eco-account-summary">
+    <strong>{{ session.get('nome') or 'Usuário' }}</strong>
+    <span>{{ session.get('email') or '' }}</span>
+  </div>
+  <a href="{{ url_for('home.perfil') }}"><i class="bi bi-person-circle"></i> Meu perfil</a>
+  <a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Sair da conta</a>
 </div>

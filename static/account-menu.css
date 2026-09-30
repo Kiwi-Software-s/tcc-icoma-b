@@ -36,3 +36,15 @@
 }
 .eco-account-menu a:hover,
 .eco-account-menu a:focus-visible { background: #edf4e8; }
+.eco-account-summary {
+  padding: 10px 12px 9px;
+  border-bottom: 1px solid #ece7dd;
+  margin-bottom: 4px;
+  max-width: 240px;
+}
+.eco-account-summary strong,
+.eco-account-summary span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.eco-account-summary strong { color:#174d2c; font:700 13px/1.4 Inter,sans-serif; }
+.eco-account-summary span { color:#969189; font:500 10px/1.4 Inter,sans-serif; margin-top:2px; }
+.eco-account-menu a { display:flex; align-items:center; gap:9px; }
+.eco-account-menu a i { width:16px; text-align:center; }
