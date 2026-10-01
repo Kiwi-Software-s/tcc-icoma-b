@@ -97,10 +97,6 @@ A pontuação segue a mesma regra do projeto:
 ## Benefícios na dashboard
 
 A seção **Benefícios Disponíveis** da dashboard agora usa exatamente o mesmo catálogo da tela **Meus descontos**. Assim, nome, imagem, porcentagem e preço em GreenPoints não ficam duplicados nem divergentes. Os cards e o botão **Ver todos os benefícios** levam para `/meus-descontos`.
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
 ## Perfil e favoritos
 
@@ -120,8 +116,3 @@ python preparar_demo.py --email EMAIL_DA_CONTA
 ```
 
 O script só roda uma vez por UID e cria um marcador em `demo_seeds` para evitar duplicação.
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70

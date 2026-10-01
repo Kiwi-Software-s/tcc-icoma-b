@@ -137,10 +137,6 @@ def listar_resgates_usuario(uid: str) -> list[dict]:
     return itens
 
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 def _normalizar_data_local(data):
     if not data:
         return None
@@ -253,21 +249,6 @@ def _montar_serie_periodo(resgates: list[dict], trocas: list[dict], saldo_atual:
         })
 
     return {"desempenho": desempenho, "evolucao": evolucao}
-<<<<<<< HEAD
-=======
-=======
-def _seis_meses_referencia(agora_local: datetime) -> list[tuple[int, int]]:
-    ano = agora_local.year
-    mes = agora_local.month
-    resultado = []
-    for deslocamento in range(5, -1, -1):
-        total = ano * 12 + (mes - 1) - deslocamento
-        y = total // 12
-        m = (total % 12) + 1
-        resultado.append((y, m))
-    return resultado
->>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
 
 def montar_metricas_dashboard(uid: str) -> dict:
@@ -275,10 +256,6 @@ def montar_metricas_dashboard(uid: str) -> dict:
     resgates = listar_resgates_usuario(uid)
     trocas = listar_trocas_usuario(uid)
     agora = datetime.now(BRT)
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     saldo_atual = int(usuario.get("pontos_total", 0) or 0)
 
     graficos = {
@@ -289,86 +266,15 @@ def montar_metricas_dashboard(uid: str) -> dict:
 
     # O card continua mostrando o total do mês atual.
     kg_mes = graficos["mensal"]["desempenho"][-1]["valor"]
-<<<<<<< HEAD
-=======
-=======
-    meses = _seis_meses_referencia(agora)
-
-    kg_por_mes = defaultdict(float)
-    saldo_delta_por_mes = defaultdict(int)
-    primeiro_ano, primeiro_mes = meses[0]
-
-    # Calcula o saldo histórico pelos eventos. Um ajuste cobre qualquer saldo
-    # antigo/manual que exista no usuário mas não tenha evento correspondente.
-    total_ganho_eventos = sum(int(item.get("pontos", 0) or 0) for item in resgates)
-    total_gasto_eventos = sum(int(item.get("pontos_gastos", 0) or 0) for item in trocas)
-    saldo_atual = int(usuario.get("pontos_total", 0) or 0)
-    ajuste_saldo = saldo_atual - (total_ganho_eventos - total_gasto_eventos)
-    saldo_antes_periodo = ajuste_saldo
-
-    for item in resgates:
-        data = item.get("data")
-        if not data:
-            continue
-        if data.tzinfo is None:
-            data = data.replace(tzinfo=timezone.utc)
-        local = data.astimezone(BRT)
-        chave = (local.year, local.month)
-        pontos = int(item.get("pontos", 0) or 0)
-        kg = float(item.get("kg", 0) or 0)
-
-        if chave < (primeiro_ano, primeiro_mes):
-            saldo_antes_periodo += pontos
-        else:
-            kg_por_mes[chave] += kg
-            saldo_delta_por_mes[chave] += pontos
-
-    for item in trocas:
-        data = item.get("data")
-        if not data:
-            continue
-        if data.tzinfo is None:
-            data = data.replace(tzinfo=timezone.utc)
-        local = data.astimezone(BRT)
-        chave = (local.year, local.month)
-        pontos = int(item.get("pontos_gastos", 0) or 0)
-
-        if chave < (primeiro_ano, primeiro_mes):
-            saldo_antes_periodo -= pontos
-        else:
-            saldo_delta_por_mes[chave] -= pontos
-
-    desempenho = []
-    evolucao = []
-    saldo = saldo_antes_periodo
-    for ano, mes in meses:
-        saldo += saldo_delta_por_mes[(ano, mes)]
-        desempenho.append({"label": MESES_PT[mes - 1], "valor": round(kg_por_mes[(ano, mes)], 2)})
-        evolucao.append({"label": MESES_PT[mes - 1], "valor": max(0, saldo)})
-
-    kg_mes = round(kg_por_mes[(agora.year, agora.month)], 2)
->>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
     return {
         "usuario": usuario,
         "kg_mes": kg_mes,
         "pontos_total": saldo_atual,
         "kg_total": round(float(usuario.get("kg_total", 0) or 0), 2),
-<<<<<<< HEAD
         "desempenho": graficos["mensal"]["desempenho"],
         "evolucao": graficos["mensal"]["evolucao"],
         "graficos": graficos,
-=======
-<<<<<<< HEAD
-        "desempenho": graficos["mensal"]["desempenho"],
-        "evolucao": graficos["mensal"]["evolucao"],
-        "graficos": graficos,
-=======
-        "desempenho": desempenho,
-        "evolucao": evolucao,
->>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     }
 
 

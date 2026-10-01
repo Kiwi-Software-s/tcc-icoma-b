@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends "ecopoints/base.html" %}
 {% block title %}EcoPoints - Gerar código{% endblock %}
 
@@ -203,32 +202,5 @@
     ecoToast('Não foi possível copiar automaticamente. O código foi selecionado.');
   });
 })();
-=======
-
-{% extends "ecopoints/base.html" %}
-{% block content %}
-<div class="container">
-<h1>Painel do Funcionário</h1>
-<p>Gere códigos após receber e pesar os materiais.</p>
-<form id="gerar">
-<select name="material">
-<option value="plastico">Plástico</option>
-<option value="papel">Papel</option>
-<option value="vidro">Vidro</option>
-<option value="metal">Metal</option>
-</select>
-<input name="kg" type="number" step="0.1" placeholder="Kg">
-<button>Gerar código</button>
-</form>
-<div class="eco-card" id="resultado" style="margin-top:20px"></div>
-</div>
-<script>
-document.querySelector("#gerar").onsubmit=async e=>{
-e.preventDefault();
-let r=await fetch("/funcionario/gerar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});
-let j=await r.json();
-document.querySelector("#resultado").innerHTML=j.success?`Código: <b id="codigo-gerado">${j.codigo}</b><br>${j.kg}kg - ${j.pontos} pontos<br><button onclick="navigator.clipboard.writeText(document.getElementById("codigo-gerado").innerText)">Copiar código</button>`:j.message;
-}
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 </script>
 {% endblock %}

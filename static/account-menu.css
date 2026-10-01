@@ -48,7 +48,6 @@
 .eco-account-summary span { color:#969189; font:500 10px/1.4 Inter,sans-serif; margin-top:2px; }
 .eco-account-menu a { display:flex; align-items:center; gap:9px; }
 .eco-account-menu a i { width:16px; text-align:center; }
-<<<<<<< HEAD
 
 .eco-role-badge {
   display: inline-flex !important;
@@ -63,5 +62,3 @@
   text-transform: uppercase;
   letter-spacing: .06em;
 }
-=======
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70

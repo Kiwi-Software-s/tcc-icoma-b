@@ -6,8 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>EcoPoints - Mapa de Pontos de Descarte</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
 
-  <link rel="favicon" href="../../img/ecopoints.favicon.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap"
@@ -457,15 +459,9 @@
     }
 
     .ecoponto-popup .leaflet-popup-content-wrapper {
-<<<<<<< HEAD
       width: min(var(--popup-width, 430px), calc(100vw - 36px));
       max-width: 95vw;
       border-radius: var(--popup-radius, 20px);
-=======
-      width: min(430px, calc(100vw - 36px));
-      max-width: 95vw;
-      border-radius: 20px;
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
       background: #fdfaf7;
       box-shadow: 0 7px 22px rgba(0, 0, 0, .28);
       overflow: hidden;
@@ -797,14 +793,6 @@
       }
     }
   
-<<<<<<< HEAD
-=======
-@media (max-width: 600px) {
-  .leaflet-popup-content-wrapper { width: calc(100vw - 50px); }
-  .ecoponto-popup { max-width: calc(100vw - 50px); }
-  .ecoponto-popup img { max-width: 100%; height: auto; }
-}
->>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 </style>
   <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='mobile-nav.css') }}">
