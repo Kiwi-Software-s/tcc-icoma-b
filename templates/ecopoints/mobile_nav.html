@@ -1,0 +1,59 @@
+<header class="mobile-appbar" aria-label="Navegação móvel">
+  <button class="mobile-menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-main-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="mobile-brand" href="{{ url_for('home.dashboard') }}" aria-label="EcoPoints - Início">
+    <img src="{{ url_for('static', filename='titulo.png') }}" alt="EcoPoints">
+  </a>
+  <a class="mobile-profile" href="{{ url_for('home.perfil') }}" aria-label="Meu perfil">
+    <i class="bi bi-person-circle" aria-hidden="true"></i>
+  </a>
+</header>
+
+<div class="mobile-menu-overlay" data-mobile-menu-close></div>
+<aside id="mobile-main-menu" class="mobile-drawer" aria-hidden="true">
+  <div class="mobile-drawer-head">
+    <img src="{{ url_for('static', filename='titulo.png') }}" alt="EcoPoints">
+    <button type="button" class="mobile-menu-close" data-mobile-menu-close aria-label="Fechar menu">
+      <i class="bi bi-x-lg" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <nav class="mobile-drawer-nav" aria-label="Menu principal">
+    <a class="{{ 'active' if active == 'inicio' else '' }}" href="{{ url_for('home.dashboard') }}">
+      <i class="bi bi-house-fill"></i><span>Início</span>
+    </a>
+    <a class="{{ 'active' if active == 'descontos' else '' }}" href="{{ url_for('meus_descontos') }}">
+      <i class="bi bi-ticket-perforated-fill"></i><span>Meus descontos</span>
+    </a>
+    <a class="{{ 'active' if active == 'historico' else '' }}" href="{{ url_for('historico') }}">
+      <i class="bi bi-clock-history"></i><span>Histórico</span>
+    </a>
+    <a class="{{ 'active' if active == 'dicas' else '' }}" href="{{ url_for('dicas_verdes') }}">
+      <i class="bi bi-lightbulb-fill"></i><span>Dicas verdes</span>
+    </a>
+    <a class="{{ 'active' if active == 'mapa' else '' }}" href="{{ url_for('home.mapa_de_pontos') }}">
+      <i class="bi bi-map-fill"></i><span>Mapa dos pontos</span>
+    </a>
+    <a class="{{ 'active' if active == 'resgate' else '' }}" href="{{ url_for('resgatar_codigos') }}">
+      <i class="bi bi-qr-code"></i><span>Resgatar pontos</span>
+    </a>
+
+    {% if session.get('tipo') in ['funcionario', 'admin'] %}
+    <div class="mobile-drawer-label">Gestão</div>
+    <a class="{{ 'active' if active == 'funcionario' else '' }}" href="{{ url_for('home.funcionario') }}">
+      <i class="bi bi-upc-scan"></i><span>Gerar código</span>
+    </a>
+    {% endif %}
+    {% if session.get('tipo') == 'admin' %}
+    <a class="{{ 'active' if active == 'admin' else '' }}" href="{{ url_for('home.admin') }}">
+      <i class="bi bi-shield-lock-fill"></i><span>Administração</span>
+    </a>
+    {% endif %}
+  </nav>
+
+  <div class="mobile-drawer-account">
+    <a href="{{ url_for('home.perfil') }}"><i class="bi bi-person-circle"></i><span>Meu perfil</span></a>
+    <a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i><span>Sair da conta</span></a>
+  </div>
+</aside>

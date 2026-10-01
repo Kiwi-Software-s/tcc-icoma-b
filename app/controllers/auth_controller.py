@@ -4,8 +4,8 @@ from flask import Blueprint, jsonify, redirect, render_template, request, sessio
 from firebase_admin import auth as firebase_auth
 
 from app.firebase_config import init_firebase
+from app.repositories.user_repository import garantir_usuario, obter_tipo_usuario
 
-init_firebase()
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -14,8 +14,22 @@ def login_required(view):
     """Decorator que protege rotas exigindo uma sessão autenticada."""
     @functools.wraps(view)
     def wrapped_view(*args, **kwargs):
-        if not session.get("uid"):
+        uid = session.get("uid")
+        if not uid:
             return redirect(url_for("auth.login"))
+
+        # Mantém a permissão da sessão sincronizada com o Firestore.
+        # Assim, quando um admin promove/rebaixa uma conta, o menu correto
+        # aparece já na próxima página protegida, sem precisar sair e entrar.
+        try:
+            session["tipo"] = obter_tipo_usuario(uid)
+        except Exception as exc:
+            # Falha de rede não deve derrubar a navegação. Mantém o último
+            # papel conhecido da sessão e as rotas sensíveis continuam
+            # validando novamente a permissão no backend.
+            print(f"Não foi possível atualizar o tipo do usuário: {type(exc).__name__}")
+            session.setdefault("tipo", "usuario")
+
         return view(*args, **kwargs)
     return wrapped_view
 
@@ -36,11 +50,7 @@ def cadastro():
 
 @auth_bp.route("/auth/session", methods=["POST"])
 def criar_sessao():
-    """
-    Recebe o idToken gerado pelo Firebase no navegador (após login ou
-    cadastro com e-mail/senha ou Google), valida no servidor com o
-    Firebase Admin SDK e cria a sessão do Flask.
-    """
+    """Valida o idToken do Firebase e cria a sessão Flask."""
     data = request.get_json(silent=True) or {}
     id_token = data.get("idToken")
 
@@ -48,15 +58,47 @@ def criar_sessao():
         return jsonify(success=False, message="Token não informado."), 400
 
     try:
+        init_firebase()
         decoded_token = firebase_auth.verify_id_token(id_token)
-    except Exception:
+    except RuntimeError as exc:
+        print(f"Firebase não configurado: {exc}")
+        return jsonify(
+            success=False,
+            message="O servidor de autenticação não está configurado neste ambiente.",
+        ), 503
+    except Exception as exc:
+        print(f"Falha ao validar token Firebase: {type(exc).__name__}")
         return jsonify(success=False, message="Token inválido ou expirado."), 401
 
-    session["uid"] = decoded_token.get("uid")
-    session["email"] = decoded_token.get("email")
-    session["nome"] = decoded_token.get("name", "")
+    uid = decoded_token.get("uid")
+    if not uid:
+        return jsonify(success=False, message="Token sem identificador de usuário."), 401
 
-    return jsonify(success=True)
+    session.clear()
+    session.permanent = True
+    session["uid"] = uid
+    session["email"] = decoded_token.get("email") or ""
+    session["nome"] = decoded_token.get("name") or ""
+
+    try:
+        usuario = garantir_usuario(
+            uid=uid,
+            nome=session.get("nome", ""),
+            email=session.get("email", ""),
+        )
+    except Exception as exc:
+        session.clear()
+        print(f"Falha ao carregar perfil no Firestore: {type(exc).__name__}: {exc}")
+        return jsonify(
+            success=False,
+            message="Login validado, mas não foi possível carregar seu perfil agora.",
+        ), 503
+
+    if usuario.get("nome"):
+        session["nome"] = usuario["nome"]
+    session["tipo"] = usuario.get("tipo", "usuario")
+
+    return jsonify(success=True, tipo=session["tipo"])
 
 
 @auth_bp.route("/logout")

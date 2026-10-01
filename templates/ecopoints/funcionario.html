@@ -1,0 +1,206 @@
+{% extends "ecopoints/base.html" %}
+{% block title %}EcoPoints - Gerar código{% endblock %}
+
+{% block content %}
+<section class="staff-page">
+  <div class="page-heading staff-heading">
+    <div>
+      <span class="staff-kicker">Área do funcionário</span>
+      <h1>Gerar código de descarte</h1>
+      <p>Informe o material e o peso medido no ponto de coleta. Os GreenPoints são calculados automaticamente.</p>
+    </div>
+    <a class="staff-back" href="{{ url_for('home.dashboard') }}"><i class="bi bi-arrow-left"></i> Voltar à dashboard</a>
+  </div>
+
+  <div class="staff-grid">
+    <article class="card staff-form-card">
+      <div class="staff-card-head">
+        <div class="staff-card-icon"><i class="bi bi-upc-scan"></i></div>
+        <div>
+          <h2>Novo código</h2>
+          <p>Use a pesagem real do material recebido.</p>
+        </div>
+      </div>
+
+      <form id="gerarCodigoForm" class="staff-form" novalidate>
+        <label>
+          <span>Material</span>
+          <select id="material" name="material" required>
+            <option value="plastico">Plástico — 150 pontos/kg</option>
+            <option value="papel">Papel — 100 pontos/kg</option>
+            <option value="vidro">Vidro — 80 pontos/kg</option>
+            <option value="metal">Metal — 200 pontos/kg</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Peso (kg)</span>
+          <input id="kg" name="kg" type="number" min="0.01" max="1000" step="0.01" inputmode="decimal" placeholder="Ex.: 2,5" required>
+        </label>
+
+        <div class="staff-preview" aria-live="polite">
+          <span>Pontos estimados</span>
+          <strong id="pontosPreview">0 GreenPoints</strong>
+        </div>
+
+        <button id="gerarCodigoBtn" class="staff-primary-btn" type="submit">
+          <i class="bi bi-stars"></i><span>Gerar código</span>
+        </button>
+        <p id="gerarErro" class="staff-message error" role="alert" hidden></p>
+      </form>
+    </article>
+
+    <article class="card staff-result-card" id="resultadoCard">
+      <div class="staff-result-empty" id="resultadoVazio">
+        <i class="bi bi-qr-code"></i>
+        <strong>O código aparecerá aqui</strong>
+        <span>Depois de gerar, entregue o código ao usuário para resgate no EcoPoints.</span>
+      </div>
+
+      <div id="resultadoConteudo" class="staff-result-content" hidden>
+        <span class="staff-success-label"><i class="bi bi-check-circle-fill"></i> Código gerado com sucesso</span>
+        <div class="staff-code-line">
+          <strong id="codigoGerado">—</strong>
+          <button id="copiarCodigo" type="button" class="staff-copy-btn"><i class="bi bi-copy"></i> Copiar</button>
+        </div>
+        <div class="staff-result-meta">
+          <div><span>Material</span><strong id="resultadoMaterial">—</strong></div>
+          <div><span>Peso</span><strong id="resultadoKg">—</strong></div>
+          <div><span>GreenPoints</span><strong id="resultadoPontos">—</strong></div>
+        </div>
+        <p class="staff-result-note"><i class="bi bi-info-circle"></i> O código só pode ser usado uma vez.</p>
+      </div>
+    </article>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+  const form = document.getElementById('gerarCodigoForm');
+  const material = document.getElementById('material');
+  const kg = document.getElementById('kg');
+  const preview = document.getElementById('pontosPreview');
+  const submit = document.getElementById('gerarCodigoBtn');
+  const erro = document.getElementById('gerarErro');
+  const vazio = document.getElementById('resultadoVazio');
+  const conteudo = document.getElementById('resultadoConteudo');
+  const codigo = document.getElementById('codigoGerado');
+  const copiar = document.getElementById('copiarCodigo');
+
+  const tabela = { plastico: 150, papel: 100, vidro: 80, metal: 200 };
+  const nomes = { plastico: 'Plástico', papel: 'Papel', vidro: 'Vidro', metal: 'Metal' };
+
+  function numeroKg() {
+    const valor = Number(String(kg.value || '').replace(',', '.'));
+    return Number.isFinite(valor) ? valor : 0;
+  }
+
+  function atualizarPreview() {
+    const peso = numeroKg();
+    const pontos = Math.max(0, Math.round(peso * (tabela[material.value] || 0)));
+    preview.textContent = `${pontos.toLocaleString('pt-BR')} GreenPoints`;
+  }
+
+  material.addEventListener('change', atualizarPreview);
+  kg.addEventListener('input', atualizarPreview);
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    erro.hidden = true;
+
+    const peso = numeroKg();
+    if (peso <= 0) {
+      erro.textContent = 'Informe um peso maior que zero.';
+      erro.hidden = false;
+      kg.focus();
+      return;
+    }
+
+    submit.disabled = true;
+    submit.innerHTML = '<span class="modal-spinner"></span><span>Gerando...</span>';
+
+    try {
+      const response = await fetch('/funcionario/gerar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ material: material.value, kg: peso })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || 'Não foi possível gerar o código.');
+
+      codigo.textContent = data.codigo;
+      document.getElementById('resultadoMaterial').textContent = nomes[data.material] || nomes[material.value] || data.material;
+      document.getElementById('resultadoKg').textContent = `${Number(data.kg).toLocaleString('pt-BR')} kg`;
+      document.getElementById('resultadoPontos').textContent = `${Number(data.pontos).toLocaleString('pt-BR')} pontos`;
+      vazio.hidden = true;
+      conteudo.hidden = false;
+      ecoToast('Código gerado com sucesso.');
+    } catch (error) {
+      erro.textContent = error.message || 'Não foi possível gerar o código.';
+      erro.hidden = false;
+    } finally {
+      submit.disabled = false;
+      submit.innerHTML = '<i class="bi bi-stars"></i><span>Gerar código</span>';
+    }
+  });
+
+  async function copiarTexto(valor) {
+    // Clipboard API funciona em HTTPS/localhost. Em acesso pelo IP da rede,
+    // alguns navegadores bloqueiam a API; por isso há um fallback compatível.
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(valor);
+        return true;
+      } catch (_) {
+        // Continua para o fallback abaixo.
+      }
+    }
+
+    const textarea = document.createElement('textarea');
+    textarea.value = valor;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    textarea.style.top = '0';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+
+    let copiado = false;
+    try {
+      copiado = document.execCommand('copy');
+    } catch (_) {
+      copiado = false;
+    }
+    textarea.remove();
+    return copiado;
+  }
+
+  copiar.addEventListener('click', async () => {
+    const valor = codigo.textContent.trim();
+    if (!valor || valor === '—') return;
+
+    const htmlOriginal = copiar.innerHTML;
+    const copiado = await copiarTexto(valor);
+
+    if (copiado) {
+      copiar.innerHTML = '<i class="bi bi-check-lg"></i> Copiado!';
+      ecoToast('Código copiado.');
+      setTimeout(() => { copiar.innerHTML = htmlOriginal; }, 1600);
+      return;
+    }
+
+    // Último fallback: deixa o valor selecionável para cópia manual.
+    const range = document.createRange();
+    range.selectNodeContents(codigo);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    ecoToast('Não foi possível copiar automaticamente. O código foi selecionado.');
+  });
+})();
+</script>
+{% endblock %}

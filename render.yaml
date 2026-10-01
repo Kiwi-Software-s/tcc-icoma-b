@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ecopoints
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app
+    healthCheckPath: /health
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: FIREBASE_CREDENTIALS
+        sync: false
+      - key: FLASK_ENV
+        value: production

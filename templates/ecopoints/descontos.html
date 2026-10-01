@@ -5,86 +5,110 @@
 <div class="search-row">
   <div class="search-box">
     <i class="bi bi-search"></i>
-    <input id="buscaDesconto" placeholder="Buscar desconto">
+    <input id="buscaDesconto" placeholder="Buscar benefício, categoria ou loja" autocomplete="off">
   </div>
 
   <div class="points-pill">
     <i class="bi bi-coin"></i>
-    <span>Seus GreenPoints<br><strong>350 Pontos</strong></span>
+    <span>Seus GreenPoints<br><strong id="saldoPontos" data-saldo="{{ pontos_total }}">{{ pontos_total|fmt_int }} Pontos</strong></span>
   </div>
 </div>
 
-<div class="filters">
-  <button class="filter-btn primary"><i class="bi bi-grid-fill"></i>Categoria<i class="bi bi-chevron-down"></i></button>
-  <button class="filter-btn"><i class="bi bi-tags-fill"></i>% Desconto<i class="bi bi-chevron-down"></i></button>
-  <button class="filter-btn"><i class="bi bi-shop"></i>Lojas parceiras<i class="bi bi-chevron-down"></i></button>
+<div class="filters" aria-label="Filtros de benefícios">
+  <label class="filter-select-wrap primary">
+    <i class="bi bi-grid-fill"></i>
+    <select id="filtroCategoria" aria-label="Filtrar por categoria">
+      <option value="">Todas as categorias</option>
+      {% for categoria in beneficios|map(attribute='categoria')|unique %}
+      <option value="{{ categoria|lower }}">{{ categoria }}</option>
+      {% endfor %}
+    </select>
+    <i class="bi bi-chevron-down"></i>
+  </label>
+
+  <label class="filter-select-wrap">
+    <i class="bi bi-tags-fill"></i>
+    <select id="filtroDesconto" aria-label="Filtrar por desconto">
+      <option value="">Todos os descontos</option>
+      {% for valor in beneficios|map(attribute='desconto')|unique|sort(reverse=true) %}
+      <option value="{{ valor }}">{{ valor }}% OFF</option>
+      {% endfor %}
+    </select>
+    <i class="bi bi-chevron-down"></i>
+  </label>
+
+  <label class="filter-select-wrap">
+    <i class="bi bi-shop"></i>
+    <select id="filtroLoja" aria-label="Filtrar por loja parceira">
+      <option value="">Todas as lojas</option>
+      {% for loja in beneficios|map(attribute='loja')|unique %}
+      <option value="{{ loja|lower }}">{{ loja }}</option>
+      {% endfor %}
+    </select>
+    <i class="bi bi-chevron-down"></i>
+  </label>
+
+  <button id="limparFiltros" class="clear-filters" type="button"><i class="bi bi-x-circle"></i> Limpar filtros</button>
 </div>
 
 <div class="discount-layout">
   <section class="products" id="listaProdutos">
-    <article class="card product-card" data-name="EcoBag sustentável">
+    {% for beneficio in beneficios %}
+    <article
+      class="card product-card"
+      data-name="{{ beneficio.nome|lower }}"
+      data-category="{{ beneficio.categoria|lower }}"
+      data-discount="{{ beneficio.desconto }}"
+      data-partner="{{ beneficio.loja|lower }}"
+      data-beneficio-id="{{ beneficio.id }}"
+    >
       <div class="product-image">
-        <span class="discount-badge">30% OFF</span>
-        <button class="heart" aria-label="Favoritar">♡</button>
-        <img src="{{ url_for('static', filename='dashboard/premios/ecobag.png') }}" alt="EcoBag sustentável">
+        <span class="discount-badge">{{ beneficio.desconto }}% OFF</span>
+        <button class="heart" type="button" data-id="{{ beneficio.id }}" aria-label="Favoritar {{ beneficio.nome }}" aria-pressed="{{ 'true' if beneficio.id in favoritos else 'false' }}">{{ '♥' if beneficio.id in favoritos else '♡' }}</button>
+        {% if beneficio.imagem %}
+          <img src="{{ url_for('static', filename=beneficio.imagem) }}" alt="{{ beneficio.nome }}">
+        {% else %}
+          <i class="bi {{ beneficio.icone or 'bi-gift' }} product-placeholder" aria-hidden="true"></i>
+        {% endif %}
       </div>
       <div class="product-body">
-        <div class="product-name">EcoBag sustentável</div>
-        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
-        <button class="exchange">Trocar por GreenPoints</button>
-        <button class="detail">Ver detalhes</button>
+        <div class="product-name">{{ beneficio.nome }}</div>
+        <div class="product-meta"><i class="bi bi-shop"></i> {{ beneficio.loja }} • {{ beneficio.categoria }}</div>
+        <div class="product-price"><i class="bi bi-recycle"></i><strong>{{ beneficio.preco_pontos|fmt_int }} GreenPoints</strong></div>
+        <button
+          class="exchange"
+          type="button"
+          data-id="{{ beneficio.id }}"
+          data-name="{{ beneficio.nome }}"
+          data-price="{{ beneficio.preco_pontos }}"
+          data-discount="{{ beneficio.desconto }}"
+        >Trocar por GreenPoints</button>
+        <button class="detail" type="button" data-detail="{{ beneficio.desconto }}% OFF em {{ beneficio.nome }} • {{ beneficio.loja }} • {{ beneficio.preco_pontos }} GreenPoints">Ver detalhes</button>
       </div>
     </article>
-
-    <article class="card product-card" data-name="Garrafa reutilizável">
-      <div class="product-image">
-        <span class="discount-badge">20% OFF</span>
-        <button class="heart" aria-label="Favoritar">♡</button>
-        <img src="{{ url_for('static', filename='dashboard/premios/garrafa.png') }}" alt="Garrafa reutilizável">
-      </div>
-      <div class="product-body">
-        <div class="product-name">Garrafa reutilizável</div>
-        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
-        <button class="exchange">Trocar por GreenPoints</button>
-        <button class="detail">Ver detalhes</button>
-      </div>
-    </article>
-
-    <article class="card product-card" data-name="Vaso ecológico">
-      <div class="product-image">
-        <span class="discount-badge">15% OFF</span>
-        <button class="heart" aria-label="Favoritar">♡</button>
-        <img src="{{ url_for('static', filename='dashboard/premios/vaso.png') }}" alt="Vaso ecológico">
-      </div>
-      <div class="product-body">
-        <div class="product-name">Vaso ecológico</div>
-        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
-        <button class="exchange">Trocar por GreenPoints</button>
-        <button class="detail">Ver detalhes</button>
-      </div>
-    </article>
-
-    <article class="card product-card" data-name="Kit produtos naturais">
-      <div class="product-image">
-        <span class="discount-badge">10% OFF</span>
-        <button class="heart" aria-label="Favoritar">♡</button>
-        <i class="bi bi-bag-heart product-placeholder"></i>
-      </div>
-      <div class="product-body">
-        <div class="product-name">Kit produtos naturais</div>
-        <div class="product-price"><i class="bi bi-recycle"></i><strong>150 GreenPoints</strong></div>
-        <button class="exchange">Trocar por GreenPoints</button>
-        <button class="detail">Ver detalhes</button>
-      </div>
-    </article>
+    {% endfor %}
   </section>
+
+  <div id="semResultados" class="empty-benefits" hidden>
+    <i class="bi bi-search"></i>
+    <strong>Nenhum benefício encontrado</strong>
+    <span>Tente mudar a busca ou limpar os filtros.</span>
+  </div>
 
   <div class="discount-bottom">
     <aside class="card ranking">
-      <h3>Ranking de Recicladores</h3>
-      <div class="rank-row"><span class="medal">1</span><span>Você</span><strong>65 kg</strong></div>
-      <div class="rank-row"><span class="medal">2</span><span>Murilo</span><strong>45 kg</strong></div>
-      <div class="rank-row"><span class="medal">3</span><span>Thiago</span><strong>30 kg</strong></div>
+      <h3>Ranking semanal</h3>
+      {% if ranking %}
+        {% for item in ranking %}
+        <div class="rank-row">
+          <span class="medal">{{ loop.index }}</span>
+          <span>{{ item.nome }}</span>
+          <strong>{{ item.pontos|fmt_int }} pts</strong>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="font-size:10px;color:#908d85;padding:10px 0;">Ainda não há pontos resgatados nesta semana.</div>
+      {% endif %}
     </aside>
 
     <div class="bottom-right">
@@ -101,35 +125,211 @@
       <article class="card partners">
         <h3><i class="bi bi-shop accent"></i> Lojas Parceiras</h3>
         <div class="partner-row">
-          <span class="partner-dot"></span>
-          <span class="partner-dot"></span>
-          <span class="partner-dot"></span>
-          <span class="partner-dot"></span>
-          <span class="partner-dot"></span>
+          {% for loja in beneficios|map(attribute='loja')|unique %}
+          <button class="partner-chip" type="button" data-partner-filter="{{ loja|lower }}">{{ loja }}</button>
+          {% endfor %}
         </div>
       </article>
     </div>
   </div>
 </div>
+
+<div id="confirmModal" class="eco-modal" hidden aria-hidden="true">
+  <div class="eco-modal-backdrop" data-close-modal></div>
+  <section class="eco-modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" aria-describedby="modalDescricao">
+    <button class="eco-modal-close" type="button" aria-label="Fechar" data-close-modal><i class="bi bi-x-lg"></i></button>
+    <div class="eco-modal-icon"><i class="bi bi-gift-fill"></i></div>
+    <p class="eco-modal-eyebrow">Confirmar resgate</p>
+    <h2 id="modalTitulo">Resgatar benefício?</h2>
+    <p id="modalDescricao">Confira os dados antes de confirmar.</p>
+    <div class="eco-modal-summary">
+      <div><span>Benefício</span><strong id="modalBeneficio">—</strong></div>
+      <div><span>Desconto</span><strong id="modalDesconto">—</strong></div>
+      <div><span>Custo</span><strong id="modalPreco">—</strong></div>
+      <div><span>Saldo após</span><strong id="modalSaldoApos">—</strong></div>
+    </div>
+    <div class="eco-modal-actions">
+      <button id="modalCancelar" class="modal-btn secondary" type="button" data-close-modal>Cancelar</button>
+      <button id="modalConfirmar" class="modal-btn primary" type="button"><i class="bi bi-check2-circle"></i> Confirmar resgate</button>
+    </div>
+  </section>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-document.getElementById('buscaDesconto').addEventListener('input', e => {
-  const q = e.target.value.toLowerCase();
+const saldoPontos = document.getElementById('saldoPontos');
+const busca = document.getElementById('buscaDesconto');
+const filtroCategoria = document.getElementById('filtroCategoria');
+const filtroDesconto = document.getElementById('filtroDesconto');
+const filtroLoja = document.getElementById('filtroLoja');
+const semResultados = document.getElementById('semResultados');
+const modal = document.getElementById('confirmModal');
+const btnConfirmar = document.getElementById('modalConfirmar');
+let botaoSelecionado = null;
+
+function formatarPontos(valor) {
+  return Number(valor || 0).toLocaleString('pt-BR');
+}
+
+function saldoAtual() {
+  return Number(saldoPontos.dataset.saldo || 0);
+}
+
+function atualizarEstadoBotoes() {
+  const saldo = saldoAtual();
+  document.querySelectorAll('.exchange').forEach(btn => {
+    const preco = Number(btn.dataset.price || 0);
+    const disponivel = saldo >= preco;
+    btn.disabled = !disponivel;
+    btn.classList.toggle('insufficient', !disponivel);
+    btn.textContent = disponivel ? 'Trocar por GreenPoints' : `Faltam ${formatarPontos(preco - saldo)} pontos`;
+    btn.title = disponivel ? 'Resgatar este benefício' : 'Saldo insuficiente';
+  });
+}
+
+function aplicarFiltros() {
+  const q = busca.value.trim().toLowerCase();
+  const categoria = filtroCategoria.value;
+  const desconto = filtroDesconto.value;
+  const loja = filtroLoja.value;
+  let visiveis = 0;
+
   document.querySelectorAll('.product-card').forEach(card => {
-    card.style.display = card.dataset.name.toLowerCase().includes(q) ? 'block' : 'none';
+    const texto = `${card.dataset.name} ${card.dataset.category} ${card.dataset.partner}`;
+    const bateBusca = !q || texto.includes(q);
+    const bateCategoria = !categoria || card.dataset.category === categoria;
+    const bateDesconto = !desconto || card.dataset.discount === desconto;
+    const bateLoja = !loja || card.dataset.partner === loja;
+    const mostrar = bateBusca && bateCategoria && bateDesconto && bateLoja;
+    card.hidden = !mostrar;
+    if (mostrar) visiveis += 1;
+  });
+
+  semResultados.hidden = visiveis !== 0;
+}
+
+[busca, filtroCategoria, filtroDesconto, filtroLoja].forEach(controle => {
+  controle.addEventListener(controle.tagName === 'INPUT' ? 'input' : 'change', aplicarFiltros);
+});
+
+document.getElementById('limparFiltros').addEventListener('click', () => {
+  busca.value = '';
+  filtroCategoria.value = '';
+  filtroDesconto.value = '';
+  filtroLoja.value = '';
+  aplicarFiltros();
+  busca.focus();
+});
+
+document.querySelectorAll('.partner-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    filtroLoja.value = btn.dataset.partnerFilter;
+    aplicarFiltros();
+    document.getElementById('listaProdutos').scrollIntoView({behavior: 'smooth', block: 'start'});
   });
 });
 
 document.querySelectorAll('.heart').forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.textContent = btn.textContent === '♡' ? '♥' : '♡';
+  btn.addEventListener('click', async () => {
+    if (btn.disabled) return;
+    const ativo = btn.getAttribute('aria-pressed') === 'true';
+    const novoEstado = !ativo;
+    btn.disabled = true;
+    btn.setAttribute('aria-pressed', String(novoEstado));
+    btn.textContent = novoEstado ? '♥' : '♡';
+
+    try {
+      const response = await fetch(`/api/favoritos/${encodeURIComponent(btn.dataset.id)}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({favorito: novoEstado})
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || 'Não foi possível salvar o favorito.');
+      ecoToast(novoEstado ? 'Adicionado aos favoritos.' : 'Removido dos favoritos.');
+    } catch (erro) {
+      btn.setAttribute('aria-pressed', String(ativo));
+      btn.textContent = ativo ? '♥' : '♡';
+      ecoToast(erro.message);
+    } finally {
+      btn.disabled = false;
+    }
   });
 });
 
-document.querySelectorAll('.exchange').forEach(btn => {
-  btn.addEventListener('click', () => ecoToast('Desconto selecionado para troca.'));
+document.querySelectorAll('.detail').forEach(btn => {
+  btn.addEventListener('click', () => ecoToast(btn.dataset.detail));
 });
+
+function abrirModal(btn) {
+  botaoSelecionado = btn;
+  const preco = Number(btn.dataset.price || 0);
+  const saldo = saldoAtual();
+  document.getElementById('modalBeneficio').textContent = btn.dataset.name;
+  document.getElementById('modalDesconto').textContent = `${btn.dataset.discount}% OFF`;
+  document.getElementById('modalPreco').textContent = `${formatarPontos(preco)} GreenPoints`;
+  document.getElementById('modalSaldoApos').textContent = `${formatarPontos(Math.max(0, saldo - preco))} GreenPoints`;
+  modal.hidden = false;
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(() => modal.classList.add('show'));
+  btnConfirmar.focus();
+}
+
+function fecharModal() {
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  setTimeout(() => { modal.hidden = true; }, 180);
+  if (botaoSelecionado) botaoSelecionado.focus();
+}
+
+document.querySelectorAll('[data-close-modal]').forEach(el => el.addEventListener('click', fecharModal));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !modal.hidden) fecharModal();
+});
+
+document.querySelectorAll('.exchange').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!btn.disabled) abrirModal(btn);
+  });
+});
+
+btnConfirmar.addEventListener('click', async () => {
+  if (!botaoSelecionado) return;
+  const btn = botaoSelecionado;
+  const textoOriginal = btnConfirmar.innerHTML;
+  btnConfirmar.disabled = true;
+  btnConfirmar.innerHTML = '<span class="modal-spinner" aria-hidden="true"></span> Processando...';
+
+  try {
+    const response = await fetch('/api/trocar-beneficio', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({beneficio_id: btn.dataset.id})
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || 'Não foi possível concluir a troca.');
+    }
+
+    saldoPontos.dataset.saldo = data.pontos_total;
+    saldoPontos.textContent = `${formatarPontos(data.pontos_total)} Pontos`;
+    atualizarEstadoBotoes();
+    fecharModal();
+    ecoToast(`${data.nome} resgatado! -${formatarPontos(data.pontos_gastos)} pontos • ${data.protocolo}`);
+  } catch (erro) {
+    fecharModal();
+    ecoToast(erro.message);
+  } finally {
+    btnConfirmar.disabled = false;
+    btnConfirmar.innerHTML = textoOriginal;
+  }
+});
+
+atualizarEstadoBotoes();
+aplicarFiltros();
 </script>
 {% endblock %}

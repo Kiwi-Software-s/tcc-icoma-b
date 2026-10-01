@@ -11,9 +11,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='ecopoints-pages.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='mobile-nav.css') }}">
   <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
 </head>
 <body>
+{% include 'ecopoints/mobile_nav.html' %}
 <div class="shell">
   <aside class="sidebar">
     <img class="sidebar-logo" src="{{ url_for('static', filename='titulo.png') }}" alt="EcoPoints">
@@ -30,12 +32,24 @@
     <a class="side-link {{ 'active' if active == 'dicas' else '' }}" href="{{ url_for('dicas_verdes') }}">
       <i class="bi bi-lightbulb-fill"></i>Dicas verdes
     </a>
-    <a class="side-link" href="{{ url_for('home.mapa_de_pontos') }}">
+    <a class="side-link {{ 'active' if active == 'mapa' else '' }}" href="{{ url_for('home.mapa_de_pontos') }}">
       <i class="bi bi-map-fill"></i>Mapa dos pontos
     </a>
     <a class="side-link {{ 'active' if active == 'resgate' else '' }}" href="{{ url_for('resgatar_codigos') }}" {% if active == 'resgate' %}aria-current="page"{% endif %}>
       <i class="bi bi-qr-code" aria-hidden="true"></i>Resgatar pontos
     </a>
+
+    {% if session.get('tipo') in ['funcionario', 'admin'] %}
+    <div class="sidebar-section-label">Gestão</div>
+    <a class="side-link {{ 'active' if active == 'funcionario' else '' }}" href="{{ url_for('home.funcionario') }}">
+      <i class="bi bi-upc-scan"></i>Gerar código
+    </a>
+    {% endif %}
+    {% if session.get('tipo') == 'admin' %}
+    <a class="side-link {{ 'active' if active == 'admin' else '' }}" href="{{ url_for('home.admin') }}">
+      <i class="bi bi-shield-lock-fill"></i>Administração
+    </a>
+    {% endif %}
   </aside>
 
   <div class="shell-main">
@@ -49,7 +63,7 @@
 
       <nav class="top-nav">
         <a href="{{ url_for('home.dashboard') }}">Início</a>
-        <a href="{{ url_for('home.mapa_de_pontos') }}">Mapa de pontos</a>
+        <a href="{{ url_for('home.mapa_de_pontos') }}" class="{{ 'active' if active == 'mapa' else '' }}">Mapa de pontos</a>
         <a href="{{ url_for('meus_descontos') }}" class="{{ 'active' if active == 'descontos' else '' }}">Meus descontos</a>
         <a href="{{ url_for('dicas_verdes') }}" class="{{ 'active' if active == 'dicas' else '' }}">Dicas verdes</a>
         <a href="{{ url_for('resgatar_codigos') }}" class="{{ 'active' if active == 'resgate' else '' }}">Resgatar pontos</a>
@@ -74,6 +88,7 @@ function ecoToast(message) {
   window.__ecoToast = setTimeout(() => el.classList.remove('show'), 2200);
 }
 </script>
+<script src="{{ url_for('static', filename='mobile-nav.js') }}" defer></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

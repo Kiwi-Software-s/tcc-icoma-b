@@ -4,8 +4,8 @@
 {% block content %}
 <section class="page-heading">
   <div>
-    <h1>Resgate dos pontos</h1>
-    <p>Utilize seus pontos para resgatar códigos e troque-os por benefícios.</p>
+    <h1>Resgatar código</h1>
+    <p>Digite o código recebido no ponto de coleta para adicionar seus quilos reciclados e EcoPoints.</p>
   </div>
 </section>
 
@@ -16,73 +16,123 @@
     <div class="step">
       <span class="step-num">1</span>
       <div>
-        <strong>Resgate um código</strong>
-        <span>Use seus pontos para resgatar o código desejado.</span>
+        <strong>Receba seu código</strong>
+        <span>Após entregar o material no ponto de coleta, você recebe um código.</span>
       </div>
     </div>
 
     <div class="step">
       <span class="step-num">2</span>
       <div>
-        <strong>Receba o código</strong>
-        <span>Após o resgate, você recebe um código para utilizar.</span>
+        <strong>Digite o código</strong>
+        <span>Insira o código nesta tela para validar o descarte.</span>
       </div>
     </div>
 
     <div class="step">
       <span class="step-num">3</span>
       <div>
-        <strong>Resgate e aproveite</strong>
-        <span>Use o código na loja parceira e aproveite seu benefício.</span>
+        <strong>Ganhe kg e pontos</strong>
+        <span>Os quilos reciclados e os EcoPoints são adicionados automaticamente à sua conta.</span>
       </div>
     </div>
 
     <div class="example-code">
       <i class="bi bi-ticket-perforated"></i> Exemplo<br>
-      <strong>ECO-459-POINTS-ABC</strong>
+      <strong>ECO-PLASTICO-001</strong>
     </div>
   </article>
 
   <article class="card redeem-card">
     <h2>Inserir código</h2>
-    <p class="small-muted">Digite seu código de resgate para adicioná-lo à sua conta.</p>
+    <p class="small-muted">Cada código pode ser utilizado apenas uma vez.</p>
 
     <label for="codigo">Código de resgate</label>
-    <input id="codigo" maxlength="24" placeholder="Ex: ECO-POINTS-ABC-123">
+    <input id="codigo" maxlength="32" placeholder="Ex: ECO-PLASTICO-001" autocomplete="off">
 
     <small><i class="bi bi-info-circle"></i> O código não diferencia letras maiúsculas e minúsculas.</small>
 
     <button class="green-button" id="btnResgatar">
       <i class="bi bi-arrow-right"></i> Resgatar código
     </button>
+
+    <div id="resgateResultado" hidden style="margin-top:18px;padding:14px 16px;border-radius:12px;background:#eef7e8;border:1px solid #cfe3c3;line-height:1.55;">
+      <strong id="resgateTitulo" style="color:#467a1a;display:block;margin-bottom:4px;"></strong>
+      <span id="resgateDetalhes"></span>
+    </div>
   </article>
 </div>
 
 <div class="card benefits">
   <div class="benefit">
     <i class="bi bi-clock-history"></i>
-    <div><strong>Válido para sempre</strong><span>Seu código não expira após ser resgatado.</span></div>
+    <div><strong>Uso único</strong><span>Cada código só pode ser resgatado uma vez.</span></div>
   </div>
   <div class="benefit">
     <i class="bi bi-stars"></i>
-    <div><strong>Mais pontos, mais benefícios</strong><span>Use pontos para resgatar códigos cada vez melhores.</span></div>
+    <div><strong>Acúmulo automático</strong><span>Os pontos e quilos são somados ao seu perfil.</span></div>
   </div>
   <div class="benefit">
     <i class="bi bi-leaf"></i>
-    <div><strong>Mais pontos, mais benefícios</strong><span>Uma experiência que valoriza escolhas sustentáveis.</span></div>
+    <div><strong>Impacto registrado</strong><span>Cada resgate alimenta seus gráficos e o ranking semanal.</span></div>
   </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-document.getElementById('btnResgatar').addEventListener('click', () => {
-  const input = document.getElementById('codigo');
-  if (!input.value.trim()) {
+const btnResgatar = document.getElementById('btnResgatar');
+const inputCodigo = document.getElementById('codigo');
+const resultado = document.getElementById('resgateResultado');
+const resultadoTitulo = document.getElementById('resgateTitulo');
+const resultadoDetalhes = document.getElementById('resgateDetalhes');
+
+async function resgatarCodigo() {
+  const codigo = inputCodigo.value.trim();
+  if (!codigo) {
     ecoToast('Digite um código para continuar.');
+    inputCodigo.focus();
     return;
   }
-  ecoToast('Código enviado para validação.');
+
+  btnResgatar.disabled = true;
+  const textoOriginal = btnResgatar.innerHTML;
+  btnResgatar.innerHTML = '<i class="bi bi-hourglass-split"></i> Validando...';
+  resultado.hidden = true;
+
+  try {
+    const response = await fetch('/api/resgatar-codigo', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({codigo})
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || 'Não foi possível resgatar o código.');
+    }
+
+    const kg = Number(data.kg).toLocaleString('pt-BR', {maximumFractionDigits: 2});
+    const pontos = Number(data.pontos).toLocaleString('pt-BR');
+    resultadoTitulo.textContent = 'Código resgatado com sucesso!';
+    resultadoDetalhes.innerHTML = `<strong>+${kg} kg reciclados</strong><br><strong>+${pontos} EcoPoints</strong>`;
+    resultado.hidden = false;
+    inputCodigo.value = '';
+    ecoToast(`+${kg} kg e +${pontos} pontos adicionados!`);
+  } catch (erro) {
+    ecoToast(erro.message);
+  } finally {
+    btnResgatar.disabled = false;
+    btnResgatar.innerHTML = textoOriginal;
+  }
+}
+
+btnResgatar.addEventListener('click', resgatarCodigo);
+inputCodigo.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    resgatarCodigo();
+  }
 });
 </script>
 {% endblock %}

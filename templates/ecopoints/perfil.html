@@ -1,0 +1,89 @@
+{% extends "ecopoints/base.html" %}
+{% block title %}Meu perfil - EcoPoints{% endblock %}
+
+{% block content %}
+<section class="profile-hero card">
+  <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+  <div class="profile-title">
+    <span class="profile-kicker">Sua conta EcoPoints</span>
+    <h1 id="nomeExibido">{{ usuario.nome or session.get('nome') or 'Usuário' }}</h1>
+    <p>{{ usuario.email or session.get('email') }}</p>
+  </div>
+  <a class="profile-back" href="{{ url_for('home.dashboard') }}"><i class="bi bi-arrow-left"></i> Voltar ao painel</a>
+</section>
+
+<section class="profile-stats">
+  <article class="card profile-stat"><i class="bi bi-coin"></i><div><span>Saldo atual</span><strong>{{ usuario.pontos_total|default(0)|fmt_int }}</strong><small>GreenPoints</small></div></article>
+  <article class="card profile-stat"><i class="bi bi-recycle"></i><div><span>Total reciclado</span><strong>{{ kg_total|fmt_num }}</strong><small>kg</small></div></article>
+  <article class="card profile-stat"><i class="bi bi-ticket-perforated"></i><div><span>Benefícios resgatados</span><strong>{{ quantidade_trocas }}</strong><small>trocas</small></div></article>
+  <article class="card profile-stat"><i class="bi bi-heart-fill"></i><div><span>Favoritos</span><strong>{{ favoritos_total }}</strong><small>benefícios</small></div></article>
+</section>
+
+<section class="profile-grid">
+  <article class="card profile-panel">
+    <div class="profile-panel-title">
+      <div><span class="profile-kicker">Informações pessoais</span><h2>Dados da conta</h2></div>
+      <i class="bi bi-person-vcard"></i>
+    </div>
+
+    <form id="formPerfil" class="profile-form">
+      <label>
+        <span>Nome</span>
+        <input id="perfilNome" name="nome" value="{{ usuario.nome or session.get('nome') or '' }}" minlength="2" maxlength="60" required>
+      </label>
+      <label>
+        <span>E-mail</span>
+        <input value="{{ usuario.email or session.get('email') or '' }}" readonly aria-readonly="true">
+      </label>
+      <div class="profile-meta-row"><span>Membro desde</span><strong>{{ usuario.created_at|fmt_date }}</strong></div>
+      <button id="salvarPerfil" class="profile-save" type="submit"><i class="bi bi-check2-circle"></i> Salvar nome</button>
+    </form>
+  </article>
+
+  <article class="card profile-panel">
+    <div class="profile-panel-title">
+      <div><span class="profile-kicker">Seu impacto</span><h2>Resumo da atividade</h2></div>
+      <i class="bi bi-graph-up-arrow"></i>
+    </div>
+    <div class="profile-activity-list">
+      <div><span><i class="bi bi-qr-code"></i> Códigos resgatados</span><strong>{{ quantidade_resgates }}</strong></div>
+      <div><span><i class="bi bi-trophy"></i> Pontos ganhos</span><strong>{{ pontos_ganhos|fmt_int }}</strong></div>
+      <div><span><i class="bi bi-wallet2"></i> Pontos gastos</span><strong>{{ pontos_gastos|fmt_int }}</strong></div>
+      <div><span><i class="bi bi-clock-history"></i> Atividades registradas</span><strong>{{ quantidade_eventos }}</strong></div>
+    </div>
+    {% if quantidade_eventos == 0 %}
+    <div class="profile-empty"><i class="bi bi-stars"></i><span>Seu impacto aparecerá aqui depois do primeiro código resgatado.</span></div>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const formPerfil = document.getElementById('formPerfil');
+const salvarPerfil = document.getElementById('salvarPerfil');
+formPerfil.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const nome = document.getElementById('perfilNome').value.trim();
+  const textoOriginal = salvarPerfil.innerHTML;
+  salvarPerfil.disabled = true;
+  salvarPerfil.innerHTML = '<span class="modal-spinner" aria-hidden="true"></span> Salvando...';
+  try {
+    const response = await fetch('/api/perfil/nome', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({nome})
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || 'Não foi possível atualizar seu perfil.');
+    document.getElementById('nomeExibido').textContent = data.nome;
+    ecoToast('Perfil atualizado com sucesso.');
+  } catch (erro) {
+    ecoToast(erro.message);
+  } finally {
+    salvarPerfil.disabled = false;
+    salvarPerfil.innerHTML = textoOriginal;
+  }
+});
+</script>
+{% endblock %}

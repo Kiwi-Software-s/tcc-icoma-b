@@ -101,11 +101,26 @@
       color: #fff;
     }
 
-    .menu-item img {
-      width: 26px;
-      height: 26px;
+    .menu-item i {
+      width: 28px;
       flex: none;
-      object-fit: contain;
+      text-align: center;
+      color: #71a93d;
+      font-size: var(--popup-title, 1.35rem);
+      line-height: 1;
+    }
+
+    .menu-item.ativo {
+      box-shadow: inset 3px 0 0 #76b340;
+    }
+
+    .menu-secao {
+      margin: 14px 10px 3px;
+      color: rgba(255, 255, 255, .54);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
     }
 
     .card-frase {
@@ -180,7 +195,7 @@
       align-items: center;
       gap: 14px;
       margin-bottom: 9px;
-      font-size: .92rem;
+      font-size: var(--popup-text, .92rem);
       color: #55524b;
       cursor: pointer;
     }
@@ -412,7 +427,7 @@
       text-align: center;
       padding: 24px;
       color: #6e6b63;
-      font-size: .92rem;
+      font-size: var(--popup-text, .92rem);
       background: repeating-linear-gradient(45deg, #e6eae0, #e6eae0 18px, #dfe3da 18px, #dfe3da 36px);
     }
 
@@ -442,12 +457,19 @@
     }
 
     .ecoponto-popup .leaflet-popup-content-wrapper {
-      width: min(430px, calc(100vw - 36px));
-      border-radius: 20px;
+      width: min(var(--popup-width, 430px), calc(100vw - 36px));
+      max-width: 95vw;
+      border-radius: var(--popup-radius, 20px);
       background: #fdfaf7;
       box-shadow: 0 7px 22px rgba(0, 0, 0, .28);
       overflow: hidden;
+      transition: width .18s ease, border-radius .18s ease;
     }
+
+    /* O card acompanha o nível de zoom: longe = compacto; perto = completo. */
+    #mapa.popup-far { --popup-width: 285px; --popup-pad: 14px; --popup-title: .98rem; --popup-text: .76rem; --popup-gap: 12px; --popup-material: 27px; --popup-button: .73rem; --popup-radius: 15px; }
+    #mapa.popup-mid { --popup-width: 350px; --popup-pad: 18px; --popup-title: 1.12rem; --popup-text: .84rem; --popup-gap: 16px; --popup-material: 30px; --popup-button: .78rem; --popup-radius: 17px; }
+    #mapa.popup-near { --popup-width: 430px; --popup-pad: 25px; --popup-title: 1.35rem; --popup-text: .96rem; --popup-gap: 20px; --popup-material: 34px; --popup-button: .84rem; --popup-radius: 20px; }
 
     .ecoponto-popup .leaflet-popup-content {
       width: auto !important;
@@ -469,7 +491,7 @@
     }
 
     .ecoponto-card {
-      padding: 25px 25px 20px;
+      padding: var(--popup-pad, 25px);
       color: #222;
     }
 
@@ -478,10 +500,10 @@
       align-items: center;
       gap: 12px;
       padding-right: 34px;
-      margin-bottom: 16px;
+      margin-bottom: var(--popup-gap, 16px);
       color: var(--green-title);
       font-family: 'Montserrat', sans-serif;
-      font-size: 1.35rem;
+      font-size: var(--popup-title, 1.35rem);
       font-weight: 900;
       line-height: 1.2;
     }
@@ -497,7 +519,7 @@
       grid-template-columns: 27px 1fr;
       gap: 12px;
       align-items: start;
-      font-size: .96rem;
+      font-size: var(--popup-text, .96rem);
       line-height: 1.45;
     }
 
@@ -515,7 +537,7 @@
 
     .ecoponto-divisor {
       height: 1px;
-      margin: 20px 0;
+      margin: var(--popup-gap, 20px) 0;
       background: #ddd7d1;
     }
 
@@ -528,27 +550,27 @@
     .ecoponto-materiais {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: var(--popup-gap, 24px);
       min-height: 50px;
     }
 
     .ecoponto-material {
       display: inline-flex;
-      width: 34px;
-      height: 44px;
+      width: var(--popup-material, 34px);
+      height: calc(var(--popup-material, 34px) * 1.28);
       align-items: center;
       justify-content: center;
     }
 
     .ecoponto-material img {
-      max-width: 34px;
-      max-height: 44px;
+      max-width: var(--popup-material, 34px);
+      max-height: calc(var(--popup-material, 34px) * 1.28);
       object-fit: contain;
     }
 
     .ecoponto-horario {
       margin: 0;
-      font-size: .92rem;
+      font-size: var(--popup-text, .92rem);
       line-height: 1.45;
     }
 
@@ -560,7 +582,7 @@
       display: grid;
       grid-template-columns: 1fr 1.38fr;
       gap: 14px;
-      margin-top: 22px;
+      margin-top: var(--popup-gap, 22px);
     }
 
     .ecoponto-botao {
@@ -571,7 +593,7 @@
       min-height: 43px;
       border-radius: 8px;
       font-family: 'Inter', sans-serif;
-      font-size: .84rem;
+      font-size: var(--popup-button, .84rem);
       font-weight: 500;
       transition: transform .15s, box-shadow .15s, background .15s;
     }
@@ -680,7 +702,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: .92rem;
+      font-size: var(--popup-text, .92rem);
       color: #55524b;
     }
 
@@ -743,6 +765,24 @@
       .legenda {
         gap: 16px 34px;
       }
+
+      .menu-item {
+        white-space: nowrap;
+        padding: 9px 10px;
+      }
+
+      .menu-item i {
+        font-size: 1.15rem;
+      }
+
+      .ecoponto-popup .leaflet-popup-content-wrapper {
+        width: min(var(--popup-width, 330px), calc(100vw - 28px));
+      }
+
+      .ecoponto-acoes {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -750,44 +790,68 @@
         transition: none !important;
       }
     }
-  </style>
+  
+</style>
   <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='mobile-nav.css') }}">
   <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
 </head>
 
 <body>
+  {% set active = 'mapa' %}
+  {% include 'ecopoints/mobile_nav.html' %}
 
   <!-- ============================ MENU LATERAL ============================ -->
   <aside class="sidebar">
 
     <img src="../../static/titulo.png" alt="EcoPoints" class="sidebar-logo">
 
-    <nav class="menu-lateral">
+    <nav class="menu-lateral" aria-label="Navegação principal">
 
       <a href="/dashboard" class="menu-item">
-        <img src="../../static/mapa/home.png" alt="">
+        <i class="bi bi-house-fill" aria-hidden="true"></i>
         Início
       </a>
 
       <a href="/meus-descontos" class="menu-item">
-        <img src="../../static/mapa/voucher.png" alt="">
+        <i class="bi bi-ticket-perforated-fill" aria-hidden="true"></i>
         Meus descontos
       </a>
 
       <a href="/historico" class="menu-item">
-        <img src="../../static/mapa/leaf.png" alt="">
-        Meus descartes
+        <i class="bi bi-clock-history" aria-hidden="true"></i>
+        Histórico
       </a>
 
       <a href="/dicas-verdes" class="menu-item">
-        <img src="../../static/mapa/greentech.png" alt="">
+        <i class="bi bi-lightbulb-fill" aria-hidden="true"></i>
         Dicas verdes
       </a>
 
+      <a href="/mapa-de-pontos" class="menu-item ativo" aria-current="page">
+        <i class="bi bi-map-fill" aria-hidden="true"></i>
+        Mapa dos pontos
+      </a>
+
       <a href="/resgatar-codigos" class="menu-item">
-        <i class="bi bi-qr-code" aria-hidden="true" style="font-size: 24px; width: 24px; text-align: center;"></i>
+        <i class="bi bi-qr-code" aria-hidden="true"></i>
         Resgatar pontos
       </a>
+
+      {% if session.get('tipo') in ['funcionario', 'admin'] %}
+      <div class="menu-secao">Gestão</div>
+      <a href="{{ url_for('home.funcionario') }}" class="menu-item">
+        <i class="bi bi-upc-scan" aria-hidden="true"></i>
+        Gerar código
+      </a>
+      {% endif %}
+
+      {% if session.get('tipo') == 'admin' %}
+      <a href="{{ url_for('home.admin') }}" class="menu-item">
+        <i class="bi bi-shield-lock-fill" aria-hidden="true"></i>
+        Administração
+      </a>
+      {% endif %}
 
     </nav>
 
@@ -1056,6 +1120,26 @@
         { position: 'topright' }
       ).addTo(mapa);
 
+
+      const mapaEl = document.getElementById('mapa');
+      function atualizarTamanhoPopup() {
+        const zoomAtual = mapa.getZoom();
+        mapaEl.classList.remove('popup-far', 'popup-mid', 'popup-near');
+        if (zoomAtual <= 13) {
+          mapaEl.classList.add('popup-far');
+        } else if (zoomAtual <= 15) {
+          mapaEl.classList.add('popup-mid');
+        } else {
+          mapaEl.classList.add('popup-near');
+        }
+        if (marcadorEtec && marcadorEtec.isPopupOpen()) {
+          marcadorEtec.getPopup().update();
+        }
+      }
+
+      atualizarTamanhoPopup();
+      mapa.on('zoomend', atualizarTamanhoPopup);
+
       marcadorEtec = L.marker(CENTRO_DO_MAPA, {
         icon: iconePonto,
         title: PONTO_ETEC.nome,
@@ -1065,7 +1149,6 @@
         .bindPopup(htmlPopupEtec(), {
           className: 'ecoponto-popup',
           maxWidth: 430,
-          minWidth: 330,
           autoPanPaddingTopLeft: [28, 28],
           autoPanPaddingBottomRight: [28, 28]
         });
@@ -1266,6 +1349,7 @@
     });
   </script>
 
+  <script src="{{ url_for('static', filename='mobile-nav.js') }}" defer></script>
 </body>
 
 </html>

@@ -1,0 +1,131 @@
+{% extends "ecopoints/base.html" %}
+{% block title %}EcoPoints - Administração{% endblock %}
+
+{% block content %}
+<section class="admin-page">
+  <div class="page-heading admin-heading">
+    <div>
+      <span class="staff-kicker">Área administrativa</span>
+      <h1>Painel administrativo</h1>
+      <p>Gerencie níveis de acesso e acompanhe os códigos gerados pelos pontos de coleta.</p>
+    </div>
+    <a class="staff-back" href="{{ url_for('home.dashboard') }}"><i class="bi bi-arrow-left"></i> Voltar à dashboard</a>
+  </div>
+
+  <div class="admin-summary-grid">
+    <article class="card admin-summary-card">
+      <i class="bi bi-people-fill"></i>
+      <div><span>Usuários cadastrados</span><strong>{{ usuarios|length }}</strong></div>
+    </article>
+    <article class="card admin-summary-card">
+      <i class="bi bi-upc-scan"></i>
+      <div><span>Códigos listados</span><strong>{{ codigos|length }}</strong></div>
+    </article>
+    <article class="card admin-summary-card">
+      <i class="bi bi-person-badge-fill"></i>
+      <div><span>Funcionários</span><strong>{{ usuarios|selectattr('tipo', 'equalto', 'funcionario')|list|length }}</strong></div>
+    </article>
+  </div>
+
+  <article class="card admin-section-card">
+    <div class="admin-section-head">
+      <div>
+        <span class="staff-kicker">Permissões</span>
+        <h2>Usuários</h2>
+      </div>
+      <div class="admin-legend"><span>Usuário</span><span>Funcionário</span><span>Admin</span></div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Nome</th><th>E-mail</th><th>Acesso</th></tr></thead>
+        <tbody>
+        {% for u in usuarios %}
+          <tr>
+            <td data-label="Nome"><strong>{{ u.nome or 'Sem nome' }}</strong>{% if u.uid == session.get('uid') %}<small class="you-badge">Você</small>{% endif %}</td>
+            <td data-label="E-mail"><span class="admin-email">{{ u.email or '—' }}</span></td>
+            <td data-label="Acesso">
+              <select class="role-select" data-uid="{{ u.uid }}" data-current="{{ u.tipo or 'usuario' }}" aria-label="Tipo de acesso de {{ u.nome or u.email }}">
+                <option value="usuario" {% if (u.tipo or 'usuario') == 'usuario' %}selected{% endif %}>Usuário</option>
+                <option value="funcionario" {% if u.tipo == 'funcionario' %}selected{% endif %}>Funcionário</option>
+                <option value="admin" {% if u.tipo == 'admin' %}selected{% endif %}>Admin</option>
+              </select>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="admin-empty">Nenhum usuário encontrado.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="card admin-section-card">
+    <div class="admin-section-head">
+      <div>
+        <span class="staff-kicker">Auditoria</span>
+        <h2>Códigos gerados</h2>
+      </div>
+      <span class="admin-help-text">Até 100 códigos recentes</span>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table codes-table">
+        <thead><tr><th>Código</th><th>Material</th><th>Peso</th><th>Pontos</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for c in codigos %}
+          <tr>
+            <td data-label="Código"><code>{{ c.codigo }}</code></td>
+            <td data-label="Material">{{ (c.material or '—')|capitalize }}</td>
+            <td data-label="Peso">{{ c.kg|fmt_num }} kg</td>
+            <td data-label="Pontos">{{ c.pontos|fmt_int }}</td>
+            <td data-label="Status">
+              {% if c.usado %}<span class="status-pill used"><i class="bi bi-check-circle-fill"></i> Usado</span>
+              {% else %}<span class="status-pill free"><i class="bi bi-circle-fill"></i> Disponível</span>{% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="admin-empty">Nenhum código gerado encontrado.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <div class="admin-note card">
+    <i class="bi bi-shield-check"></i>
+    <div><strong>Como funcionam as permissões</strong><span>Usuário usa o aplicativo. Funcionário pode gerar códigos. Admin pode gerar códigos e gerenciar acessos.</span></div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+  document.querySelectorAll('.role-select').forEach((select) => {
+    select.addEventListener('focus', () => { select.dataset.previous = select.value; });
+    select.addEventListener('change', async () => {
+      const previous = select.dataset.previous || select.dataset.current || 'usuario';
+      select.disabled = true;
+      try {
+        const response = await fetch('/admin/tipo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid: select.dataset.uid, tipo: select.value })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || 'Não foi possível alterar a permissão.');
+        select.dataset.current = select.value;
+        select.dataset.previous = select.value;
+        ecoToast('Permissão atualizada.');
+      } catch (error) {
+        select.value = previous;
+        ecoToast(error.message || 'Não foi possível alterar a permissão.');
+      } finally {
+        select.disabled = false;
+      }
+    });
+  });
+})();
+</script>
+{% endblock %}
