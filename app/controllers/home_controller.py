@@ -1,6 +1,10 @@
 from flask import Blueprint, jsonify, render_template, request, session
 
 from app.controllers.auth_controller import login_required
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 from app.repositories.admin_repository import listar_codigos, listar_usuarios, alterar_tipo
 from app.repositories.user_repository import (
     atualizar_nome_usuario,
@@ -16,6 +20,12 @@ from app.servicies.beneficio_service import (
     montar_historico_usuario,
 )
 from app.servicies.funcionario_service import criar_codigo
+<<<<<<< HEAD
+=======
+=======
+from app.repositories.user_repository import garantir_usuario
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 from app.servicies.resgate_service import (
     CodigoInvalidoError,
     CodigoJaUsadoError,
@@ -23,6 +33,13 @@ from app.servicies.resgate_service import (
     ranking_semanal,
     resgatar_codigo,
 )
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+from app.servicies.beneficio_service import listar_beneficios
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
 home_bp = Blueprint("home", __name__)
 
@@ -39,17 +56,38 @@ def dashboard():
     nome = session.get("nome", "")
     email = session.get("email", "")
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     usuario = garantir_usuario(uid, nome, email)
     if usuario.get("nome"):
         session["nome"] = usuario["nome"]
 
     metricas = montar_metricas_dashboard(uid)
     ranking = ranking_semanal(uid)
+<<<<<<< HEAD
+=======
+=======
+    garantir_usuario(uid, nome, email)
+    metricas = montar_metricas_dashboard(uid)
+    ranking = ranking_semanal(uid)
+
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     beneficios_dashboard = listar_beneficios()[:3]
 
     return render_template(
         "dashboard/dashboard.html",
+<<<<<<< HEAD
         nome=session.get("nome") or "Usuário",
+=======
+<<<<<<< HEAD
+        nome=session.get("nome") or "Usuário",
+=======
+        nome=nome,
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
         ranking=ranking,
         beneficios_dashboard=beneficios_dashboard,
         **metricas,
@@ -62,6 +100,10 @@ def mapa_de_pontos():
     return render_template("mapa/mapa.html")
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 @home_bp.route("/perfil")
 @login_required
 def perfil():
@@ -115,6 +157,11 @@ def api_favorito(beneficio_id):
     return jsonify(success=True, favorito=favorito, favoritos=favoritos)
 
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 @home_bp.route("/api/resgatar-codigo", methods=["POST"])
 @login_required
 def api_resgatar_codigo():
@@ -133,6 +180,10 @@ def api_resgatar_codigo():
     except CodigoJaUsadoError as exc:
         return jsonify(success=False, message=str(exc)), 409
     except Exception as exc:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
         print(f"Erro ao resgatar código: {type(exc).__name__}: {exc}")
         return jsonify(success=False, message="Não foi possível resgatar o código agora."), 500
 
@@ -140,6 +191,7 @@ def api_resgatar_codigo():
 
 
 
+<<<<<<< HEAD
 def _tipo_atual():
     tipo = obter_tipo_usuario(session["uid"])
     session["tipo"] = tipo
@@ -148,24 +200,42 @@ def _tipo_atual():
 
 def _tem_acesso(tipos):
     return _tipo_atual() in tipos
+=======
+def _tem_acesso(tipos):
+    return obter_tipo_usuario(session["uid"]) in tipos
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
 @home_bp.route("/funcionario")
 @login_required
 def funcionario():
+<<<<<<< HEAD
     if not _tem_acesso(["funcionario", "admin"]):
         return render_template("error/403.html", area="funcionários"), 403
     return render_template("ecopoints/funcionario.html", active="funcionario")
+=======
+    if not _tem_acesso(["funcionario","admin"]):
+        return "Acesso negado", 403
+    return render_template("ecopoints/funcionario.html")
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
 @home_bp.route("/admin")
 @login_required
 def admin():
     if not _tem_acesso(["admin"]):
+<<<<<<< HEAD
         return render_template("error/403.html", area="administrativa"), 403
     return render_template(
         "ecopoints/admin.html",
         active="admin",
         usuarios=listar_usuarios(),
         codigos=listar_codigos(),
+=======
+        return "Acesso negado", 403
+    return render_template(
+        "ecopoints/admin.html",
+        usuarios=listar_usuarios(),
+        codigos=listar_codigos()
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     )
 
 @home_bp.route("/admin/tipo", methods=["POST"])
@@ -173,6 +243,7 @@ def admin():
 def admin_tipo():
     if not _tem_acesso(["admin"]):
         return jsonify(success=False, message="Sem permissão"),403
+<<<<<<< HEAD
     dados = request.get_json(silent=True) or {}
     uid = (dados.get("uid") or "").strip()
     tipo = (dados.get("tipo") or "").strip()
@@ -181,6 +252,12 @@ def admin_tipo():
     try:
         alterar_tipo(uid, tipo)
         return jsonify(success=True, tipo=tipo)
+=======
+    dados=request.get_json(silent=True) or {}
+    try:
+        alterar_tipo(dados.get("uid"), dados.get("tipo"))
+        return jsonify(success=True)
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     except Exception as exc:
         return jsonify(success=False,message=str(exc)),400
 
@@ -195,3 +272,12 @@ def funcionario_gerar():
         return jsonify(success=True, **resultado)
     except Exception as exc:
         return jsonify(success=False, message=str(exc)),400
+<<<<<<< HEAD
+=======
+=======
+        print(f"Erro ao resgatar código: {exc}")
+        return jsonify(success=False, message="Não foi possível resgatar o código agora."), 500
+
+    return jsonify(success=True, **resultado)
+>>>>>>> 40045d14bc5afcf18652c9804bdce5877a5f3ee6
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70

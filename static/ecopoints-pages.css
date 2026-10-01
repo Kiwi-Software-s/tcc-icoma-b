@@ -124,14 +124,16 @@ img { max-width: 100%; display: block; }
 }
 
 .avatar {
-  width: 34px;
-  height: 34px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #edf2e9;
+  background: #e8e6e0;
+  padding: 8px;
+  object-fit: contain;
   color: var(--green-800);
-  border: 1px solid #e0e5dd;
+  border: 0;
 }
 
 .top-nav {
@@ -382,6 +384,14 @@ img { max-width: 100%; display: block; }
 .green-button:hover {
   background: #2e6b23;
   transform: translateY(-1px);
+}
+
+.tips-page .green-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
 }
 
 .benefits {
@@ -1378,6 +1388,7 @@ body.modal-open { overflow: hidden; }
  .conteudo{width:100%!important;margin-left:0!important}
  .menu-topo{overflow-x:auto;white-space:nowrap}
 }
+<<<<<<< HEAD
 
 
 /* ===== Dicas verdes - versão integrada ao aplicativo ===== */
@@ -1991,3 +2002,5 @@ body.modal-open { overflow: hidden; }
   .admin-table td::before { content:attr(data-label); color:#969189; font-size:8px; font-weight:800; text-transform:uppercase; }
   .role-select { width:100%; }
 }
+=======
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70

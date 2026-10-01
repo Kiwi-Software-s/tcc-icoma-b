@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "ecopoints/base.html" %}
 {% block title %}EcoPoints - Administração{% endblock %}
 
@@ -127,5 +128,52 @@
     });
   });
 })();
+=======
+
+{% extends "ecopoints/base.html" %}
+{% block content %}
+<div class="container admin-panel">
+<h1>Painel Administrativo</h1>
+<p>Gerencie usuários e acompanhe códigos gerados.</p>
+
+<div class="admin-cards">
+<div class="eco-card"><h3>Usuários</h3><p>{{ usuarios|length }} cadastrados</p></div>
+<div class="eco-card"><h3>Códigos</h3><p>{{ codigos|length }} gerados</p></div>
+</div>
+
+<h2>Usuários</h2>
+<div class="eco-card">
+{% for u in usuarios %}
+<div style="display:flex;justify-content:space-between;gap:10px;margin:12px 0">
+<div><b>{{u.nome or "Sem nome"}}</b><br>{{u.email}}</div>
+<select onchange="alterar('{{u.uid}}',this.value)">
+<option value="usuario" {% if u.tipo=="usuario" %}selected{% endif %}>Usuário</option>
+<option value="funcionario" {% if u.tipo=="funcionario" %}selected{% endif %}>Funcionário</option>
+<option value="admin" {% if u.tipo=="admin" %}selected{% endif %}>Admin</option>
+</select>
+</div>
+{% endfor %}
+</div>
+
+<h2>Códigos gerados</h2>
+<p>Controle dos códigos criados pelos pontos de coleta.</p>
+<div class="eco-card">
+{% for c in codigos %}
+<p><b>{{c.codigo}}</b> - {{c.material}} - {{c.kg}}kg - {{c.pontos}} pontos -
+{% if c.usado %}<span class="status-used">Usado</span>{% else %}<span class="status-free">Disponível</span>{% endif %}<br><small>Criado por: {{ c.criado_por or "Sistema" }}</small></p>
+{% endfor %}
+</div>
+</div>
+
+<div class="eco-card admin-help">
+<h3>Permissões</h3>
+<p>Usuário: acesso ao aplicativo. Funcionário: gera códigos de coleta. Admin: gerencia o sistema.</p>
+</div>
+
+<script>
+async function alterar(uid,tipo){
+ await fetch("/admin/tipo",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({uid,tipo})});
+}
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 </script>
 {% endblock %}

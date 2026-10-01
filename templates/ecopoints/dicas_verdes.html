@@ -1,6 +1,7 @@
 {% extends "ecopoints/base.html" %}
 {% block title %}Dicas verdes - EcoPoints{% endblock %}
 
+<<<<<<< HEAD
 {% block content %}
 <section class="green-tips-page">
   <div class="page-heading green-tips-heading">
@@ -12,6 +13,39 @@
     <a class="tips-cta" href="{{ url_for('resgatar_codigos') }}">
       <i class="bi bi-qr-code" aria-hidden="true"></i>
       Resgatar pontos
+=======
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='ecopoints-pages.css') }}">
+<style>
+.tip-card { transition: .2s ease; }
+.tip-card:hover { transform: translateY(-4px); }
+.tips-footer { border-radius: 18px; }
+@media (max-width: 768px) {
+ .tip-card { width: 100%; }
+ .tips-footer { margin: 16px; text-align:center; }
+}
+</style>
+</head>
+<body>
+<section class="tips-page">
+  <a class="back-btn" href="{{ url_for('home.dashboard') }}">
+    <i class="bi bi-chevron-left"></i> Voltar
+  </a>
+
+  <div class="leaf-cluster leaf-left">🍃🍃🍃🍃</div>
+  <div class="leaf-cluster leaf-right">🍃🍃🍃🍃</div>
+  <div class="hills"></div>
+
+  <header class="tips-hero">
+    <h1>Dicas <span>Verdes <i class="bi bi-leaf tips-leaf"></i></span></h1>
+    <p>Pequenas atitudes hoje, <strong>Grandes mudanças amanhã.</strong></p>
+  </header>
+
+  <div style="position: relative; z-index: 2; display: flex; justify-content: center; margin: 0 20px 24px;">
+    <a class="green-button" href="{{ url_for('resgatar_codigos') }}" style="width: auto; text-decoration: none;">
+      <i class="bi bi-qr-code" aria-hidden="true"></i> Resgatar pontos
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     </a>
   </div>
 

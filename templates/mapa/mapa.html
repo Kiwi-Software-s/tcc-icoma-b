@@ -457,9 +457,15 @@
     }
 
     .ecoponto-popup .leaflet-popup-content-wrapper {
+<<<<<<< HEAD
       width: min(var(--popup-width, 430px), calc(100vw - 36px));
       max-width: 95vw;
       border-radius: var(--popup-radius, 20px);
+=======
+      width: min(430px, calc(100vw - 36px));
+      max-width: 95vw;
+      border-radius: 20px;
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
       background: #fdfaf7;
       box-shadow: 0 7px 22px rgba(0, 0, 0, .28);
       overflow: hidden;
@@ -791,6 +797,14 @@
       }
     }
   
+<<<<<<< HEAD
+=======
+@media (max-width: 600px) {
+  .leaflet-popup-content-wrapper { width: calc(100vw - 50px); }
+  .ecoponto-popup { max-width: calc(100vw - 50px); }
+  .ecoponto-popup img { max-width: 100%; height: auto; }
+}
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 </style>
   <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='mobile-nav.css') }}">

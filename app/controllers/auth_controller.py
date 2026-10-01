@@ -4,7 +4,11 @@ from flask import Blueprint, jsonify, redirect, render_template, request, sessio
 from firebase_admin import auth as firebase_auth
 
 from app.firebase_config import init_firebase
+<<<<<<< HEAD
 from app.repositories.user_repository import garantir_usuario, obter_tipo_usuario
+=======
+from app.repositories.user_repository import garantir_usuario
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
 
 auth_bp = Blueprint("auth", __name__)
@@ -73,6 +77,38 @@ def criar_sessao():
     uid = decoded_token.get("uid")
     if not uid:
         return jsonify(success=False, message="Token sem identificador de usuário."), 401
+<<<<<<< HEAD
+=======
+
+    session.clear()
+    session.permanent = True
+    session["uid"] = uid
+    session["email"] = decoded_token.get("email") or ""
+    session["nome"] = decoded_token.get("name") or ""
+
+    try:
+        usuario = garantir_usuario(
+            uid=uid,
+            nome=session.get("nome", ""),
+            email=session.get("email", ""),
+        )
+    except Exception as exc:
+        session.clear()
+        print(f"Falha ao carregar perfil no Firestore: {type(exc).__name__}: {exc}")
+        return jsonify(
+            success=False,
+            message="Login validado, mas não foi possível carregar seu perfil agora.",
+        ), 503
+
+    if usuario.get("nome"):
+        session["nome"] = usuario["nome"]
+
+    garantir_usuario(
+        uid=session["uid"],
+        nome=session.get("nome", ""),
+        email=session.get("email", ""),
+    )
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
     session.clear()
     session.permanent = True

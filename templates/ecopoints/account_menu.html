@@ -5,6 +5,7 @@
   <div class="eco-account-summary">
     <strong>{{ session.get('nome') or 'Usuário' }}</strong>
     <span>{{ session.get('email') or '' }}</span>
+<<<<<<< HEAD
     {% if session.get('tipo') and session.get('tipo') != 'usuario' %}
       <em class="eco-role-badge">{{ 'Administrador' if session.get('tipo') == 'admin' else 'Funcionário' }}</em>
     {% endif %}
@@ -16,5 +17,9 @@
   {% if session.get('tipo') == 'admin' %}
   <a href="{{ url_for('home.admin') }}"><i class="bi bi-shield-lock-fill"></i> Administração</a>
   {% endif %}
+=======
+  </div>
+  <a href="{{ url_for('home.perfil') }}"><i class="bi bi-person-circle"></i> Meu perfil</a>
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
   <a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Sair da conta</a>
 </div>

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 """Verificação rápida do EcoPoints sem escrever no Firestore.
+=======
+"""Smoke test local, sem escrever no Firestore.
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
 Rode com a venv ativa:
     python verificar_projeto.py
@@ -28,6 +32,7 @@ def main():
         "templates/ecopoints/descontos.html",
         "templates/ecopoints/historico.html",
         "templates/ecopoints/perfil.html",
+<<<<<<< HEAD
         "templates/ecopoints/funcionario.html",
         "templates/ecopoints/admin.html",
         "templates/ecopoints/mobile_nav.html",
@@ -38,6 +43,10 @@ def main():
         "app/repositories/beneficio_repository.py",
         "app/repositories/funcionario_repository.py",
         "app/repositories/admin_repository.py",
+=======
+        "app/repositories/resgate_repository.py",
+        "app/repositories/beneficio_repository.py",
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     ]
     for nome in obrigatorios:
         if (ROOT / nome).exists():
@@ -45,6 +54,7 @@ def main():
         else:
             tudo_ok = fail(f"Arquivo ausente: {nome}") and tudo_ok
 
+<<<<<<< HEAD
     # Evita repetir o problema de marcadores de conflito Git dentro do Python/HTML.
     conflitos = []
     ignorar = {".git", ".venv", "venv", "node_modules", "__pycache__"}
@@ -64,6 +74,8 @@ def main():
     else:
         ok("Nenhum marcador de conflito Git encontrado")
 
+=======
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8", errors="ignore")
     if "serviceAccountKey.json" in gitignore:
         ok("serviceAccountKey.json está protegido pelo .gitignore")
@@ -73,7 +85,11 @@ def main():
     if (ROOT / "serviceAccountKey.json").exists() or os.environ.get("FIREBASE_CREDENTIALS"):
         ok("Credencial Firebase encontrada para execução")
     else:
+<<<<<<< HEAD
         print("[AVISO] Firebase não configurado neste ambiente; login e Firestore não poderão ser testados.")
+=======
+        print("[AVISO] Firebase não configurado neste ambiente; páginas públicas ainda podem abrir.")
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
 
     try:
         from main import app
@@ -91,12 +107,16 @@ def main():
             tudo_ok = fail("Tratamento 404 falhou") and tudo_ok
 
         rotas = {rule.rule for rule in app.url_map.iter_rules()}
+<<<<<<< HEAD
         esperadas = [
             "/dashboard", "/perfil", "/meus-descontos", "/historico",
             "/resgatar-codigos", "/mapa-de-pontos", "/funcionario", "/admin",
             "/funcionario/gerar", "/admin/tipo",
         ]
         for rota in esperadas:
+=======
+        for rota in ["/dashboard", "/perfil", "/meus-descontos", "/historico", "/resgatar-codigos", "/mapa-de-pontos"]:
+>>>>>>> 00cb19d9a33f9dbe87dcea517577a29742de9f70
             if rota in rotas:
                 ok(f"Rota registrada: {rota}")
             else:
