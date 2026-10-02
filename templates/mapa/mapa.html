@@ -6,9 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>EcoPoints - Mapa de Pontos de Descarte</title>
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='ecopoints-favicon-239e7a5f8c.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='ecopoints-favicon-239e7a5f8c.png') }}">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link
@@ -792,10 +791,10 @@
         transition: none !important;
       }
     }
-  
 </style>
   <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='mobile-nav.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard-theme.css', v='1') }}">
   <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
 </head>
 
@@ -912,23 +911,27 @@
 
     <header class="topo">
 
-      <img src="../../static/mapa/onda.png" alt="" class="onda">
+      <img src="{{ url_for('static', filename='dashboard/icons/onda.png') }}" alt="" class="onda">
 
-      <div class="topo-linha">
+        <div class="topo-acoes">
+          {% include 'ecopoints/account_menu.html' %}
+        </div>
 
+      <nav class="top-nav" aria-label="Navegação principal">
+        <a href="{{ url_for('home.dashboard') }}">Início</a>
+        <a href="{{ url_for('home.mapa_de_pontos') }}" class="active" aria-current="page">Mapa de pontos</a>
+        <a href="{{ url_for('meus_descontos') }}">Meus descontos</a>
+        <a href="{{ url_for('dicas_verdes') }}">Dicas verdes</a>
+        <a href="{{ url_for('resgatar_codigos') }}">Resgatar pontos</a>
+      </nav>
+
+    </header>
+
+    <section class="map-intro">
         <div class="topo-titulo">
           <h1>Mapa de Pontos de Descarte</h1>
           <p>Encontre o local para fazer o descarte correto.</p>
         </div>
-
-        <div class="topo-acoes">
-          <button class="btn-sino" type="button" aria-label="Notificações">
-            <img src="../../static/mapa/bell.png" alt="">
-          </button>
-          {% include 'ecopoints/account_menu.html' %}
-        </div>
-
-      </div>
 
       <div class="busca-area">
 
@@ -948,7 +951,7 @@
 
       </div>
 
-    </header>
+    </section>
 
     <!-- ---------- Mapa ---------- -->
     <div class="area-mapa">
@@ -1355,4 +1358,3 @@
 </body>
 
 </html>
-
