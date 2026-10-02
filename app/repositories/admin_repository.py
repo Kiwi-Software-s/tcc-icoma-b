@@ -15,6 +15,7 @@ def listar_usuarios():
         dados = doc.to_dict() or {}
         dados["uid"] = doc.id
         dados.setdefault("tipo", "usuario")
+        dados.setdefault("origem", False)
         usuarios.append(dados)
 
     usuarios.sort(key=lambda u: ((u.get("nome") or "").lower(), (u.get("email") or "").lower()))
@@ -30,8 +31,14 @@ def alterar_tipo(uid, tipo):
         raise ValueError("Tipo de usuário inválido.")
 
     ref = _db().collection("usuarios").document(uid)
-    if not ref.get().exists:
+    snap = ref.get()
+    if not snap.exists:
         raise ValueError("Usuário não encontrado.")
+
+    dados = snap.to_dict() or {}
+    if dados.get("origem") is True:
+        raise ValueError("Esta é uma conta de origem e seu cargo não pode ser alterado.")
+
     ref.set({"tipo": tipo}, merge=True)
 
 

@@ -42,10 +42,14 @@
         <tbody>
         {% for u in usuarios %}
           <tr>
-            <td data-label="Nome"><strong>{{ u.nome or 'Sem nome' }}</strong>{% if u.uid == session.get('uid') %}<small class="you-badge">Você</small>{% endif %}</td>
+            <td data-label="Nome">
+              <strong>{{ u.nome or 'Sem nome' }}</strong>
+              {% if u.uid == session.get('uid') %}<small class="you-badge">Você</small>{% endif %}
+              {% if u.origem %}<span class="status-pill free"><i class="bi bi-shield-lock-fill"></i> Origem</span>{% endif %}
+            </td>
             <td data-label="E-mail"><span class="admin-email">{{ u.email or '—' }}</span></td>
             <td data-label="Acesso">
-              <select class="role-select" data-uid="{{ u.uid }}" data-current="{{ u.tipo or 'usuario' }}" aria-label="Tipo de acesso de {{ u.nome or u.email }}">
+              <select class="role-select" data-uid="{{ u.uid }}" data-current="{{ u.tipo or 'usuario' }}" aria-label="Tipo de acesso de {{ u.nome or u.email }}" {% if u.origem %}disabled title="Conta de origem protegida"{% endif %}>
                 <option value="usuario" {% if (u.tipo or 'usuario') == 'usuario' %}selected{% endif %}>Usuário</option>
                 <option value="funcionario" {% if u.tipo == 'funcionario' %}selected{% endif %}>Funcionário</option>
                 <option value="admin" {% if u.tipo == 'admin' %}selected{% endif %}>Admin</option>
@@ -94,7 +98,7 @@
 
   <div class="admin-note card">
     <i class="bi bi-shield-check"></i>
-    <div><strong>Como funcionam as permissões</strong><span>Usuário usa o aplicativo. Funcionário pode gerar códigos. Admin pode gerar códigos e gerenciar acessos.</span></div>
+    <div><strong>Como funcionam as permissões</strong><span>Usuário usa o aplicativo. Funcionário pode gerar códigos. Admin pode gerar códigos e gerenciar acessos. Contas de origem ficam protegidas e não podem ter o cargo alterado por outros administradores.</span></div>
   </div>
 </section>
 {% endblock %}
