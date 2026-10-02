@@ -390,6 +390,7 @@
         const firebaseApp = initializeApp(firebaseConfig);
         const auth = getAuth(firebaseApp);
         const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
 
         const googleBtn = document.getElementById('googleLoginBtn');
         const errorMsg = document.getElementById('loginError');
@@ -408,26 +409,39 @@
                 body: JSON.stringify({ idToken })
             });
 
-            const data = await response.json();
+            const data = await response.json().catch(() => ({}));
 
-            if (data.success) {
+            if (response.ok && data.success) {
                 window.location.href = '/dashboard';
             } else {
-                errorMsg.textContent = 'Não foi possível entrar. Tente novamente.';
+                errorMsg.textContent = data.message || 'Não foi possível entrar. Tente novamente.';
             }
         }
 
         // LOGIN COM GOOGLE (já existente)
         googleBtn.addEventListener('click', async () => {
+            if (btnLogin.disabled) return;
+            errorMsg.style.color = '#c0392b';
             errorMsg.textContent = '';
+            btnLogin.disabled = true;
 
             try {
                 const result = await signInWithPopup(auth, provider);
-                const idToken = await result.user.getIdToken();
+                const idToken = await result.user.getIdToken(true);
                 await autenticarNoBackend(idToken);
             } catch (err) {
-                console.error(err);
-                errorMsg.textContent = 'Login com Google cancelado ou falhou.';
+                console.error('Falha no login com Google:', err.code || err.name);
+                const mensagens = {
+                    'auth/popup-closed-by-user': 'A janela do Google foi fechada antes de concluir o login.',
+                    'auth/popup-blocked': 'Permita pop-ups para este site e tente novamente.',
+                    'auth/cancelled-popup-request': 'Já existe uma tentativa de login aberta. Tente novamente.',
+                    'auth/unauthorized-domain': 'Este domínio precisa ser autorizado no Firebase Authentication.',
+                    'auth/operation-not-allowed': 'Ative o provedor Google no Firebase Authentication.',
+                    'auth/network-request-failed': 'Falha de conexão com o Google. Verifique sua internet.'
+                };
+                errorMsg.textContent = mensagens[err.code] || 'Login com Google falhou. Tente novamente.';
+            } finally {
+                btnLogin.disabled = false;
             }
         });
 
@@ -467,7 +481,7 @@
 
             try {
                 const cred = await signInWithEmailAndPassword(auth, email, senha);
-                const idToken = await cred.user.getIdToken();
+                const idToken = await cred.user.getIdToken(true);
                 await autenticarNoBackend(idToken);
             } catch (err) {
                 let texto = 'Não foi possível entrar. Tente novamente.';

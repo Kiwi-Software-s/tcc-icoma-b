@@ -1,6 +1,6 @@
 import functools
 
-from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
+from flask import Blueprint, current_app, jsonify, redirect, render_template, request, session, url_for
 from firebase_admin import auth as firebase_auth
 
 from app.firebase_config import init_firebase
@@ -51,24 +51,70 @@ def cadastro():
 @auth_bp.route("/auth/session", methods=["POST"])
 def criar_sessao():
     """Valida o idToken do Firebase e cria a sessão Flask."""
-    data = request.get_json(silent=True) or {}
-    id_token = data.get("idToken")
+    data = request.get_json(silent=True)
+    id_token = data.get("idToken") if isinstance(data, dict) else None
 
-    if not id_token:
+    if not isinstance(id_token, str) or not id_token.strip():
         return jsonify(success=False, message="Token não informado."), 400
 
     try:
         init_firebase()
-        decoded_token = firebase_auth.verify_id_token(id_token)
     except RuntimeError as exc:
-        print(f"Firebase não configurado: {exc}")
+        current_app.logger.error("Firebase não configurado: %s", exc)
         return jsonify(
             success=False,
-            message="O servidor de autenticação não está configurado neste ambiente.",
+            code="firebase_configuration_error",
+            message=(
+                "O servidor precisa das credenciais Firebase do projeto tcc-ecopoint. "
+                "Confira FIREBASE_CREDENTIALS no Render ou serviceAccountKey.json localmente."
+            ),
         ), 503
     except Exception as exc:
-        print(f"Falha ao validar token Firebase: {type(exc).__name__}")
-        return jsonify(success=False, message="Token inválido ou expirado."), 401
+        current_app.logger.error("Falha ao iniciar Firebase: %s", type(exc).__name__)
+        return jsonify(
+            success=False,
+            code="firebase_initialization_error",
+            message="Não foi possível iniciar a autenticação no servidor. Confira os logs.",
+        ), 503
+
+    try:
+        # O SDK continua validando assinatura, emissor, projeto e validade.
+        # Tolera apenas uma pequena diferença entre os relógios dos servidores.
+        decoded_token = firebase_auth.verify_id_token(id_token, clock_skew_seconds=30)
+    except firebase_auth.ExpiredIdTokenError:
+        return jsonify(
+            success=False,
+            code="token_expired",
+            message="Sua autenticação expirou. Clique em entrar novamente.",
+        ), 401
+    except firebase_auth.CertificateFetchError:
+        current_app.logger.error("Firebase: falha ao buscar certificados de validação.")
+        return jsonify(
+            success=False,
+            code="certificate_fetch_error",
+            message="O servidor não conseguiu consultar o Firebase. Tente novamente em instantes.",
+        ), 503
+    except firebase_auth.InvalidIdTokenError as exc:
+        # Não imprime tokens, e-mails ou credenciais. Registra só a categoria.
+        detail = str(exc).lower()
+        if "used too early" in detail or "future" in detail:
+            code = "server_clock_error"
+            message = "O horário do servidor está fora de sincronia. Sincronize o relógio e tente novamente."
+        elif '"aud"' in detail or '"iss"' in detail:
+            code = "firebase_project_mismatch"
+            message = "O login e o servidor precisam usar o mesmo projeto Firebase: tcc-ecopoint."
+        else:
+            code = "invalid_token"
+            message = "A autenticação foi recusada pelo servidor. Entre novamente; se persistir, confira os logs."
+        current_app.logger.warning("Falha ao validar token Firebase: %s", code)
+        return jsonify(success=False, code=code, message=message), 401
+    except Exception as exc:
+        current_app.logger.error("Falha ao validar token Firebase: %s", type(exc).__name__)
+        return jsonify(
+            success=False,
+            code="firebase_validation_error",
+            message="Não foi possível validar o login no servidor. Confira os logs e tente novamente.",
+        ), 503
 
     uid = decoded_token.get("uid")
     if not uid:
