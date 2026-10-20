@@ -1,831 +1,290 @@
 <!doctype html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
+  <meta name="theme-color" content="#0f4a2b">
   <title>EcoPoints</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='ecopoints-favicon-239e7a5f8c.png') }}">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='ecopoints-favicon-239e7a5f8c.png') }}">
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
   <style>
-    ::-webkit-scrollbar {
-      display: none;
-    }
-
     :root {
       --green-dark: #102c18;
+      --green-deep: #0f4a2b;
       --green-main: #3f8d35;
       --green-light: #79b92f;
       --cream: #f4efe6;
       --card: #ece5d8;
+      --ink: #18331d;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--cream);
-      overflow-x: hidden;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5 {
-      font-family: 'Montserrat', sans-serif;
-    }
-
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body { margin: 0; font-family: Inter, sans-serif; background: var(--cream); color: #252b24; overflow-x: hidden; }
+    body.index-menu-open { overflow: hidden; }
+    img { max-width: 100%; }
+    h1, h2, h3, h4, h5 { font-family: Montserrat, sans-serif; }
     .navbar-custom {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 999;
-      padding: 18px 0;
-      background: rgba(10, 20, 10, .30);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      position: fixed; inset: 0 0 auto; z-index: 1200; width: 100%; padding: 15px 0;
+      background: rgba(10, 27, 15, .46); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.09);
     }
-
-    .brand {
-      color: #fff;
-      text-decoration: none;
-      font-size: 2rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { color: #fff; text-decoration: none; font-size: clamp(1.45rem, 2.5vw, 2rem); font-weight: 800; display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+    .brand i { color: #7ec850; font-size: 1.2em; }
+    .nav-buttons { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+    .nav-btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; color: #fff; padding: 10px 16px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1); transition: background .2s ease, transform .2s ease; font-weight: 600; font-size: .9rem; white-space: nowrap; }
+    .nav-btn:hover, .nav-btn:focus-visible { background: var(--green-light); color: #fff; transform: translateY(-1px); }
+    .index-menu-toggle, .index-mobile-login { display: none; }
+    .index-menu-toggle { width: 42px; height: 42px; flex: 0 0 42px; border: 1px solid rgba(255,255,255,.15); border-radius: 10px; background: rgba(255,255,255,.08); color: #fff; align-items: center; justify-content: center; flex-direction: column; gap: 5px; cursor: pointer; padding: 0; }
+    .index-menu-toggle span { display: block; width: 21px; height: 2px; border-radius: 99px; background: currentColor; transition: transform .2s ease, opacity .2s ease; }
+    .index-menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(7px) rotate(45deg); }
+    .index-menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .index-menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-7px) rotate(-45deg); }
+    .index-mobile-login { width: 42px; height: 42px; align-items: center; justify-content: center; color: #fff; text-decoration: none; border-radius: 10px; background: rgba(255,255,255,.08); font-size: 1.45rem; }
+    .index-menu-overlay { display: none; }
+    .index-mobile-drawer { display: none; }
+    #hero { min-height: 100svh; background: linear-gradient(135deg, #12361f 0%, #22642c 45%, #5ba63d 100%); display: flex; align-items: center; position: relative; overflow: hidden; padding: 135px 0 75px; }
+    #hero::before { content: ''; position: absolute; width: min(700px, 70vw); aspect-ratio: 1; background: rgba(255,255,255,.05); border-radius: 50%; top: -250px; right: -250px; pointer-events: none; }
+    #hero::after { content: ''; position: absolute; width: min(500px, 60vw); aspect-ratio: 1; background: rgba(0,0,0,.08); border-radius: 50%; bottom: -200px; left: -200px; pointer-events: none; }
+    .hero-content { position: relative; z-index: 2; max-width: 760px; }
+    .hero-content h1 { font-size: clamp(2.3rem, 5vw, 4.2rem); font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 22px; overflow-wrap: anywhere; }
+    .hero-content p { color: rgba(255,255,255,.88); font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.7; max-width: 570px; margin-bottom: 32px; }
+    .hero-btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: #fff; color: #1b4b1b; text-decoration: none; padding: 14px 25px; border-radius: 999px; font-weight: 800; transition: transform .2s ease, background .2s ease; }
+    .hero-btn:hover { transform: translateY(-2px); background: #e8f5e0; color: #1b4b1b; }
+    section:not(#hero) { padding: clamp(56px, 8vw, 100px) 0; }
+    #como-funciona { background: #f5f1e8; }
+    .section-title { text-align: center; font-size: clamp(1.7rem, 3.5vw, 2.5rem); font-weight: 800; margin-bottom: 15px; color: #132913; }
+    .section-subtitle { text-align: center; color: #666; line-height: 1.65; margin: 0 auto 45px; max-width: 690px; padding: 0 8px; }
+    .step-card { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.07); transition: transform .2s ease; height: 100%; }
+    .step-card:hover { transform: translateY(-4px); }
+    .step-header { background: var(--green-main); color: #fff; padding: clamp(20px, 3vw, 30px); font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: 800; }
+    .step-header i { margin-right: 8px; }
+    .step-body { padding: clamp(20px, 3vw, 28px); color: #666; line-height: 1.7; }
+    #por-que { background: #fff; }
+    .stat-card { background: var(--card); border-radius: 18px; padding: clamp(22px, 3vw, 30px); text-align: center; height: 100%; transition: transform .2s ease; }
+    .stat-card:hover { transform: translateY(-4px); }
+    .stat-icon { font-size: 2.5rem; color: var(--green-main); margin-bottom: 15px; }
+    .stat-number { font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 800; color: #1b3d1b; margin-bottom: 5px; }
+    .stat-label { color: #666; }
+    #cadastro { background: linear-gradient(90deg, #0f2f1f 0%, #173d28 50%, #0f2f1f 100%); }
+    .cadastro-card { background: #f3eee6; border-radius: 16px; padding: clamp(22px, 5vw, 40px); width: min(100%, 560px); margin: auto; box-shadow: 0 15px 40px rgba(0,0,0,.3); }
+    .cadastro-card h2 { text-align: center; font-size: clamp(1.6rem, 4vw, 2rem); font-weight: 900; margin-bottom: 1.7rem; color: #111; }
+    .form-control { width: 100%; min-height: 54px; border-radius: 8px; border: 1px solid #d8d1c6; background: #f8f4ed; padding: 12px 1rem; font: inherit; }
+    .form-control:focus { border-color: #5b9b2d; box-shadow: 0 0 0 4px rgba(91,155,45,.15); background: #fffdf8; }
+    .password-wrapper { position: relative; }
+    .password-wrapper .form-control { padding-right: 52px; }
+    .toggle-eye { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); border: 0; background: none; color: #777; font-size: 1.2rem; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer; }
+    .btn-cadastro { width: 100%; min-height: 55px; border: 0; border-radius: 8px; background: #76ab2c; color: #fff; font-weight: 800; font-size: 1rem; position: relative; padding: 12px 45px 12px 14px; transition: background .2s ease; }
+    .btn-cadastro:hover { background: #5f9120; }
+    .btn-cadastro:disabled { opacity: .7; cursor: not-allowed; }
+    .btn-arrow { position: absolute; right: 17px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; }
+    .parceiros-link { text-align: center; margin-top: 20px; }
+    .parceiros-link a { color: #5b8f26; text-decoration: none; font-size: .9rem; }
+    .msg-feedback { font-size: .9rem; margin: 0 0 1rem; text-align: center; min-height: 20px; line-height: 1.5; overflow-wrap: anywhere; }
+    .msg-feedback.erro { color: #c0392b; }
+    .msg-feedback.sucesso { color: #2e7d32; }
+    #faq { background: #102416; }
+    #faq .section-title { color: #fff; }
+    .faq-item { background: rgba(255,255,255,.06); border-radius: 10px; padding: 20px; margin-bottom: 15px; color: #fff; cursor: pointer; transition: background .2s ease; line-height: 1.55; }
+    .faq-item:hover, .faq-item:focus-visible { background: rgba(255,255,255,.12); }
+    .faq-answer { display: none; color: #d7d7d7; margin-top: 12px; line-height: 1.6; }
+    .faq-item[aria-expanded="true"] .faq-answer { display: block; }
+    footer { background: #0b120b; color: #aaa; padding: 38px 0; text-align: center; }
+    footer h5 { color: #fff; margin-bottom: 10px; }
+    footer p { margin-bottom: 10px; line-height: 1.6; }
+    @media (max-width: 1000px) {
+      .navbar-custom { padding: 10px 0; background: #0f4a2b; backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .navbar-inner { display: grid; grid-template-columns: 42px minmax(0, 1fr) 42px; gap: 8px; }
+      .index-menu-toggle { display: inline-flex; grid-column: 1; grid-row: 1; }
+      .brand { grid-column: 2; grid-row: 1; justify-content: center; font-size: clamp(1.2rem, 4vw, 1.6rem); gap: 7px; }
+      .index-mobile-login { display: inline-flex; grid-column: 3; grid-row: 1; }
+      .nav-buttons { display: none; }
+      .index-menu-overlay { display: block; position: fixed; inset: 0; z-index: 1250; background: rgba(10,25,14,.55); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity .22s ease; }
+      .index-mobile-drawer { display: flex; position: fixed; inset: 0 auto 0 0; z-index: 1260; width: min(84vw, 320px); flex-direction: column; padding: 18px 16px 20px; background: #0f4a2b; color: #fff; box-shadow: 14px 0 34px rgba(0,0,0,.24); transform: translateX(-105%); transition: transform .24s ease; overflow-y: auto; }
+      .index-menu-open .index-menu-overlay { opacity: 1; pointer-events: auto; }
+      .index-menu-open .index-mobile-drawer { transform: translateX(0); }
+      .index-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 2px 17px; border-bottom: 1px solid rgba(255,255,255,.12); }
+      .index-drawer-brand { font: 800 1.3rem Montserrat, sans-serif; color: #fff; text-decoration: none; white-space: nowrap; }
+      .index-drawer-brand i { color: #7ec850; margin-right: 6px; }
+      .index-menu-close { width: 40px; height: 40px; flex: 0 0 40px; border: 0; border-radius: 10px; background: rgba(255,255,255,.08); color: #fff; font-size: 1.2rem; }
+      .index-drawer-nav { display: flex; flex-direction: column; gap: 7px; padding: 18px 0; }
+      .index-drawer-nav a { display: flex; align-items: center; gap: 13px; min-height: 46px; padding: 11px 13px; border-radius: 10px; color: #eaf4e7; font: 600 14px/1.25 Inter, sans-serif; text-decoration: none; }
+      .index-drawer-nav a i { width: 24px; color: #7fbd43; font-size: 19px; text-align: center; }
+      .index-drawer-nav a:hover, .index-drawer-nav a:focus-visible { background: rgba(255,255,255,.1); color: #fff; }
+      .index-drawer-note { margin-top: auto; padding: 14px 12px 0; border-top: 1px solid rgba(255,255,255,.12); color: rgba(234,244,231,.7); font-size: 12px; line-height: 1.5; }
+      #hero { padding-top: 120px; }
     }
-
-    .brand i {
-      color: #7ec850;
-      font-size: 2rem;
+    @media (max-width: 600px) {
+      .container { padding-left: 18px; padding-right: 18px; }
+      #hero { min-height: 88svh; padding: 110px 0 65px; }
+      .hero-content h1 { font-size: clamp(2.15rem, 10vw, 3rem); letter-spacing: -.035em; }
+      .hero-content p { font-size: 1rem; margin-bottom: 25px; }
+      .hero-btn { width: 100%; max-width: 300px; padding: 14px 18px; }
+      .section-subtitle { margin-bottom: 30px; }
+      .step-header { padding: 20px; }
+      .step-body { padding: 20px; }
+      .cadastro-card { border-radius: 12px; }
+      .faq-item { padding: 16px; }
+      .index-mobile-drawer { width: min(88vw, 305px); }
     }
-
-    .nav-buttons {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .nav-btn {
-      text-decoration: none;
-      color: #fff;
-      padding: 10px 22px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .08);
-      border: 1px solid rgba(255, 255, 255, .08);
-      transition: .25s;
-      font-weight: 600;
-      font-size: .95rem;
-    }
-
-    .nav-btn:hover {
-      background: #7ec850;
-      color: #fff;
-      transform: translateY(-2px);
-    }
-
-    #hero {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #12361f 0%, #22642c 45%, #5ba63d 100%);
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      padding-top: 120px;
-    }
-
-    #hero::before {
-      content: '';
-      position: absolute;
-      width: 700px;
-      height: 700px;
-      background: rgba(255, 255, 255, .05);
-      border-radius: 50%;
-      top: -250px;
-      right: -250px;
-    }
-
-    #hero::after {
-      content: '';
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      background: rgba(0, 0, 0, .08);
-      border-radius: 50%;
-      bottom: -200px;
-      left: -200px;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero-content h1 {
-      font-size: 4rem;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-
-    .hero-content p {
-      color: rgba(255, 255, 255, .85);
-      font-size: 1.1rem;
-      max-width: 520px;
-      margin-bottom: 35px;
-    }
-
-    .hero-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: #fff;
-      color: #1b4b1b;
-      text-decoration: none;
-      padding: 15px 28px;
-      border-radius: 999px;
-      font-weight: 700;
-      transition: .25s;
-    }
-
-    .hero-btn:hover {
-      transform: translateY(-3px);
-      background: #e8f5e0;
-    }
-
-    #como-funciona {
-      padding: 100px 0;
-      background: #f5f1e8;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 15px;
-      color: #132913;
-    }
-
-    .section-subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 60px;
-    }
-
-    .step-card {
-      background: white;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, .07);
-      transition: .25s;
-      height: 100%;
-    }
-
-    .step-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .step-header {
-      background: var(--green-main);
-      color: white;
-      padding: 30px;
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
-
-    .step-body {
-      padding: 28px;
-      color: #666;
-      line-height: 1.7;
-    }
-
-    #por-que {
-      padding: 100px 0;
-      background: #fff;
-    }
-
-    .stat-card {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 30px;
-      text-align: center;
-      height: 100%;
-      transition: .25s;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .stat-icon {
-      font-size: 2.5rem;
-      color: var(--green-main);
-      margin-bottom: 15px;
-    }
-
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #1b3d1b;
-      margin-bottom: 5px;
-    }
-
-    .stat-label {
-      color: #666;
-    }
-
-    #cadastro {
-      background: linear-gradient(90deg,
-          #0f2f1f 0%,
-          #173d28 50%,
-          #0f2f1f 100%);
-      padding: 120px 20px;
-    }
-
-    .cadastro-card {
-      background: #f3eee6;
-      border-radius: 10px;
-      padding: 2.5rem;
-      max-width: 560px;
-      margin: auto;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, .3);
-    }
-
-    .cadastro-card h2 {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 900;
-      margin-bottom: 2rem;
-      color: #111;
-    }
-
-    .form-control {
-      height: 58px;
-      border-radius: 8px;
-      border: 1px solid #d8d1c6;
-      background: #f8f4ed;
-      padding: 0 1rem;
-    }
-
-    .form-control:focus {
-      border-color: #5b9b2d;
-      box-shadow: 0 0 0 4px rgba(91, 155, 45, .15);
-    }
-
-    .password-wrapper {
-      position: relative;
-    }
-
-    .toggle-eye {
-      position: absolute;
-      top: 50%;
-      right: 15px;
-      transform: translateY(-50%);
-      border: none;
-      background: none;
-      color: #999;
-      font-size: 1.1rem;
-    }
-
-    .btn-cadastro {
-      width: 100%;
-      height: 58px;
-      border: none;
-      border-radius: 8px;
-      background: #76ab2c;
-      color: #fff;
-      font-weight: 800;
-      font-size: 1rem;
-      position: relative;
-      transition: .25s;
-    }
-
-    .btn-cadastro:hover {
-      background: #5f9120;
-    }
-
-    .btn-cadastro:disabled {
-      opacity: .7;
-      cursor: not-allowed;
-    }
-
-    .btn-arrow {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.2rem;
-    }
-
-    .parceiros-link {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .parceiros-link a {
-      color: #5b8f26;
-      text-decoration: none;
-      font-size: .9rem;
-    }
-
-    .msg-feedback {
-      font-size: .9rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      min-height: 20px;
-    }
-
-    .msg-feedback.erro {
-      color: #c0392b;
-    }
-
-    .msg-feedback.sucesso {
-      color: #2e7d32;
-    }
-
-    #faq {
-      padding: 100px 0;
-      background: #102416;
-    }
-
-    #faq .section-title {
-      color: #fff;
-    }
-
-    .faq-item {
-      background: rgba(255, 255, 255, .06);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 15px;
-      color: #fff;
-      cursor: pointer;
-      transition: .25s;
-    }
-
-    .faq-item:hover {
-      background: rgba(255, 255, 255, .12);
-    }
-
-    .faq-answer {
-      display: none;
-      color: #d7d7d7;
-      margin-top: 12px;
-      line-height: 1.6;
-    }
-
-    footer {
-      background: #0b120b;
-      color: #aaa;
-      padding: 40px 0;
-      text-align: center;
-    }
-
-    footer h5 {
-      color: #fff;
-      margin-bottom: 10px;
-    }
-
-    @media(max-width:992px) {
-
-      .hero-content h1 {
-        font-size: 3rem;
-      }
-
-      .nav-buttons {
-        justify-content: center;
-        margin-top: 20px;
-      }
-
-      .navbar-custom .container {
-        flex-direction: column;
-      }
-    }
-
-    @media(max-width:768px) {
-
-      .hero-content h1 {
-        font-size: 2.4rem;
-      }
-
-      .nav-btn {
-        width: 100%;
-        text-align: center;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
     }
   </style>
 </head>
-
 <body>
-
-  <nav class="navbar-custom">
-    <div class="container d-flex justify-content-between align-items-center">
-
-      <a href="#" class="brand">
-        <i class="bi bi-recycle"></i>
-        EcoPoints
-      </a>
-
-      <div class="nav-buttons">
-
-        <a href="#como-funciona" class="nav-btn">
-          Como Funciona
-        </a>
-
-        <a href="#por-que" class="nav-btn">
-          Por que usar
-        </a>
-
-        <a href="#cadastro" class="nav-btn">
-          Crie sua conta
-        </a>
-
-        <a href="#faq" class="nav-btn">
-          FAQ
-        </a>
-
-        <a href="/login" class="nav-btn">
-          Login
-        </a>
-
+  <nav class="navbar-custom" aria-label="Navegação principal">
+    <div class="container navbar-inner">
+      <button class="index-menu-toggle" id="indexMenuToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="indexMobileDrawer">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="#hero" class="brand" aria-label="EcoPoints - Início"><i class="bi bi-recycle" aria-hidden="true"></i><span>EcoPoints</span></a>
+      <a href="/login" class="index-mobile-login" aria-label="Entrar"><i class="bi bi-person-circle" aria-hidden="true"></i></a>
+      <div class="nav-buttons" id="indexNavButtons">
+        <a href="#como-funciona" class="nav-btn">Como funciona</a>
+        <a href="#por-que" class="nav-btn">Por que usar</a>
+        <a href="#cadastro" class="nav-btn">Crie sua conta</a>
+        <a href="#faq" class="nav-btn">FAQ</a>
+        <a href="/login" class="nav-btn">Login</a>
       </div>
     </div>
   </nav>
 
-  <section id="hero">
-
-    <div class="container">
-      <div class="hero-content">
-
-        <h1>
-          Ganhe recompensas<br>
-          ajudando o planeta
-        </h1>
-
-        <p>
-          Recicle, acumule GreenPoints e troque seus pontos
-          por recompensas incríveis enquanto ajuda o meio ambiente.
-        </p>
-
-        <a href="#cadastro" class="hero-btn">
-          Começar agora
-          <i class="bi bi-arrow-right"></i>
-        </a>
-
-      </div>
+  <div class="index-menu-overlay" id="indexMenuOverlay" aria-hidden="true"></div>
+  <aside class="index-mobile-drawer" id="indexMobileDrawer" aria-hidden="true" aria-label="Menu móvel">
+    <div class="index-drawer-head">
+      <a href="#hero" class="index-drawer-brand"><i class="bi bi-recycle" aria-hidden="true"></i>EcoPoints</a>
+      <button class="index-menu-close" id="indexMenuClose" type="button" aria-label="Fechar menu"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
     </div>
+    <nav class="index-drawer-nav" aria-label="Links da página">
+      <a href="#hero"><i class="bi bi-house-fill" aria-hidden="true"></i><span>Início</span></a>
+      <a href="#como-funciona"><i class="bi bi-recycle" aria-hidden="true"></i><span>Como funciona</span></a>
+      <a href="#por-que"><i class="bi bi-globe-americas" aria-hidden="true"></i><span>Por que usar</span></a>
+      <a href="#cadastro"><i class="bi bi-person-plus-fill" aria-hidden="true"></i><span>Crie sua conta</span></a>
+      <a href="#faq"><i class="bi bi-question-circle-fill" aria-hidden="true"></i><span>Perguntas frequentes</span></a>
+      <a href="/login"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i><span>Login</span></a>
+    </nav>
+    <div class="index-drawer-note">Recicle, acumule GreenPoints e troque seus pontos por recompensas.</div>
+  </aside>
 
+  <section id="hero">
+    <div class="container"><div class="hero-content">
+      <h1>Ganhe recompensas ajudando o planeta</h1>
+      <p>Recicle, acumule GreenPoints e troque seus pontos por recompensas incríveis enquanto ajuda o meio ambiente.</p>
+      <a href="#cadastro" class="hero-btn">Começar agora <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+    </div></div>
   </section>
 
   <section id="como-funciona">
-
     <div class="container">
-
-      <h2 class="section-title">
-        Como Funciona
-      </h2>
-
-      <p class="section-subtitle">
-        Recicle e acumule pontos em apenas 3 passos simples
-      </p>
-
+      <h2 class="section-title">Como funciona</h2>
+      <p class="section-subtitle">Recicle e acumule pontos em apenas 3 passos simples.</p>
       <div class="row g-4">
-
-        <div class="col-md-4">
-
-          <div class="step-card">
-
-            <div class="step-header">
-              <i class="bi bi-recycle"></i>
-              Recicle
-            </div>
-
-            <div class="step-body">
-              Participe de ações sustentáveis e contribua para um futuro melhor.
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="col-md-4">
-
-          <div class="step-card">
-
-            <div class="step-header">
-              <i class="bi bi-star-fill"></i>
-              Ganhe Pontos
-            </div>
-
-            <div class="step-body">
-              Acumule GreenPoints automaticamente ao reciclar.
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="col-md-4">
-
-          <div class="step-card">
-
-            <div class="step-header">
-              <i class="bi bi-gift-fill"></i>
-              Troque Recompensas
-            </div>
-
-            <div class="step-body">
-              Troque seus pontos por benefícios e descontos exclusivos.
-            </div>
-
-          </div>
-
-        </div>
-
+        <div class="col-12 col-md-4"><article class="step-card"><div class="step-header"><i class="bi bi-recycle" aria-hidden="true"></i>Recicle</div><div class="step-body">Participe de ações sustentáveis e contribua para um futuro melhor.</div></article></div>
+        <div class="col-12 col-md-4"><article class="step-card"><div class="step-header"><i class="bi bi-star-fill" aria-hidden="true"></i>Ganhe pontos</div><div class="step-body">Acumule GreenPoints automaticamente ao reciclar.</div></article></div>
+        <div class="col-12 col-md-4"><article class="step-card"><div class="step-header"><i class="bi bi-gift-fill" aria-hidden="true"></i>Troque recompensas</div><div class="step-body">Troque seus pontos por benefícios e descontos exclusivos.</div></article></div>
       </div>
     </div>
   </section>
 
   <section id="por-que">
-
     <div class="container">
-
-      <h2 class="section-title">
-        Por que usar o GreenPoints?
-      </h2>
-
-      <p class="section-subtitle">
-        Contribua para um planeta mais limpo e sustentável
-      </p>
-
+      <h2 class="section-title">Por que usar o GreenPoints?</h2>
+      <p class="section-subtitle">Contribua para um planeta mais limpo e sustentável.</p>
       <div class="row g-4">
-
-        <div class="col-md-4">
-
-          <div class="stat-card">
-
-            <div class="stat-icon">
-              <i class="bi bi-trash3-fill"></i>
-            </div>
-
-            <div class="stat-number">
-              +0000kg
-            </div>
-
-            <div class="stat-label">
-              Resíduos reciclados
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="col-md-4">
-
-          <div class="stat-card">
-
-            <div class="stat-icon">
-              <i class="bi bi-people-fill"></i>
-            </div>
-
-            <div class="stat-number">
-              +0000
-            </div>
-
-            <div class="stat-label">
-              Usuários ativos
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="col-md-4">
-
-          <div class="stat-card">
-
-            <div class="stat-icon">
-              <i class="bi bi-gift-fill"></i>
-            </div>
-
-            <div class="stat-number">
-              +0000
-            </div>
-
-            <div class="stat-label">
-              Recompensas entregues
-            </div>
-
-          </div>
-
-        </div>
-
+        <div class="col-12 col-md-4"><article class="stat-card"><div class="stat-icon"><i class="bi bi-trash3-fill" aria-hidden="true"></i></div><div class="stat-number">+0000 kg</div><div class="stat-label">Resíduos reciclados</div></article></div>
+        <div class="col-12 col-md-4"><article class="stat-card"><div class="stat-icon"><i class="bi bi-people-fill" aria-hidden="true"></i></div><div class="stat-number">+0000</div><div class="stat-label">Usuários ativos</div></article></div>
+        <div class="col-12 col-md-4"><article class="stat-card"><div class="stat-icon"><i class="bi bi-gift-fill" aria-hidden="true"></i></div><div class="stat-number">+0000</div><div class="stat-label">Recompensas entregues</div></article></div>
       </div>
     </div>
   </section>
 
   <section id="cadastro">
-
     <div class="container">
-
       <div class="cadastro-card">
-
-        <h2>
-          Crie sua conta!
-        </h2>
-
-        <form id="form-cadastro">
-
-          <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Seu nome completo" id="nome" required>
-          </div>
-
-          <div class="mb-3">
-            <input type="email" class="form-control" placeholder="Email" id="email" required>
-          </div>
-
-          <div class="mb-3 password-wrapper">
-
-            <input type="password" class="form-control pe-5" placeholder="Senha" id="senha" required>
-
-            <button type="button" class="toggle-eye" onclick="toggleSenha()">
-              <i class="bi bi-eye-slash" id="eye-icon"></i>
-            </button>
-
-          </div>
-
-          <div id="msg-feedback" class="msg-feedback"></div>
-
-          <button type="submit" class="btn-cadastro" id="btn-cadastro">
-
-            <span id="btn-cadastro-texto">Começe a ganhar pontos</span>
-
-            <span class="btn-arrow">
-              <i class="bi bi-chevron-right"></i>
-            </span>
-
-          </button>
-
+        <h2>Crie sua conta!</h2>
+        <form id="form-cadastro" novalidate>
+          <div class="mb-3"><input type="text" class="form-control" placeholder="Seu nome completo" id="nome" autocomplete="name" required aria-label="Seu nome completo"></div>
+          <div class="mb-3"><input type="email" class="form-control" placeholder="E-mail" id="email" autocomplete="email" required aria-label="E-mail"></div>
+          <div class="mb-3 password-wrapper"><input type="password" class="form-control" placeholder="Senha (mínimo 6 caracteres)" id="senha" autocomplete="new-password" minlength="6" required aria-label="Senha"><button type="button" class="toggle-eye" id="toggleSenhaBtn" aria-label="Mostrar senha"><i class="bi bi-eye-slash" id="eye-icon" aria-hidden="true"></i></button></div>
+          <div id="msg-feedback" class="msg-feedback" role="status" aria-live="polite"></div>
+          <button type="submit" class="btn-cadastro" id="btn-cadastro"><span id="btn-cadastro-texto">Comece a ganhar pontos</span><span class="btn-arrow"><i class="bi bi-chevron-right" aria-hidden="true"></i></span></button>
         </form>
-
-        <div class="parceiros-link">
-          <a href="#">
-            Parcerias
-          </a>
-        </div>
-
+        <div class="parceiros-link"><a href="#por-que">Parcerias</a></div>
+        <p class="text-center mt-3 mb-0 small">Já tem uma conta? <a href="/login" style="color:#467a1a;font-weight:700">Entrar</a></p>
       </div>
-
     </div>
-
   </section>
 
   <section id="faq">
-
     <div class="container">
-
-      <h2 class="section-title">
-        Perguntas Frequentes
-      </h2>
-
-      <div class="row">
-
-        <div class="col-md-6">
-
-          <div class="faq-item" onclick="toggleFaq(this)">
-            Como faço para me cadastrar?
-
-            <div class="faq-answer">
-              Basta preencher o formulário com seus dados.
-            </div>
-          </div>
-
-          <div class="faq-item" onclick="toggleFaq(this)">
-            Como ganho GreenPoints?
-
-            <div class="faq-answer">
-              Você ganha pontos reciclando e participando de ações sustentáveis.
-            </div>
-          </div>
-
+      <h2 class="section-title mb-4">Perguntas frequentes</h2>
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <div class="faq-item" role="button" tabindex="0" aria-expanded="false">Como faço para me cadastrar?<div class="faq-answer">Basta preencher o formulário com seu nome, e-mail e senha.</div></div>
+          <div class="faq-item" role="button" tabindex="0" aria-expanded="false">Como ganho GreenPoints?<div class="faq-answer">Você ganha pontos reciclando e participando de ações sustentáveis.</div></div>
         </div>
-
-        <div class="col-md-6">
-
-          <div class="faq-item" onclick="toggleFaq(this)">
-            Os pontos expiram?
-
-            <div class="faq-answer">
-              Os pontos possuem validade de 12 meses.
-            </div>
-          </div>
-
-          <div class="faq-item" onclick="toggleFaq(this)">
-            Existe aplicativo mobile?
-
-            <div class="faq-answer">
-              Sim, o app estará disponível em breve para Android e iOS.
-            </div>
-          </div>
-
+        <div class="col-12 col-md-6">
+          <div class="faq-item" role="button" tabindex="0" aria-expanded="false">Os pontos expiram?<div class="faq-answer">Os pontos possuem validade de 12 meses.</div></div>
+          <div class="faq-item" role="button" tabindex="0" aria-expanded="false">Existe aplicativo mobile?<div class="faq-answer">Sim, o app estará disponível em breve para Android e iOS.</div></div>
         </div>
-
       </div>
-
     </div>
-
   </section>
 
-  <footer>
-
-    <div class="container">
-
-      <h5>
-        GreenPoints
-      </h5>
-
-      <p>
-        Incentivando a reciclagem e um futuro mais sustentável.
-      </p>
-
-      <small>
-        © 2026 GreenPoints - Todos os direitos reservados.
-      </small>
-
-    </div>
-
-  </footer>
+  <footer><div class="container"><h5>GreenPoints</h5><p>Incentivando a reciclagem e um futuro mais sustentável.</p><small>© 2026 GreenPoints — Todos os direitos reservados.</small></div></footer>
 
   <script>
-
-    function toggleSenha() {
-
-      const senha = document.getElementById('senha');
-      const icon = document.getElementById('eye-icon');
-
-      if (senha.type === 'password') {
-        senha.type = 'text';
-        icon.classList.remove('bi-eye-slash');
-        icon.classList.add('bi-eye');
-      } else {
-        senha.type = 'password';
-        icon.classList.remove('bi-eye');
-        icon.classList.add('bi-eye-slash');
+    (() => {
+      const toggle = document.getElementById('indexMenuToggle');
+      const drawer = document.getElementById('indexMobileDrawer');
+      const overlay = document.getElementById('indexMenuOverlay');
+      const closeButton = document.getElementById('indexMenuClose');
+      function setMenuOpen(open) {
+        document.body.classList.toggle('index-menu-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+        drawer.setAttribute('aria-hidden', String(!open));
+        overlay.setAttribute('aria-hidden', String(!open));
       }
-    }
+      toggle.addEventListener('click', () => setMenuOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+      closeButton.addEventListener('click', () => setMenuOpen(false));
+      overlay.addEventListener('click', () => setMenuOpen(false));
+      drawer.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenuOpen(false)));
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') setMenuOpen(false); });
+      window.addEventListener('resize', () => { if (window.innerWidth > 1000) setMenuOpen(false); });
 
-    function toggleFaq(item) {
+      const eyeButton = document.getElementById('toggleSenhaBtn');
+      const password = document.getElementById('senha');
+      const eyeIcon = document.getElementById('eye-icon');
+      eyeButton.addEventListener('click', () => {
+        const showing = password.type === 'password';
+        password.type = showing ? 'text' : 'password';
+        eyeIcon.classList.toggle('bi-eye', showing);
+        eyeIcon.classList.toggle('bi-eye-slash', !showing);
+        eyeButton.setAttribute('aria-label', showing ? 'Ocultar senha' : 'Mostrar senha');
+      });
 
-      const answer = item.querySelector('.faq-answer');
-
-      if (answer.style.display === 'block') {
-        answer.style.display = 'none';
-      } else {
-        document.querySelectorAll('.faq-answer').forEach(el => {
-          el.style.display = 'none';
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const toggleFaq = () => {
+          const willOpen = item.getAttribute('aria-expanded') !== 'true';
+          item.setAttribute('aria-expanded', String(willOpen));
+        };
+        item.addEventListener('click', toggleFaq);
+        item.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggleFaq(); }
         });
-
-        answer.style.display = 'block';
-      }
-    }
-
+      });
+    })();
   </script>
 
-  <!--
-  =====================================================================
-  CADASTRO FUNCIONAL (Firebase Authentication)
-  Substitua o objeto firebaseConfig abaixo pelo MESMO usado na sua
-  página de login (projeto tcc-ecopoint). Nunca coloque a
-  serviceAccountKey.json aqui — isso é só para o backend (Admin SDK).
-  =====================================================================
--->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      updateProfile
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // TODO: cole aqui o firebaseConfig real do projeto tcc-ecopoint
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
       apiKey: "AIzaSyApm0Z0DnU3Up012atks4u3a1BRMzsrn7A",
       authDomain: "tcc-ecopoint.firebaseapp.com",
@@ -838,7 +297,6 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-
     const form = document.getElementById('form-cadastro');
     const btn = document.getElementById('btn-cadastro');
     const btnTexto = document.getElementById('btn-cadastro-texto');
@@ -847,71 +305,39 @@
     function mostrarMsg(texto, tipo) {
       msg.textContent = texto;
       msg.classList.remove('erro', 'sucesso');
-      if (tipo) {
-        msg.classList.add(tipo);
-      }
+      if (tipo) msg.classList.add(tipo);
     }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
       mostrarMsg('', '');
-
       const nome = document.getElementById('nome').value.trim();
       const email = document.getElementById('email').value.trim();
       const senha = document.getElementById('senha').value;
 
-      if (nome.length < 2) {
-        mostrarMsg('Informe seu nome completo.', 'erro');
-        return;
-      }
-
-      if (senha.length < 6) {
-        mostrarMsg('A senha precisa ter pelo menos 6 caracteres.', 'erro');
-        return;
-      }
+      if (nome.length < 2) { mostrarMsg('Informe seu nome completo.', 'erro'); return; }
+      if (senha.length < 6) { mostrarMsg('A senha precisa ter pelo menos 6 caracteres.', 'erro'); return; }
 
       btn.disabled = true;
       btnTexto.textContent = 'Criando conta...';
-
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, senha);
         await updateProfile(cred.user, { displayName: nome });
-
         mostrarMsg('Conta criada com sucesso! Redirecionando...', 'sucesso');
-
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 1200);
-
+        window.setTimeout(() => { window.location.href = '/login'; }, 1200);
       } catch (err) {
-        let texto = 'Erro ao criar conta. Tente novamente.';
-
-        switch (err.code) {
-          case 'auth/email-already-in-use':
-            texto = 'Este email já está cadastrado.';
-            break;
-          case 'auth/invalid-email':
-            texto = 'Email inválido.';
-            break;
-          case 'auth/weak-password':
-            texto = 'Senha muito fraca.';
-            break;
-          case 'auth/network-request-failed':
-            texto = 'Falha de conexão. Verifique sua internet.';
-            break;
-        }
-
-        mostrarMsg(texto, 'erro');
+        const mensagens = {
+          'auth/email-already-in-use': 'Este e-mail já está cadastrado.',
+          'auth/invalid-email': 'E-mail inválido.',
+          'auth/weak-password': 'Senha muito fraca. Use pelo menos 6 caracteres.',
+          'auth/network-request-failed': 'Falha de conexão. Verifique sua internet.'
+        };
+        mostrarMsg(mensagens[err.code] || 'Erro ao criar conta. Tente novamente.', 'erro');
+      } finally {
         btn.disabled = false;
-        btnTexto.textContent = 'Começe a ganhar pontos';
-        return;
+        btnTexto.textContent = 'Comece a ganhar pontos';
       }
-
-      btn.disabled = false;
-      btnTexto.textContent = 'Começe a ganhar pontos';
     });
   </script>
-
 </body>
-
 </html>
