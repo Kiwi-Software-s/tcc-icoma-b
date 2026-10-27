@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Página do mapa com os pontos de descarte e recursos de localização. -->
 <html lang="pt-BR">
 
 <head>
@@ -795,7 +796,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='mobile-nav.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard-theme.css', v='1') }}">
-  <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
+  <!-- JavaScript: controla comportamentos interativos desta página. -->
+<script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
 </head>
 
 <body>
@@ -807,6 +809,7 @@
 
     <img src="../../static/titulo.png" alt="EcoPoints" class="sidebar-logo">
 
+    <!-- Área de navegação: reúne links para outras páginas ou seções. -->
     <nav class="menu-lateral" aria-label="Navegação principal">
 
       <a href="/dashboard" class="menu-item">
@@ -909,6 +912,7 @@
   <!-- ============================ CONTEÚDO ============================ -->
   <main class="conteudo">
 
+    <!-- Cabeçalho da página, com identidade visual ou navegação. -->
     <header class="topo">
 
       <img src="{{ url_for('static', filename='dashboard/icons/onda.png') }}" alt="" class="onda">
@@ -917,6 +921,7 @@
           {% include 'ecopoints/account_menu.html' %}
         </div>
 
+      <!-- Área de navegação: reúne links para outras páginas ou seções. -->
       <nav class="top-nav" aria-label="Navegação principal">
         <a href="{{ url_for('home.dashboard') }}">Início</a>
         <a href="{{ url_for('home.mapa_de_pontos') }}" class="active" aria-current="page">Mapa de pontos</a>
@@ -927,6 +932,7 @@
 
     </header>
 
+    <!-- Seção relacionada à visualização ou aos controles do mapa. -->
     <section class="map-intro">
         <div class="topo-titulo">
           <h1>Mapa de Pontos de Descarte</h1>
@@ -999,9 +1005,11 @@
 
   </main>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- JavaScript: controla comportamentos interativos desta página. -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <script>
+  <!-- JavaScript: controla comportamentos interativos desta página. -->
+<script>
     /* =====================================================================
        MAPA - Leaflet + tiles gratuitos
 
@@ -1354,7 +1362,8 @@
     });
   </script>
 
-  <script src="{{ url_for('static', filename='mobile-nav.js') }}" defer></script>
+  <!-- JavaScript: controla comportamentos interativos desta página. -->
+<script src="{{ url_for('static', filename='mobile-nav.js') }}" defer></script>
 </body>
 
 </html>

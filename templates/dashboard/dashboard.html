@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Painel principal do usuário, com resumo das informações e atalhos do sistema. -->
 <html lang="pt-BR">
 
 <head>
@@ -689,7 +690,8 @@
   </style>
   <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='mobile-nav.css') }}">
-  <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
+  <!-- JavaScript: controla comportamentos interativos desta página. -->
+<script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
 </head>
 
 <body>
@@ -701,6 +703,7 @@
 
     <img src="../../static/titulo.png" alt="EcoPoints" class="sidebar-logo">
 
+    <!-- Área de navegação: reúne links para outras páginas ou seções. -->
     <nav class="menu-lateral">
 
       <a href="/dashboard" class="menu-item ativo">
@@ -764,6 +767,7 @@
         {% include 'ecopoints/account_menu.html' %}
       </div>
 
+      <!-- Área de navegação: reúne links para outras páginas ou seções. -->
       <nav class="menu-topo">
         <a href="/dashboard" class="ativo">Início</a>
         <a href="/mapa-de-pontos">Mapa de pontos</a>
@@ -804,6 +808,7 @@
         <!-- ======= Resíduos + Total de Pontos ======= -->
         <div class="coluna-dupla">
 
+          <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
           <article class="cartao">
             <div class="cartao-topo">
               <h2>Resíduos Coletados
@@ -816,6 +821,7 @@
             <p class="numero-grande">{{ kg_mes|fmt_num }} Kg</p>
           </article>
 
+          <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
           <article class="cartao">
             <div class="cartao-topo">
               <h2>Total de Pontos</h2>
@@ -982,6 +988,7 @@
 
   </main>
 
+<!-- JavaScript: controla comportamentos interativos desta página. -->
 <script>
   const graficosData = {{ graficos|tojson }};
   let desempenhoData = graficosData.mensal.desempenho;
@@ -1118,7 +1125,8 @@
   atualizarGraficoEvolucao('mensal');
 </script>
 
-  <script src="{{ url_for('static', filename='mobile-nav.js') }}" defer></script>
+  <!-- JavaScript: controla comportamentos interativos desta página. -->
+<script src="{{ url_for('static', filename='mobile-nav.js') }}" defer></script>
 </body>
 
 </html>

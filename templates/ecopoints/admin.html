@@ -1,7 +1,9 @@
+<!-- Área administrativa para consultar usuários e gerenciar acessos/códigos. -->
 {% extends "ecopoints/base.html" %}
 {% block title %}EcoPoints - Administração{% endblock %}
 
 {% block content %}
+<!-- Seção de conteúdo desta página. -->
 <section class="admin-page">
   <div class="page-heading admin-heading">
     <div>
@@ -13,20 +15,24 @@
   </div>
 
   <div class="admin-summary-grid">
+    <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
     <article class="card admin-summary-card">
       <i class="bi bi-people-fill"></i>
       <div><span>Usuários cadastrados</span><strong>{{ usuarios|length }}</strong></div>
     </article>
+    <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
     <article class="card admin-summary-card">
       <i class="bi bi-upc-scan"></i>
       <div><span>Códigos listados</span><strong>{{ codigos|length }}</strong></div>
     </article>
+    <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
     <article class="card admin-summary-card">
       <i class="bi bi-person-badge-fill"></i>
       <div><span>Funcionários</span><strong>{{ usuarios|selectattr('tipo', 'equalto', 'funcionario')|list|length }}</strong></div>
     </article>
   </div>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card admin-section-card">
     <div class="admin-section-head">
       <div>
@@ -37,6 +43,7 @@
     </div>
 
     <div class="admin-table-wrap">
+      <!-- Tabela usada para organizar informações em linhas e colunas. -->
       <table class="admin-table">
         <thead><tr><th>Nome</th><th>E-mail</th><th>Acesso</th></tr></thead>
         <tbody>
@@ -64,6 +71,7 @@
     </div>
   </article>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card admin-section-card">
     <div class="admin-section-head">
       <div>
@@ -74,6 +82,7 @@
     </div>
 
     <div class="admin-table-wrap">
+      <!-- Tabela usada para organizar informações em linhas e colunas. -->
       <table class="admin-table codes-table">
         <thead><tr><th>Código</th><th>Material</th><th>Peso</th><th>Pontos</th><th>Status</th></tr></thead>
         <tbody>
@@ -104,6 +113,7 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- JavaScript: controla comportamentos interativos desta página. -->
 <script>
 (() => {
   document.querySelectorAll('.role-select').forEach((select) => {

@@ -1,7 +1,9 @@
+<!-- Página para informar um código e resgatar pontos. -->
 {% extends "ecopoints/base.html" %}
 {% block title %}Resgate dos pontos - EcoPoints{% endblock %}
 
 {% block content %}
+<!-- Seção de conteúdo desta página. -->
 <section class="page-heading">
   <div>
     <h1>Resgatar código</h1>
@@ -10,6 +12,7 @@
 </section>
 
 <div class="redeem-grid">
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card steps-card">
     <h2><i class="bi bi-info-circle-fill accent"></i> Como funciona?</h2>
 
@@ -43,6 +46,7 @@
     </div>
   </article>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card redeem-card">
     <h2>Inserir código</h2>
     <p class="small-muted">Cada código pode ser utilizado apenas uma vez.</p>
@@ -80,6 +84,7 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- JavaScript: controla comportamentos interativos desta página. -->
 <script>
 const btnResgatar = document.getElementById('btnResgatar');
 const inputCodigo = document.getElementById('codigo');

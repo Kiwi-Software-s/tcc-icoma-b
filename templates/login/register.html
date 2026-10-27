@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Tela de cadastro de uma nova conta. -->
 <html lang="pt-BR">
 
 <head>
@@ -264,6 +265,7 @@
 <body>
     <img src="../../static/Vector 1.png" alt="Fundo verde" class="wave-bg">
 
+    <!-- Conteúdo principal apresentado nesta página. -->
     <main class="login-wrapper">
 
         <div class="left-side">
@@ -275,6 +277,7 @@
         </div>
 
         <div class="right-side">
+            <!-- Formulário: reúne os campos enviados pelo usuário e as ações de envio. -->
             <form id="registerForm">
                 <div class="custom-input-group">
                     <input type="text" id="nomeInput" placeholder="Nome completo" required>
@@ -326,7 +329,8 @@
         </div>
     </main>
 
-    <script type="module">
+    <!-- JavaScript: controla comportamentos interativos desta página. -->
+<script type="module">
         // SDK do Firebase (via CDN, versão modular)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import {
@@ -441,7 +445,8 @@
         });
     </script>
 
-    <script>
+    <!-- JavaScript: controla comportamentos interativos desta página. -->
+<script>
         const togglePassword = document.getElementById('togglePassword');
         const passwordToggleInput = document.getElementById('passwordInput');
 

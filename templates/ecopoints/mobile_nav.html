@@ -1,3 +1,4 @@
+<!-- Menu de navegação usado em telas menores. -->
 <header class="mobile-appbar" aria-label="Navegação móvel">
   <button class="mobile-menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-main-menu">
     <span></span><span></span><span></span>
@@ -11,6 +12,7 @@
 </header>
 
 <div class="mobile-menu-overlay" data-mobile-menu-close></div>
+<!-- Área complementar, como menu lateral, painel auxiliar ou sobreposição. -->
 <aside id="mobile-main-menu" class="mobile-drawer" aria-hidden="true">
   <div class="mobile-drawer-head">
     <img src="{{ url_for('static', filename='titulo.png') }}" alt="EcoPoints">
@@ -19,6 +21,7 @@
     </button>
   </div>
 
+  <!-- Área de navegação: reúne links para outras páginas ou seções. -->
   <nav class="mobile-drawer-nav" aria-label="Menu principal">
     <a class="{{ 'active' if active == 'inicio' else '' }}" href="{{ url_for('home.dashboard') }}">
       <i class="bi bi-house-fill"></i><span>Início</span>

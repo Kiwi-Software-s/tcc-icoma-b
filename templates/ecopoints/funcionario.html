@@ -1,7 +1,9 @@
+<!-- Área do funcionário para gerar códigos de descarte. -->
 {% extends "ecopoints/base.html" %}
 {% block title %}EcoPoints - Gerar código{% endblock %}
 
 {% block content %}
+<!-- Seção de conteúdo desta página. -->
 <section class="staff-page">
   <div class="page-heading staff-heading">
     <div>
@@ -13,6 +15,7 @@
   </div>
 
   <div class="staff-grid">
+    <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
     <article class="card staff-form-card">
       <div class="staff-card-head">
         <div class="staff-card-icon"><i class="bi bi-upc-scan"></i></div>
@@ -22,6 +25,7 @@
         </div>
       </div>
 
+      <!-- Formulário: reúne os campos enviados pelo usuário e as ações de envio. -->
       <form id="gerarCodigoForm" class="staff-form" novalidate>
         <label>
           <span>Material</span>
@@ -50,6 +54,7 @@
       </form>
     </article>
 
+    <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
     <article class="card staff-result-card" id="resultadoCard">
       <div class="staff-result-empty" id="resultadoVazio">
         <i class="bi bi-qr-code"></i>
@@ -76,6 +81,7 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- JavaScript: controla comportamentos interativos desta página. -->
 <script>
 (() => {
   const form = document.getElementById('gerarCodigoForm');

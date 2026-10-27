@@ -1,3 +1,4 @@
+<!-- Página com o histórico de atividades e resgates do usuário. -->
 {% extends "ecopoints/base.html" %}
 {% block title %}Histórico - EcoPoints{% endblock %}
 
@@ -13,38 +14,46 @@
   </button>
 </div>
 
+<!-- Resumo visual das informações e indicadores. -->
 <section class="summary-grid">
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card summary-card">
     <div class="summary-icon"><i class="bi bi-trophy-fill"></i></div>
     <div><div class="summary-label">Pontos ganhos</div><div class="summary-value">{{ pontos_ganhos|fmt_int }}</div><div class="summary-label">Pontos</div></div>
   </article>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card summary-card">
     <div class="summary-icon"><i class="bi bi-wallet2"></i></div>
     <div><div class="summary-label">Pontos gastos</div><div class="summary-value purple-text">{{ pontos_gastos|fmt_int }}</div><div class="summary-label">Pontos</div></div>
   </article>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card summary-card">
     <div class="summary-icon"><i class="bi bi-recycle"></i></div>
     <div><div class="summary-label">Quilos reciclados</div><div class="summary-value">{{ kg_total|fmt_num }}</div><div class="summary-label">Kg</div></div>
   </article>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card summary-card">
     <div class="summary-icon"><i class="bi bi-gift-fill"></i></div>
     <div><div class="summary-label">Produtos resgatados</div><div class="summary-value violet-text">{{ produtos_resgatados }}</div><div class="summary-label">Produtos</div></div>
   </article>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card summary-card">
     <div class="summary-icon"><i class="bi bi-percent"></i></div>
     <div><div class="summary-label">Descontos resgatados</div><div class="summary-value orange-text">{{ descontos_resgatados }}</div><div class="summary-label">Descontos</div></div>
   </article>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card summary-card">
     <div class="summary-icon"><i class="bi bi-geo-alt-fill"></i></div>
     <div><div class="summary-label">Pontos de descarte</div><div class="summary-value">{{ pontos_descarte }}</div><div class="summary-label">Locais</div></div>
   </article>
 </section>
 
+<!-- Seção de conteúdo desta página. -->
 <section class="card history-card">
   <div class="tabs">
     <button class="tab active" data-type="todos"><i class="bi bi-list-ul"></i> Todos</button>
@@ -75,6 +84,7 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- JavaScript: controla comportamentos interativos desta página. -->
 <script>
 const buscaHistorico = document.getElementById('buscaHistorico');
 const tabs = document.querySelectorAll('.tab');

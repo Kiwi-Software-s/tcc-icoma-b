@@ -1,7 +1,9 @@
+<!-- Página com os dados, estatísticas e ações do perfil do usuário. -->
 {% extends "ecopoints/base.html" %}
 {% block title %}Meu perfil - EcoPoints{% endblock %}
 
 {% block content %}
+<!-- Seção de destaque inicial, com título e informações principais. -->
 <section class="profile-hero card">
   <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
   <div class="profile-title">
@@ -12,20 +14,28 @@
   <a class="profile-back" href="{{ url_for('home.dashboard') }}"><i class="bi bi-arrow-left"></i> Voltar ao painel</a>
 </section>
 
+<!-- Resumo visual das informações e indicadores. -->
 <section class="profile-stats">
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card profile-stat"><i class="bi bi-coin"></i><div><span>Saldo atual</span><strong>{{ usuario.pontos_total|default(0)|fmt_int }}</strong><small>GreenPoints</small></div></article>
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card profile-stat"><i class="bi bi-recycle"></i><div><span>Total reciclado</span><strong>{{ kg_total|fmt_num }}</strong><small>kg</small></div></article>
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card profile-stat"><i class="bi bi-ticket-perforated"></i><div><span>Benefícios resgatados</span><strong>{{ quantidade_trocas }}</strong><small>trocas</small></div></article>
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card profile-stat"><i class="bi bi-heart-fill"></i><div><span>Favoritos</span><strong>{{ favoritos_total }}</strong><small>benefícios</small></div></article>
 </section>
 
+<!-- Seção de conteúdo desta página. -->
 <section class="profile-grid">
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card profile-panel">
     <div class="profile-panel-title">
       <div><span class="profile-kicker">Informações pessoais</span><h2>Dados da conta</h2></div>
       <i class="bi bi-person-vcard"></i>
     </div>
 
+    <!-- Formulário: reúne os campos enviados pelo usuário e as ações de envio. -->
     <form id="formPerfil" class="profile-form">
       <label>
         <span>Nome</span>
@@ -40,6 +50,7 @@
     </form>
   </article>
 
+  <!-- Bloco independente de conteúdo, como um cartão, indicador ou item de lista. -->
   <article class="card profile-panel">
     <div class="profile-panel-title">
       <div><span class="profile-kicker">Seu impacto</span><h2>Resumo da atividade</h2></div>
@@ -59,6 +70,7 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- JavaScript: controla comportamentos interativos desta página. -->
 <script>
 const formPerfil = document.getElementById('formPerfil');
 const salvarPerfil = document.getElementById('salvarPerfil');
